@@ -1,0 +1,111 @@
+.dashboard-container {
+    display: flex;
+    align-items: center;
+    /* justify-content: space-between; */
+    flex-direction: column;
+    gap: var(--mb-0-75);
+    margin-top: var(--mb-1);
+}
+
+.card-content {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: var(--mb-0-75);
+}
+
+.dash-card {
+    width: 100%;
+    min-height: 100px;
+    box-shadow: 0 0 2px var(--text-color);
+    padding: var(--mb-1);
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    -ms-border-radius: 5px;
+    -o-border-radius: 5px;
+}
+
+.dash-card-4 {
+    /* max-height: 400px; */
+}
+.dash-card-5 {
+    /* width: 50%; */
+}
+.dash-card-6 {
+    /* width: 50%; */
+}
+
+.title-card {
+    margin-bottom: var(--mb-0-5);
+}
+
+
+.dash-card-content {
+    display: grid;
+    grid-template-columns: auto max-content;
+    gap: var(--mb-0-25);
+}
+
+.dash-card-content > span{
+    padding: 0 var(--mb-0-25);
+}
+
+.dash-card-left {
+    padding: var(--mb-0-5);
+    font-size: var(--h2-font-size);
+    font-weight: var(--font-semi-bold)
+    /* background-color: #000; */
+}
+.dash-card-right {
+    padding: 0 var(--mb-0-5);
+    /* background-color: #000; */
+}
+
+/* ========== BREAKPOINTS ========== */
+
+
+@media screen and (max-width: 1300px) {
+    .card-content:first-child {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        
+    }
+}
+
+/* For large devices */
+@media screen and (max-width: 992px) {
+    .dash-card-4 {
+        width: 100%;
+        height: 500px;
+        overflow: hidden;
+        position: relative;
+    }
+    .chartWork{
+        display: grid;
+        grid-template-columns: repeat(1, 1fr);
+    }
+    
+
+  }
+  
+  /* For medium devices */
+  @media screen and (max-width: 768px) {
+    .card-content:first-child {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+  }
+  
+  @media screen and (max-width: 576px) {
+    .card-content:first-child {
+        grid-template-columns: repeat(1, 1fr);
+    }
+  }
+  
+  /* For small devices */
+  @media screen and (max-width: 350px) {
+
+  }
+  
