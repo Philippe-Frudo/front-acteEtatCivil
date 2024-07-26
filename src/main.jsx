@@ -14,10 +14,11 @@ import Commune from './pages/commune/Commune';
 import District from './pages/district/District';
 import Region from './pages/region/Region';
 import Travail from './pages/travail/Travail';
-import FormAct from './pages/form_acte/FormAct';
 import Utilisateur from './pages/utilisateur/Utilisateur.jsx';
-import FormUpdateAct from './pages/form_acte/FormUpdateAct.jsx';
+import FormEditActe from './pages/form_acte/FormEditActe.jsx';
 import FormCreateUser from './pages/register/FormCreateUser.jsx';
+import ActeDetail from './pages/acte/ActeDetail.jsx';
+import FormAddActe from './pages/form_acte/FormAddActe.jsx';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
@@ -29,8 +30,9 @@ ReactDOM.createRoot(document.getElementById('root')).render(
           <Route path="/register" element={<FormCreateUser />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/acte-etat-civil" element={<Acte />} />
-          <Route path="/acte-etat-civil/add-act" element={<FormAct />} />
-          <Route path="/acte-etat-civil/update-act" element={<FormUpdateAct />} />
+          <Route path="/acte-etat-civil/add-acte" element={<FormAddActe />} />
+          <Route path="/acte-etat-civil/detail-acte/:id" element={<ActeDetail />} />
+          <Route path="/acte-etat-civil/edit/:id" element={<FormEditActe />} />
           <Route path="/adresse" element={<Adresse />} />
           <Route path="/fonkotany" element={<Fonkotany />} />
           <Route path="/commune" element={<Commune />} />

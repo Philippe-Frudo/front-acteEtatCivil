@@ -7,8 +7,44 @@ import FormAddAct from '../../components/form_acte/FormAddAct';
 import MainTop from "../../components/main_top/MainTop";
 import { useNavigate } from 'react-router-dom';
 
-const FormUpdateAct = () => {
+const FormEditActe = () => {
+
     const navigate = useNavigate();
+
+    const [acte, setActe] = useState([]);
+
+    // Recuperation de l'ID dans le LOCATION
+    let ID = String;
+    const pathName = window.location.pathname;
+    const tabID = [];
+    for (let i = pathName.length; i > 0; i--) {
+        if (pathName[i] === "/") break;
+        tabID.unshift(pathName[i]);
+    }
+    ID = tabID.join("");
+
+    /*//Supprimer la valeur de l'ID lorsqu'on retourne
+    const setID = () => {
+        ID = null;
+    }*/
+
+    useEffect(() => {
+        ACTES.forEach(acte => {
+            if (ID === acte.id_acte.toString()) {
+                setActe(acte);
+                return;
+            }
+        });
+        /*fetch(`http://localhost:3001/pokemons/${ID}`)
+        .then(response => response.json )
+        .then(pokemon => {
+            if(pokemon.id) setPokemon(pokemon)
+            }
+        );*/
+        /* "+ permet de convertir un nombre une chaine de caractere en entier"
+        PokemonService.getPokemonById(+ID).then(pokemon => setPokemon(pokemon));*/
+    }, [ID]);
+
 
     function handleClickAdd() {
         navigate("/acte-etat-civil/");
@@ -53,8 +89,8 @@ const FormUpdateAct = () => {
 
                                 <div className="content-user">
 
+                                    <FormActe />
                                     <FormAddPersonne />
-                                    <FormAddAct />
                                     <FormAddMere />
                                     <FormAddPere />
                                     <FormAddTemoin />
@@ -74,4 +110,4 @@ const FormUpdateAct = () => {
     )
 }
 
-export default FormUpdateAct;
+export default FormEditActe;

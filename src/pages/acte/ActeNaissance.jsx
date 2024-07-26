@@ -5,11 +5,10 @@ import ModalDelete from '../../components/modal_delete/ModalDelete';
 
 const ActeNaissance = () => {
 
-
   const navigate = useNavigate();
 
-  function handleClickDetail() {
-    navigate("/acte-etat-civil/detail-act");
+  function handleClickDetail(id) {
+    navigate(`/acte-etat-civil/detail-act/${id}`, {replace: true});
   }
 
   function handleClickUpdate() {
@@ -45,7 +44,7 @@ const ActeNaissance = () => {
                 <td>Adresse - Fonkotany  <br />- Commune - Region</td>
                 <td>Naissace - Mariage </td>
                 <td className="td-action">
-                  <button className="btn btn-edit" id="edit" onClick={(id => handleClickDetail(id))}>
+                  <button className="btn btn-edit" id="edit" key={Personne.id_personne} onClick={(id => handleClickDetail(id))}>
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
                       <path d="m16 2.012 3 3L16.713 7.3l-3-3zM4 14v3h3l8.299-8.287-3-3zm0 6h16v2H4z" />
                     </svg>

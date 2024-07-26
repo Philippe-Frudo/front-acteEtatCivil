@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import "./acte.css";
 import MainTop from '../../components/main_top/MainTop';
 import { useNavigate } from 'react-router-dom';
@@ -7,12 +7,16 @@ import ActeMariage from './ActeMariage';
 import ActeDece from './ActeDece';
 import ActeDivorce from './ActeDivorce';
 
-const Acte = () => {
 
+import ActeAll from './ActeAll';
+import { ACTES } from '../../models/mock-acte';
+
+
+const Acte = () => {
     const navigate = useNavigate();
 
     function handleClickAdd() {
-        navigate("/acte-etat-civil/add-act");
+        navigate("/acte-etat-civil/add-acte");
     }
 
     function cardActive(classe) {
@@ -28,7 +32,6 @@ const Acte = () => {
     }
 
     function handleActiveCard(event) {
-
         const datamain = event.currentTarget.dataset.main;
         if (datamain) {
             if (cardActive(datamain)) {
@@ -39,6 +42,21 @@ const Acte = () => {
             }
         }
     }
+
+    // const [personnes, setPersonnes] = useState([]);
+    let [actes, setActes] = useState([]);
+
+    useEffect(() => {
+        setActes(ACTES);
+
+        //   fetch("http://localhost:3001/pokemons")
+        //   .then(response => response.json)
+        //   .then((pokemons) => {
+        //     setPokemons(pokemons)
+        //   });
+
+    }, []);
+
 
     return (
         <main className="main">
@@ -82,28 +100,30 @@ const Acte = () => {
 
                 { /* <!-- ===== CARD 1 ===== --> */}
                 <div className="card active-main" id="card-1">
-                    Naissance
-                    <ActeNaissance />
+                    Acte
+                    <ActeAll actes={actes} />
+                    {/* Naissance */}
+                    {/* <ActeNaissance /> */}
                 </div>
 
                 { /* <!-- ===== CARD 2 ===== --> */}
                 <div className="card" id="card-2">
                     Mariage
-                    <ActeMariage />
+                    {/* <ActeMariage /> */}
 
                 </div>
 
                 { /* <!-- ===== CARD 3 ===== --> */}
                 <div className="card" id="card-3">
                     Divorce
-                    <ActeDivorce />
+                    {/* <ActeDivorce /> */}
 
                 </div>
 
                 { /* <!-- ===== CARD 4 ===== --> */}
                 <div className="card" id="card-4">
                     Dece
-                    <ActeDece />
+                    {/* <ActeDece /> */}
 
                 </div>
             </div>

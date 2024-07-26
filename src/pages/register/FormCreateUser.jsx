@@ -22,20 +22,20 @@ const FormCreateUser = () => {
                             <div>
                             </div>
                         </div>
-                        <div className="form-group">
+                        <div className="form-group form-group-2">
                             <div>
                                 <label htmlFor="nom_O" className="form-group-label">Nom:</label>
                                 <input type="text" className="form-group-input nom_O" name="nom_O" id="nom_O" placeholder="Nom" />
                                 <span className="msg-error"></span>
                             </div>
-                        </div>
-                        <div className="form-group">
                             <div>
                                 <label htmlFor="prenom_O" className="form-group-label">Prénom:</label>
                                 <input type="text" className="form-group-input prenom_O" name="prenom_O" id="prenom_O" placeholder="Prénom" />
                                 <span className="msg-error"></span>
                             </div>
                         </div>
+                        {/* <div className="form-group">
+                        </div> */}
                         <div className="form-group">
                             <div>
                                 <label htmlFor="" className="form-group-label sexe_O">Sexe:</label>
