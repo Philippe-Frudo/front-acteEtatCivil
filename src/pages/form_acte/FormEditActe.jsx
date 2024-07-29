@@ -13,7 +13,6 @@ const FormAddActe = () => {
         navigate("/acte-etat-civil/");
     }
 
-    
     const [personne] = useState(new Personne());
     const [acte] = useState(new Acte());
 
