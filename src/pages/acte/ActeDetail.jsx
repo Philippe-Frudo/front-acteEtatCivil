@@ -70,7 +70,6 @@ const ActeDetail = () => {
                                 <th>heure acte</th>
                                 <th>date d'anregistremment</th>
                                 <th>heure enregistrement</th>
-                                <th>Détail</th>
                                 <th>Modifier</th>
                                 <th>Supprimer</th>
                             </tr>

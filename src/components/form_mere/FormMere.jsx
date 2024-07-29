@@ -3,9 +3,98 @@ import { hiddenList, messageValidator, searchAdress, showList, successBorder } f
 import { ADDRESS } from '../../models/mock-address';
 
 const FormMere = ({useFormMere}) => {
-    
-  const [formMere, setFormMere] = useFormMere;
 
+    // ========= MERE =========
+    //const [mere] = useState(new Mere());
+    /*const [formMere, setFormMere] = useState({
+        id_m:{value: mere.id_m, isValid: true},
+        nom_m:{value: mere.nom_m, isValid: true},
+        prenom_m:{value: mere.prenom_m, isValid: true},
+        date_nais_m:{value: mere.date_nais_m, isValid: true},
+        age_m:{value: mere.age_m, isValid: true},
+        lieu_nais_m:{value: mere.lieu_nais_m, isValid: true},
+        id_travail:{value: mere.id_travail, isValid: true},
+        adrs_m:{value: mere.adrs_m, isValid: true},
+
+    });
+    const validFormMere = () => {
+        let newForm = { ...formMere };
+
+        //Validation de nom_p( nom de la mère ) + regex
+        if (!formMere.nom_m.value && !regex.character.test(formMere.nom_m.value) ) {
+            newForm.nom_m = { value: formMere.nom_m.value, error: "Le nom doit simplement composé de chaine de caractére de 3 à 30 de long", isValid: false };
+            errorBorder(".nom_m");
+            messageValidator(".nom_m", newForm.nom_m.error);
+        } else {
+            newForm.nom_m = { value: formMere.nom_m.value, error: "", isValid: true };
+            successBorder(".nom_m");
+            messageValidator(".nom_m", "");
+        }
+
+        //Validation de prenom de la mère
+        if (!formMere.prenom_m.value && !regex.character.test(formMere.prenom_m.value)) {
+            newForm.prenom_m = { value: formMere.prenom_m.value, error: "Le prenom doit simplement composé que de chaine de caractére de 3 à 50 de long.", isValid: false };
+            errorBorder(".prenom_m");
+            messageValidator(".prenom_m", newForm.prenom_m.error);
+        } else {
+            newForm.prenom_m = { value: formMere.prenom_m.value, error: "", isValid: true };
+            successBorder(".prenom_m");
+            messageValidator(".prenom_m", "");
+        }
+
+
+        const dateNais = formMere.date_nais_m.value;
+        if (dateNais && (dateNais > formActe.date_acte.value) && formActe.id_type.value == 1  && formMere.age_m.value > 12) {
+            newForm.date_nais_m = { value: formMere.date_nais_m.value, error: "Invalide date de naissance verifier bien.", isValid: false };
+            errorBorder(".date_nais_m");
+            messageValidator(".date_nais_m", newForm.date_nais_m.error);
+        } else {
+            newForm.date_nais_m = { value: formMere.date_nais_m.value, error: "", isValid: true };
+            successBorder(".date_nais_m");
+            messageValidator(".date_nais_m", "");
+        }
+
+
+        //Validation de lieu de naissance
+        if (formMere.lieu_nais_m.value === "") {
+            newForm.lieu_nais_m = { value: formMere.lieu_nais_m.value, error: "", isValid: false };
+            errorBorder(".lieu_nais_m");
+            messageValidator(".lieu_nais_m", newForm.lieu_nais_m.error);
+        } else {
+            newForm.lieu_nais_m = { value: formMere.lieu_nais_m.value, error: "", isValid: true };
+            successBorder(".lieu_nais_m");
+            messageValidator(".lieu_nais_m", "");
+        }
+
+
+        //Validation de travail mere
+        if (formMere.id_travail.value === "") {
+            newForm.id_travail = { value: formMere.id_travail.value, error: "", isValid: false };
+            errorBorder(".id_travail");
+            messageValidator(".id_travail", newForm.id_travail.error);
+        } else {
+            newForm.id_adrs = { value: formMere.id_travail.value, error: "", isValid: true };
+            successBorder(".id_travail");
+            messageValidator(".id_travail", "");
+        }
+
+        //Validation de l'adresse
+        if (formMere.adrs_m.value === "") {
+            newForm.adrs_m = { value: formMere.adrs_m.value, error: "Cette adresse est invalid", isValid: false };
+            errorBorder(".adrs_m");
+            messageValidator(".adrs_m", newForm.adrs_m.error);
+        } else {
+            newForm.adrs_m = { value: formMere.adrs_m.value, error: "", isValid: true };
+            successBorder(".adrs_m");
+            messageValidator(".adrs_m", "");
+        }
+
+        setFormPersonne(newForm);
+        return newForm.prenom_m.isValid && newForm.nom_m.isValid && newForm.date_nais_m.isValid && newForm.lieu_nais_m.isValid && newForm.id_adrs.isValid && newForm.id_travail.value;
+    }*/
+
+
+  const [formMere, setFormMere] = useFormMere;
   const handleInputChange = (e) => {
     const fieldName = e.target.name.trim();
     const fieldValue = e.target.value.trim();

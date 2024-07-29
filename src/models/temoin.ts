@@ -10,6 +10,8 @@ export default class Temoin {
     id_travail: number;
     adrs_temoin: string;
 
+    
+
     // 2. Definition des valeurs par defaut des proprietes d'un Temoin
     constructor(
         id_temoin: number,

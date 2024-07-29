@@ -27,6 +27,7 @@ export function messageSubmit(status, nameClass, msg) {
 
 // ===============LISTE ==================
 export function showList(nameClass) {
+    console.log("showList");
     document.querySelector(nameClass).classList.add("showList");
 }
 
@@ -36,7 +37,7 @@ export const hiddenList = (nameClass) => {
 }
 
 
-export function searchAdress(idName, list) {
+export function searchAddress(idName, list) {
     // Declare variables
     var input, filter, ul, li, p, i, txtValue;
     input = document.getElementById(idName);

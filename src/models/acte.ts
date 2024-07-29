@@ -1,58 +1,75 @@
 export default class Acte {
     id_acte: number;
     id_type: number;
-    id_p: number;
     date_acte: string;
     heure_acte: string;
-    id_pere: number;
-    id_mere: number;
     lieu_acte: string;
-    id_adrs: number;
-    id_temoin: number;
-    id_user: number;
     date_enreg: string;
     heure_enreg: string;
+    
+    nom_temoin: String;
+    prenom_temoin: String;
+    sexe_temoin: String;
+    date_nais_temoin: String;
+    lieu_nais_temoin: String;
+    age_temoin: number;
+    adrs_temoin: string;
+    profession_temoin: string;
+
+    id_person: number;
     code_commune: String;
     id_fonkotany: number;
-    code_district: String;
-    code_region: String;
+    id_user: number;
+
 
     constructor(
         id_acte: number,
-        id_type: number,
-        id_p: number,
-        date_acte: string = "",
+        id_type: number = 0,
+        date_acte: string = new Date().toLocaleDateString(),
         heure_acte: string = "",
         lieu_acte: string = "",
-        id_pere: number ,
-        id_mere: number,
-        id_adrs: number,
-        id_temoin: number,
-        id_user: number,
-        date_enreg: string = "",
-        heure_enreg: string = "",
+        date_enreg: string = new Date().toLocaleDateString(),
+        heure_enreg: string = '',
+        
+        id_person: number = 0,
         id_fonkotany: number,
         code_commune: String = "",
-        code_district: String = "",
-        code_region: String = "",
+
+        nom_temoin: String = "",
+        prenom_temoin: String = "",
+        sexe_temoin: String = "F",
+        date_nais_temoin: String = "",
+        lieu_nais_temoin: String = "",
+        age_temoin: number = 0,
+        adrs_temoin: string = "",
+        profession_temoin: string = "",
+
+        id_user: number = 0,
+
+
 
     ) {
         this.id_acte = id_acte;
         this.id_type = id_type;
-        this.id_p = id_p;
         this.date_acte = date_acte;
         this.heure_acte = heure_acte;
         this.lieu_acte = lieu_acte;
-        this.id_pere = id_pere;
-        this.id_mere = id_mere;
-        this.id_adrs = id_adrs;
-        this.id_temoin = id_temoin;
-        this.id_user = id_user;
         this.date_enreg = date_enreg;
         this.heure_enreg = heure_enreg;
+
+        this.nom_temoin = nom_temoin;
+        this.prenom_temoin = prenom_temoin;
+        this.sexe_temoin = sexe_temoin;
+        this.date_nais_temoin = date_nais_temoin;
+        this.lieu_nais_temoin = lieu_nais_temoin;
+        this.age_temoin = age_temoin;
+        this.adrs_temoin = adrs_temoin;
+        this.profession_temoin = profession_temoin;
+
+        this.id_person = id_person;
         this.id_fonkotany = id_fonkotany;
         this.code_commune = code_commune;
-        this.code_district =code_district;
-        this.code_region = code_region;
+        this.id_user = id_user;
+
     }
 }

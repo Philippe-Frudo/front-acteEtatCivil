@@ -4,7 +4,101 @@ import { hiddenList, messageValidator, searchAdress, showList, successBorder } f
 import { ADDRESS } from '../../models/mock-address';
 
 const FormTemoin = ({useFormTemoin}) => {
-     
+       
+
+    // ========== temoin ==========
+    //const [temoin] = useState(new Temoin());
+   /* const [formTemoin, setFormTemoin] = useState({
+        id_temoin:{value: temoin.id_temoin, isValid: true},
+        nom_temoin:{value: temoin.nom_temoin, isValid: true},
+        prenom_temoin:{value: temoin.prenom_temoin, isValid: true},
+        sexe_temoin:{value: temoin.sexe_temoin, isValid: true},
+        date_nais_temoin:{value: temoin.date_nais_temoin, isValid: true},
+        age_temoin:{value: temoin.age_temoin, isValid: true},
+        lieu_nais_temoin:{value: temoin.lieu_nais_temoin, isValid: true},
+        id_travail:{value: temoin.id_travail, isValid: true},
+        adrs_temoin:{value: temoin.adrs_temoin, isValid: true},
+    });
+    const validFormTemoin = () => {
+        let newForm = { ...formTemoin };
+
+        //Validation du temoin ( nom du temoin ) + regex
+        if (!formTemoin.nom_temoin.value && !regex.character.test(formTemoin.nom_temoin.value)) {
+            newForm.nom_temoin = { value: formTemoin.nom_temoin.value, error: "Le nom doit simplement composé de chaine de caractére de 3 à 30 de long", isValid: false };
+            errorBorder(".nom_temoin");
+            messageValidator(".nom_temoin", newForm.nom_temoin.error);
+        } else {
+            newForm.nom_temoin = { value: formTemoin.nom_temoin.value, error: "", isValid: true };
+            successBorder(".nom_temoin");
+            messageValidator(".nom_temoin", "");
+        }
+
+        //Validation de prenom du temoin 
+        if (!formTemoin.prenom_temoin.value && !regex.character.test(formTemoin.prenom_temoin.value)) {
+            newForm.prenom_temoin = { value: formTemoin.prenom_temoin.value, error: "Le prenom doit simplement composé que de chaine de caractére de 3 à 50 de long.", isValid: false };
+            errorBorder(".prenom_temoin");
+            messageValidator(".prenom_temoin", newForm.prenom_temoin.error);
+        } else {
+            newForm.prenom_temoin = { value: formTemoin.prenom_temoin.value, error: "", isValid: true };
+            successBorder(".prenom_temoin");
+            messageValidator(".prenom_temoin", "");
+        }
+
+
+        //Validation date de naissance du temoin
+        const dateNais = formTemoin.date_nais_temoin.value;
+        if (dateNais && (dateNais > formActe.date_acte.value) && formActe.id_type.value == 1  && formTemoin.date_nais_temoin.value >= 18) {
+            newForm.date_nais_temoin = { value: formTemoin.date_nais_temoin.value, error: "Invalide date de naissance verifier bien.", isValid: false };
+            errorBorder(".date_nais_temoin");
+            messageValidator(".date_nais_temoin", newForm.date_nais_temoin.error);
+        } else {
+            newForm.date_nais_temoin = { value: formTemoin.date_nais_temoin.value, error: "", isValid: true };
+            successBorder(".date_nais_temoin");
+            messageValidator(".date_nais_temoin", "");
+        }
+
+
+        //Validation de lieu de naissance du temoin
+        if (!formTemoin.lieu_nais_temoin.value && !regex.character.test(formTemoin.lieu_nais_temoin.value)) {
+            newForm.lieu_nais_temoin = { value: formTemoin.lieu_nais_temoin.value, error: "", isValid: false };
+            errorBorder(".lieu_nais_temoin");
+            messageValidator(".lieu_nais_temoin", newForm.lieu_nais_temoin.error);
+        } else {
+            newForm.lieu_nais_temoin = { value: formTemoin.lieu_nais_temoin.value, error: "", isValid: true };
+            successBorder(".lieu_nais_temoin");
+            messageValidator(".lieu_nais_temoin", "");
+        }
+
+
+        //Validation de travail du temoin
+        if (!parseInt(formTemoin.id_travail.value)) {
+            console.log("Invalide");
+            newForm.id_travail = { value: formTemoin.id_travail.value, error: "", isValid: false };
+            errorBorder(".id_travail");
+            messageValidator(".id_travail", newForm.id_travail.error);
+        } else {
+            newForm.id_adrs = { value: formTemoin.id_travail.value, error: "", isValid: true };
+            console.log("valide");
+            successBorder(".id_travail");
+            messageValidator(".id_travail", "");
+        }
+
+        //Validation de l'adresse du temoin
+        if (!parseInt(formTemoin.adrs_temoin.value)) {
+            newForm.id_adrs = { value: formTemoin.adrs_temoin.value, error: "Cette adresse est invalid", isValid: false };
+            errorBorder(".adrs_temoin");
+            messageValidator(".adrs_temoin", newForm.adrs_temoin.error);
+        } else {
+            newForm.adrs_temoin = { value: formTemoin.adrs_temoin.value, error: "", isValid: true };
+            successBorder(".adrs_temoin");
+            messageValidator(".adrs_temoin", "");
+        }
+
+        setFormPersonne(newForm);
+        return newForm.prenom_temoin.isValid && newForm.nom_temoin.isValid && newForm.date_nais_temoin.isValid && newForm.lieu_nais_temoin.isValid && newForm.adrs_temoin.isValid && newForm.id_travail.value;
+    }*/
+
+
     const [formTemoin, setFormTemoin] = useFormTemoin;
     const handleInputChange = (e) => {
         const fieldName = e.target.name.trim();
@@ -140,7 +234,7 @@ const setAddressPerson = (adrs) => {
             </div>
 
         </fieldset>
-    </div >
+    </div>
 </>
   )
 }
