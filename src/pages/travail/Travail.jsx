@@ -1,19 +1,10 @@
 import React from 'react'
-import MainTop from '../../components/main_top/MainTop'
-import { showAddModal, showUpdateModal } from '../../constants/modal'
-import FormAddTravail from '../../components/form_travail/FormAddTravail'
-import FormUpdateTravail from '../../components/form_travail/FormUpdateTravail'
+import { Link } from 'react-router-dom'
+import { TRAVAILS } from '../../models/mock-travail'
 
 const Travail = () => {
     return (
         <>
-            <main className="main">
-                { /* <!-- =====HEADER MAIN ==== --> */}
-                <MainTop />
-
-                { /* <!-- ====== CONTAINER MAIN ===== --> */}
-                <div className="main-container main-container-2" id='main-scroll'>
-
                     { /* <!-- ===== CARD 1 ===== --> */}
                     <div className="card active-main" id="card-1">
                         { /* <!-- ===== HEADER CARD 1 ===== --> */}
@@ -23,14 +14,16 @@ const Travail = () => {
                             <div className="main-local-nav">
                                 <div className="action-local-nav">
 
-                                    <button className="btn add-now" id="add-now" onClick={showAddModal}>
-                                        <span className="content-add-now" >
-                                            <svg className="add-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                                                <path d="M19 11h-6V5h-2v6H5v2h6v6h2v-6h6z" />
-                                            </svg>
-                                            <span className="add-now-name" id='add-adresse'>Ajouter</span>
-                                        </span>
-                                    </button>
+                                    <Link to='/travail/add'>
+                                        <button className="btn add-now" id="add-now">
+                                            <span className="content-add-now" >
+                                                <svg className="add-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                                                    <path d="M19 11h-6V5h-2v6H5v2h6v6h2v-6h6z" />
+                                                </svg>
+                                                <span className="add-now-name" id='add-adresse'>Ajouter</span>
+                                            </span>
+                                        </button>
+                                    </Link>
 
                                     <label htmlFor='add-file' className="btn add-file" id="add-file">
                                         <span className="content-add-now" >
@@ -51,7 +44,6 @@ const Travail = () => {
                             </div>
                         </header>
 
-                        { /* <!-- MAIN CARD 1 --> */}
                         <main className="main-main-content" id="main-main-content-1">
                             <div className="table-content">
                                 <table className="table" id="nom-table">
@@ -63,68 +55,31 @@ const Travail = () => {
                                             <th>Supprimer</th>
                                         </tr>
                                     </thead>
-                                    {/* <div className="table-scroll"> */}
                                     <tbody id="body-nom-table">
-                                        <tr>
-                                            <td>1</td>
-                                            <td>Docteur</td>
-                                            <td className="td-action">
-                                                <button className="btn btn-edit" id="edit" onClick={showUpdateModal}>
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                                                        <path d="m16 2.012 3 3L16.713 7.3l-3-3zM4 14v3h3l8.299-8.287-3-3zm0 6h16v2H4z" />
-                                                    </svg>
-                                                </button>
-                                            </td>
-                                            <td className="td-action">
-                                                <button className="btn btn-delete" id="remove">
-                                                    {/* <?xml version="1.0"? > */}
-                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" width="30px" height="30px">
-                                                        <path d="M 14.984375 2.4863281 A 1.0001 1.0001 0 0 0 14 3.5 L 14 4 L 8.5 4 A 1.0001 1.0001 0 0 0 7.4863281 5 L 6 5 A 1.0001 1.0001 0 1 0 6 7 L 24 7 A 1.0001 1.0001 0 1 0 24 5 L 22.513672 5 A 1.0001 1.0001 0 0 0 21.5 4 L 16 4 L 16 3.5 A 1.0001 1.0001 0 0 0 14.984375 2.4863281 z M 6 9 L 7.7929688 24.234375 C 7.9109687 25.241375 8.7633438 26 9.7773438 26 L 20.222656 26 C 21.236656 26 22.088031 25.241375 22.207031 24.234375 L 24 9 L 6 9 z" />
-                                                    </svg>
-                                                </button>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>valeu-colonne-3</td>
-                                            <td>valeu-colonne-4</td>
-                                            <td className="td-action">
-                                                <button className="btn btn-edit" id="edit">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                                                        <path d="m16 2.012 3 3L16.713 7.3l-3-3zM4 14v3h3l8.299-8.287-3-3zm0 6h16v2H4z" />
-                                                    </svg>
-                                                </button>
-                                            </td>
-                                            <td className="td-action">
-                                                <button className="btn btn-delete" id="remove">
-                                                    {/* <?xml version="1.0"?> */}
-                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" width="30px" height="30px">
-                                                        <path d="M 14.984375 2.4863281 A 1.0001 1.0001 0 0 0 14 3.5 L 14 4 L 8.5 4 A 1.0001 1.0001 0 0 0 7.4863281 5 L 6 5 A 1.0001 1.0001 0 1 0 6 7 L 24 7 A 1.0001 1.0001 0 1 0 24 5 L 22.513672 5 A 1.0001 1.0001 0 0 0 21.5 4 L 16 4 L 16 3.5 A 1.0001 1.0001 0 0 0 14.984375 2.4863281 z M 6 9 L 7.7929688 24.234375 C 7.9109687 25.241375 8.7633438 26 9.7773438 26 L 20.222656 26 C 21.236656 26 22.088031 25.241375 22.207031 24.234375 L 24 9 L 6 9 z" />
-                                                    </svg>
-                                                </button>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>valeu-colonne-3</td>
-                                            <td>valeu-colonne-4</td>
-                                            <td className="td-action">
-                                                <button className="btn btn-edit" id="edit">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                                                        <path d="m16 2.012 3 3L16.713 7.3l-3-3zM4 14v3h3l8.299-8.287-3-3zm0 6h16v2H4z" />
-                                                    </svg>
-                                                </button>
-                                            </td>
-                                            <td className="td-action">
-                                                <button className="btn btn-delete" id="remove">
-                                                    {/* <?xml version="1.0"?> */}
-                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" width="30px" height="30px">
-                                                        <path d="M 14.984375 2.4863281 A 1.0001 1.0001 0 0 0 14 3.5 L 14 4 L 8.5 4 A 1.0001 1.0001 0 0 0 7.4863281 5 L 6 5 A 1.0001 1.0001 0 1 0 6 7 L 24 7 A 1.0001 1.0001 0 1 0 24 5 L 22.513672 5 A 1.0001 1.0001 0 0 0 21.5 4 L 16 4 L 16 3.5 A 1.0001 1.0001 0 0 0 14.984375 2.4863281 z M 6 9 L 7.7929688 24.234375 C 7.9109687 25.241375 8.7633438 26 9.7773438 26 L 20.222656 26 C 21.236656 26 22.088031 25.241375 22.207031 24.234375 L 24 9 L 6 9 z" />
-                                                    </svg>
-                                                </button>
-                                            </td>
-                                        </tr>
-
+                                        {TRAVAILS?.map(t => (
+                                            <tr key={t.id_travail}>
+                                                <td>{t.id_travail}</td>
+                                                <td>{t.nom_travail}</td>
+                                                <td className="td-action">
+                                                    <Link to={`/travail/edit/${t.id_travail}`}>
+                                                        <button className="btn btn-edit" id="edit">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                                                                <path d="m16 2.012 3 3L16.713 7.3l-3-3zM4 14v3h3l8.299-8.287-3-3zm0 6h16v2H4z" />
+                                                            </svg>
+                                                        </button>
+                                                    </Link>
+                                                </td>
+                                                <td className="td-action">
+                                                    <button className="btn btn-delete" id="remove">
+                                                        {/* <?xml version="1.0"? > */}
+                                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" width="30px" height="30px">
+                                                            <path d="M 14.984375 2.4863281 A 1.0001 1.0001 0 0 0 14 3.5 L 14 4 L 8.5 4 A 1.0001 1.0001 0 0 0 7.4863281 5 L 6 5 A 1.0001 1.0001 0 1 0 6 7 L 24 7 A 1.0001 1.0001 0 1 0 24 5 L 22.513672 5 A 1.0001 1.0001 0 0 0 21.5 4 L 16 4 L 16 3.5 A 1.0001 1.0001 0 0 0 14.984375 2.4863281 z M 6 9 L 7.7929688 24.234375 C 7.9109687 25.241375 8.7633438 26 9.7773438 26 L 20.222656 26 C 21.236656 26 22.088031 25.241375 22.207031 24.234375 L 24 9 L 6 9 z" />
+                                                        </svg>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        ))}
                                     </tbody>
-                                    {/* </div> */}
                                 </table>
                             </div>
                         </main>
@@ -160,14 +115,6 @@ const Travail = () => {
                     <div className="card" id="card-2">
                         <main className="main-main-content" id="main-main-content-2">CARD 2</main>
                     </div>
-                </div>
-
-
-                <FormAddTravail />
-                <FormUpdateTravail />
-
-
-            </main>
         </>
     )
 }

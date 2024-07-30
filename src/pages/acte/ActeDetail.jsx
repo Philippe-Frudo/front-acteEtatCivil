@@ -1,60 +1,35 @@
 import React, { useState, useEffect } from 'react'
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import ModalDelete from '../../components/modal_delete/ModalDelete';
 import MainTop from '../../components/main_top/MainTop';
 import DETAILS from '../../models/mock-dataActe';
 
 const ActeDetail = () => {
-
+    const { id } = useParams();
     const navigate = useNavigate();
 
     const [detail, setDetail] = useState([]);
-    // Recuperation de l'ID dans le LOCATION
-    let ID = String;
-    let pathName = window.location.pathname;
-    const tabID = [];
-    for (let i = pathName.length; i > 0; i--) {
-        if (pathName[i] === "/") break;
-        tabID.unshift(pathName[i]);
-    }
-    ID = tabID.join("");
 
     useEffect(() => {   
-        DETAILS.forEach(detail => {
-            if (ID === detail.id_person.toString()) {
-                setDetail(detail); return;
-            }
-        });
-        /*fetch(`http://localhost:3001/pokemons/${ID}`)
-        .then(response => response.json )
-        .then(pokemon => {
-            if(pokemon.id) setPokemon(pokemon)
-            }
-        );*/
-        /* "+ permet de convertir un nombre une chaine de caractere en entier"
-        PokemonService.getPokemonById(+ID).then(pokemon => setPokemon(pokemon));*/
-
-    }, [ID]);
+        const foundDetail = DETAILS.find(detail => {id === detail.id_person.toString(); return });
+        if (foundDetail) {
+            setDetail(foundDetail); 
+        }
+        /* PokemonService.getPokemonById(+ID).then(pokemon => setPokemon(pokemon));*/
+    }, [id]);
 
 
-    function handleEditActe(id) {
-        navigate(`/acte-etat-civil/edit/${id}`, { replace: true });
+    function handleEditActe() {
+        navigate(`/acte-etat-civil/edit/${detail.id_person}`, { replace: true });
     }
 
     function handleClickBack() {
-        navigate("/acte-etat-civil/");
+        navigate("/acte-etat-civil", {replace: true});
     }
-
 
     return (
 
         <>
-        <main className="main">
-            { /* <!-- =====HEADER MAIN ==== --> */}
-            <MainTop />
-
-            { /* <!-- ====== CONTAINER MAIN ===== --> */}
-            <div className="main-container main-container-2" id='main-scroll'>
                 { /* <!-- ===== CARD 1 ===== --> */}
                 <div className="card active-main" id="card-1">
                     { /* <!-- ===== HEADER CARD 1 ===== --> */}
@@ -62,7 +37,7 @@ const ActeDetail = () => {
                         <h3 className="main-header-content-title">Detail d'acte de {detail.nom_person} {detail.prenom_person}</h3>
                         <span className="main-header-content-subtitle">Soutitre page</span>
                         <div className="main-local-nav" >
-                            <div className="action-local-nav" style={{display: "flex", justifyContent:"flex-end" }}>
+                            <div className="action-local-nav btn-page-detail">
                                 <button className="btn add-now" id="add-now" onClick={handleClickBack}>
                                     <span className="content-add-now" >
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
@@ -354,10 +329,6 @@ const ActeDetail = () => {
 
                     </main>
                 </div>
-            </div>
-
-        </main>
-
         </>
     )
 }

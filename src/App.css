@@ -287,6 +287,15 @@
   column-gap: 2rem;
 }
 
+
+.btn-page-detail {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  flex-direction: column;
+}
+
 .action-local-nav .btn {
   padding: 0.5rem 0.8rem;
 }
@@ -685,7 +694,7 @@ textarea {
   right: 0;
   bottom: 0;
   background: rgb(0, 0, 0, 0.5);
-  z-index: 100;
+  z-index: 1000;
   display: none;
   align-items: center;
   justify-content: center;
@@ -765,10 +774,11 @@ fieldset {
   right: 0;
   z-index: 100;
 }
+
 .message {
   width: 100%; 
   color: #fff;
-  padding: 1rem;
+
 }
 
 .error {
@@ -1026,6 +1036,12 @@ fieldset {
       column-gap: 0;
       row-gap: var(--mb-0-75);
   }
+
+  .btn-page-detail {
+    width: 100%;
+    /* justify-content: flex-start; */
+    align-items: flex-start;
+  }
 }
 
 @media screen and (max-width: 576px) {
@@ -1152,7 +1168,7 @@ fieldset {
 
   .action-local-nav {
     width: 100%;
-    align-items: center;
+    /* align-items: center; */
     column-gap: 0.5rem;
   }
 

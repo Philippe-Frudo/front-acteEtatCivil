@@ -104,7 +104,7 @@ const Login = () => {
         if (isFormValid) {
             setMessage("Connexion en cours ...");
             // API(Laraver)
-            AuthentificationService.login(form.userName.value, form.password.value)
+           /* AuthentificationService.login(form.userName.value, form.password.value)
                 .then(isAuthenticated => {
                     if (!isAuthenticated) {
                         setMessage("Identifiant ou mot de passe incorrect.");
@@ -112,7 +112,7 @@ const Login = () => {
                     }
                     console.log(message);
                     navigate("/dashboard");
-                });
+                });*/
         }
     }
 
@@ -132,7 +132,7 @@ const Login = () => {
                         <form className="form-authentification" id="loginForm" onSubmit={e => handleSubmit(e)}>
 
                             {/* Message . status: success or error*/}
-                            <div className="alert-message {/*status*/}" >
+                            <div className=" {/*status*/}" style={{margin: "1rem 0"}}>
                                 {/* Error  */}
                                 {message && <span className='message'>{message}</span>}
                             </div>

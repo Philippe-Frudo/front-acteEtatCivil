@@ -1,5 +1,5 @@
 export const regex = {
-    character: /^[a-zA-Z]{3, 50}$/,
+    character: /^[a-zA-Z]{3,50}$/,
     number: /^[0-9]$/,
     tel: /^(032|033|034|038)\d[0-9]{7}$/,
     email: /^[a-zA-Z][a-zA-Z0-9-_]{3,23}$/,

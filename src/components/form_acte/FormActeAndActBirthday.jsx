@@ -560,38 +560,76 @@ const FormActeAndBirthday = ({personne, acte, isEditForm}) => {
     
 
     const updatePersone = () => {
-        APIService.updatePersone(personne)
-        .then( (response) => response.json() )
-        .then( () => navigate("/acte-etat-civil/detail-acte"))
+        // APIService.updatePersone(personne)
+        // .then( (response) => response.json() )
+        // .then( () => navigate("/acte-etat-civil/detail-acte"))
     }
 
     const addPersonne = () => {
-        APIService.addPersonne(personne)
-        .then( () => navigate(`/pokemons/${pokemon.id}`) );
+        // APIService.addPersonne(personne)
+        // .then( () => navigate(`/pokemons/${pokemon.id}`) );
     }
 
     
 
     return (
         <>
-            <form className="form" id="form-add-act" onSubmit={handleSubmit} style={{paddingTop:"0"}}>
-                {/* Message . status: success or error*/}
-                <div className="alert-message">
-                    {message && <span className={isValid ? 'success message': 'message error'} >{message}</span>}
-                </div>
+                    { /* <!-- ===== CARD 1 ===== --> */}
+                    <div className="card active-main" id="card-1">
+                        { /* <!-- ===== HEADER CARD 1 ===== --> */}
+                        <header className="main-header-content">
+                            {isEditForm ? 
+                            (<h3 className="main-header-content-title">Ajout d'une nouvelle acte</h3>):
+                            (<h3 className="main-header-content-title">Modifier acte</h3>)
+                            }
+                            <span className="main-header-content-subtitle">Soutitre page</span>
 
-                <div className="content-user">
+                            <div className="main-local-nav">
+                                <div className="action-local-nav">
 
-                    <FormActe useFormActe={[formActe, setFormActe]} isEditForm={false} />
-                    <FormPersonne useFormPersonne={[formPersonne, setFormPersonne]} isEditForm={false} />
+                                    <Link to='/acte-etat-civil'>
+                                        <button className="btn add-now" id="add-now">
+                                            <span className="content-add-now" >
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                                                    <path fill='#fff' d="M13.939 4.939 6.879 12l7.06 7.061 2.122-2.122L11.121 12l4.94-4.939z" />
+                                                </svg>
+                                                <span className="add-now-name" id='add-adresse'>Retour</span>
+                                            </span>
+                                        </button>
+                                    </Link>
 
-                    <div className="action-group">
-                        <button type="submit" className="btn btn-save" id="save">Envoyer</button>
-                        <button type="reset" className="btn btn-clear" id="clear">Annuler</button>
+                                </div>
+                            </div>
+                        </header>
+
+                        { /* <!-- MAIN CARD 1 --> */}
+                        <main className="main-main-content" id="main-main-content-1" style={{marginTop: "0", paddingTop:"0"}}>
+
+                            <form className="form" id="form-add-act" onSubmit={handleSubmit} style={{paddingTop:"0"}}>
+                                {/* Message . status: success or error*/}
+                                <div className="alert-message">
+                                    {message && <span className={isValid ? 'success message': 'message error'} >{message}</span>}
+                                </div>
+
+                                <div className="content-user">
+
+                                    <FormActe useFormActe={[formActe, setFormActe]} isEditForm={false} />
+                                    <FormPersonne useFormPersonne={[formPersonne, setFormPersonne]} isEditForm={false} />
+
+
+                                    <div className="action-group">
+                                        {isEditForm ? 
+                                            (<button type="submit" className="btn btn-save" id="save">Modifier</button>):
+                                            (<button type="submit" className="btn btn-save" id="save">Envoyer</button>)
+                                        }
+                                        <button type="reset" className="btn btn-clear" id="clear">Annuler</button>
+                                    </div>
+
+                                </div>
+                            </form>
+
+                        </main>
                     </div>
-
-                </div>
-            </form>
         </>
     )
 }
