@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import Fonkotany from '../../models/fonkotany';
-import FormFonkotany from './FormFonkotany';
+import FormFonkotany from '../../components/form_fonkotany/FormFonkotany';
 
 const FormAddFonkotany = () => {
 

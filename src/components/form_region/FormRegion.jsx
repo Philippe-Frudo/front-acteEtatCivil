@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 const FormRegion = ({region, isEditForm}) => {
-    
+
     const [formRegion, setFormRegion] = useState({
         code_region: { value: "", isValid: false, error: "" },
         nom_region: { value: "", isValid: false, error: "" },
@@ -44,11 +44,13 @@ const FormRegion = ({region, isEditForm}) => {
     }
          
     const [message, setMessage] = useState("");
+    const [valid, setValid] = useState(false);
     const handleSubmit = (e) => {
         e.preventDefault();
         const isValid = Object.values(formRegion).every(field => field.isValid);
 
         if (isValid) {
+            setValid(isValid);
             setMessage("En cours de connexion ...");
             region.code_region = formRegion.code_region.value;
             region.nom_region = formRegion.nom_region.value;
@@ -95,7 +97,10 @@ const FormRegion = ({region, isEditForm}) => {
 
                 <form className="form" id="add-region" onSubmit={handleSubmit}>
                     <div className="alert-message">
-                        {message && <span className='message'>{message}</span>}
+                        {valid && message ? 
+                            (<span className='message success'>{message}</span>):
+                            (<span className='message error'>{message}</span>)
+                        }
                     </div>
                     <div className="content-user">
 

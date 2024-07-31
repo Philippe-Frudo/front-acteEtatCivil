@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import "./acte.css";
 import { ACTES } from '../../models/mock-acte';
 import { showDeleteModal } from '../../constants/modal';
@@ -9,7 +9,6 @@ import ModalDelete from '../../components/modal_delete/ModalDelete';
 import ActeMariage from './ActeMariage';
 import ActeDece from './ActeDece';
 import ActeDivorce from './ActeDivorce';*/
-
 
 
 const Acte = () => {
@@ -38,11 +37,6 @@ const Acte = () => {
         }
     }
 
-    
-    const navigate = useNavigate();
-    const handleDetail = (id) => {
-        navigate(`/acte-etat-civil/detail/${id}`, { replace: true });
-    }
 
 
     return (
@@ -63,9 +57,7 @@ const Acte = () => {
                             <Link to='/acte-etat-civil/add'>
                                 <button className="btn add-now" id="add-now">
                                     <span className="content-add-now">
-                                        <svg className="add-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                                            <path d="M19 11h-6V5h-2v6H5v2h6v6h2v-6h6z" />
-                                        </svg>
+                                    <box-icon className="add-now" name='plus-medical' color="#fff" ></box-icon>
                                         <span className="add-now-name">Ajouter</span>
                                     </span>
                                 </button>
@@ -73,9 +65,7 @@ const Acte = () => {
 
                             <div className="search search-local-nav">
                                 <label className="content-search">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                                        <path d="M19.023 16.977a35.13 35.13 0 0 1-1.367-1.384c-.372-.378-.596-.653-.596-.653l-2.8-1.337A6.962 6.962 0 0 0 16 9c0-3.859-3.14-7-7-7S2 5.141 2 9s3.14 7 7 7c1.763 0 3.37-.66 4.603-1.739l1.337 2.8s.275.224.653.596c.387.363.896.854 1.384 1.367l1.358 1.392.604.646 2.121-2.121-.646-.604c-.379-.372-.885-.866-1.391-1.36zM9 14c-2.757 0-5-2.243-5-5s2.243-5 5-5 5 2.243 5 5-2.243 5-5 5z" />
-                                    </svg>
+                                    <box-icon name='search-alt' flip='horizontal' animation='tada' color='rgba(0,0,0,0.73)' ></box-icon>
                                     <input className="main-search " type="text" placeholder="chercher..." />
                                 </label>
                             </div>
@@ -122,11 +112,11 @@ const Acte = () => {
                                                 <td>{acte.date_enreg}</td>
                                                 <td>{acte.heure_enrg}</td>
                                                 <td className="td-action">
-                                                    <button className="btn btn-edit" id="edit" onClick={() => { handleDetail(acte.id_acte) }}>
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                                                            <path d="m16 2.012 3 3L16.713 7.3l-3-3zM4 14v3h3l8.299-8.287-3-3zm0 6h16v2H4z" />
-                                                        </svg>
-                                                    </button>
+                                                    <Link to={`/acte-etat-civil/detail/${acte.id_person}`}>
+                                                        <button className="btn btn-edit" id="edit">
+                                                        <box-icon name='edit-alt' type='solid' color='#fff' ></box-icon>
+                                                        </button>
+                                                    </Link>
                                                 </td>
                                                 <td className="td-action">
                                                     <button className="btn btn-delete" id="remove" onClick={() => { showDeleteModal(acte.id_acte) }}>

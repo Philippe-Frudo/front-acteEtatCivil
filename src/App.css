@@ -227,12 +227,18 @@
 }
 
 .content-search {
+  width: 100%;
   padding: 0.3rem;
   box-shadow: 0 0 2px var(--text-color);
   border-radius: 5px;
   display: grid;
   grid-template-columns: 30px calc(100% - 30px);
+  align-items: center;
 }
+
+/* .content-search box-icon{
+  background-color: red;
+} */
 
 .main-search {
   outline: none;
@@ -284,6 +290,7 @@
   grid-template-columns: 150px max-content 1fr;
   align-items: center;
   justify-content: flex-end;
+  align-content: end;
   column-gap: 2rem;
 }
 
@@ -783,7 +790,7 @@ fieldset {
 
 .error {
   background-color: var(--bg-color-red);
-  /* padding: 0.8rem ; */
+  /* padding: 0.8rem; */
 }
 .success {
   background-color: var(--bg-color);

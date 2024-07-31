@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import "./commune.css";
 import MainTop from '../../components/main_top/MainTop';
 import { COMMUNE } from '../../models/mock-commune';
+import { filterTableCommune } from '../../helpers/searchTable';
 
 const Commune = () => {
+  const [search, setSearch] = useState("");
   return (
     <>
 
@@ -20,9 +22,7 @@ const Commune = () => {
                   <Link to='/commune/add'>
                     <button className="btn add-now" id="add-now" >
                       <span className="content-add-now" >
-                        <svg className="add-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                          <path d="M19 11h-6V5h-2v6H5v2h6v6h2v-6h6z" />
-                        </svg>
+                      <box-icon className="add-now" name='plus-medical' color="#fff" ></box-icon>
                         <span className="add-now-name" id='add-adresse'>Ajouter</span>
                       </span>
                     </button>
@@ -37,10 +37,8 @@ const Commune = () => {
 
                   <div className="search search-local-nav">
                     <label className="content-search">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                        <path d="M19.023 16.977a35.13 35.13 0 0 1-1.367-1.384c-.372-.378-.596-.653-.596-.653l-2.8-1.337A6.962 6.962 0 0 0 16 9c0-3.859-3.14-7-7-7S2 5.141 2 9s3.14 7 7 7c1.763 0 3.37-.66 4.603-1.739l1.337 2.8s.275.224.653.596c.387.363.896.854 1.384 1.367l1.358 1.392.604.646 2.121-2.121-.646-.604c-.379-.372-.885-.866-1.391-1.36zM9 14c-2.757 0-5-2.243-5-5s2.243-5 5-5 5 2.243 5 5-2.243 5-5 5z" />
-                      </svg>
-                      <input className="main-search " type="text" placeholder="chercher..." />
+                      <box-icon name='search-alt' flip='horizontal' animation='tada' color='rgba(0,0,0,0.73)' ></box-icon>
+                      <input className="main-search " type="text" placeholder="chercher..." onInput={(e) =>filterTableCommune(e.target.value , "table-commune")}/>
                     </label>
                   </div>
                 </div>
@@ -50,7 +48,7 @@ const Commune = () => {
             { /* <!-- MAIN CARD 1 --> */}
             <main className="main-main-content" id="main-main-content-1">
               <div className="table-content">
-                <table className="table" id="nom-table">
+                <table className="table" id="table-commune">
                   <thead>
                     <tr>
                       <th>Code</th>
@@ -60,7 +58,7 @@ const Commune = () => {
                       <th>Supprimer</th>
                     </tr>
                   </thead>
-                  <tbody id="body-nom-table">
+                  <tbody id="" className='table-commune' >
                   {COMMUNE?.map(c => (
                       <tr key={c.code_commune}>
                         <td>{c.code_commune}</td>

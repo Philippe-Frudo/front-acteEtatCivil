@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { FONKOTANY } from '../../models/mock-fonkotany';
-import FormFonkotany from './FormFonkotany';
+import FormFonkotany from '../../components/form_fonkotany/FormFonkotany';
 import { hiddenList } from '../../helpers/borderField';
 import { string } from 'zod';
 import { useParams } from 'react-router-dom';

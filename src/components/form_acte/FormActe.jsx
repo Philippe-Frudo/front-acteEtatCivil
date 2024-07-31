@@ -12,6 +12,7 @@ const FormActe = ({ useFormActe }) => {
     nom_district : {value: ""},
     nom_region : {value: ""}
   });
+  
   const handleInputChangeAddress = (e) => {
     const fieldName = e.target.name.trim();
     const fieldValue = e.target.value.trim();
@@ -194,8 +195,8 @@ const FormActe = ({ useFormActe }) => {
                       name="nom_commune"
                       id="nom_commune"
                       placeholder="Commune" 
-                      value={formAddress.nom_commune.value} 
                       onChange={handleInputChangeAddress}
+                      value={formAddress.nom_commune.value} 
                       onKeyUp={(e) => searchAddress(e.target.id, "list_adrs_acte") }
                       onFocus={() => showList(".list_adrs_acte") } 
                       // onBlur={() => hiddenList(".adrs_person")}
