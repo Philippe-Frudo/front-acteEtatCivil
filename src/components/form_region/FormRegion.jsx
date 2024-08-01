@@ -1,6 +1,7 @@
 import React from 'react'
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import RegionService from '../../services/serviceRegion';
 
 const FormRegion = ({region, isEditForm}) => {
 
@@ -63,14 +64,12 @@ const FormRegion = ({region, isEditForm}) => {
 
     const updateRegion = () => {
         console.log("Data region:", region);
-        /*APIService.updateFonkontany(fonkotany)
-        .then(response => console.log(response));*/
+        const response = RegionService.updateRegion(region);
     }
 
     const addRegion = () => {
         console.log("Data region:", region);
-        /*APIService.addFonkontany(fonkotany)
-        .then(response => console.log(response));*/
+        const response = RegionService.addRegion(region)
     }
 
 

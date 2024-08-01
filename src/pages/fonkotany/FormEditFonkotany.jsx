@@ -1,21 +1,17 @@
 import React, { useEffect, useState } from 'react'
-import { FONKOTANY } from '../../models/mock-fonkotany';
+// import FONKOTANY from '../../models/mock-fonkotany';
 import FormFonkotany from '../../components/form_fonkotany/FormFonkotany';
 import { hiddenList } from '../../helpers/borderField';
 import { string } from 'zod';
 import { useParams } from 'react-router-dom';
+import FonkotanyService from '../../services/serviceFonkotany';
 
 const FormEditFonkotany = () => {
     let { id } = useParams();
     
-    const [fonkotany, setFonkotany] = useState({});
-    
+    const [fonkotany, setFonkotany] = useState([]);
     useEffect(() => {   
-        const foundFonkotany = FONKOTANY.find(f => f.id_fonkotany == id);
-        if (foundFonkotany) {
-            setFonkotany(foundFonkotany);
-        }
-        /*APIService.getPokemonById(+ID).then(pokemon => setPokemon(pokemon));*/
+        FonkotanyService.getFonkotanyById(+id).then(fonkotany => setFonkotany(fonkotany));
     }, [id]);
 
     return (

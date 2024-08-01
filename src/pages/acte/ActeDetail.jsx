@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import ModalDelete from '../../components/modal_delete/ModalDelete';
-import MainTop from '../../components/main_top/MainTop';
 import DETAILS from '../../models/mock-dataActe';
 
 const ActeDetail = () => {
@@ -19,12 +18,8 @@ const ActeDetail = () => {
     }, [id]);
 
 
-    function handleEditActe() {
-        navigate(`/acte-etat-civil/edit/${detail.id_person}`, { replace: true });
-    }
-
-    function handleClickBack() {
-        navigate("/acte-etat-civil", {replace: true});
+    const handleEditActe = () => {
+        navigate(`/acte-etat-civil/edit/${id}`);
     }
 
     return (
@@ -38,22 +33,25 @@ const ActeDetail = () => {
                         <span className="main-header-content-subtitle">Soutitre page</span>
                         <div className="main-local-nav" >
                             <div className="action-local-nav btn-page-detail">
-                                <button className="btn add-now" id="add-now" onClick={handleClickBack}>
-                                    <span className="content-add-now" >
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                                            <path fill='#fff' d="M13.939 4.939 6.879 12l7.06 7.061 2.122-2.122L11.121 12l4.94-4.939z" />
-                                        </svg>
-                                        <span className="add-now-name" id='add-adresse'>Retour</span>
-                                    </span>
-                                </button>
-                                <button className="btn add-now" id="add-now" onClick={handleEditActe}>
-                                    <span className="content-add-now" >
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                                            <path fill='#fff' d="m16 2.012 3 3L16.713 7.3l-3-3zM4 14v3h3l8.299-8.287-3-3zm0 6h16v2H4z" />
-                                        </svg>
-                                        <span className="add-now-name" id='add-adresse'>Editer</span>
-                                    </span>
-                                </button>
+                                <Link to="/acte-etat-civil">
+                                    <button className="btn add-now" id="add-now">
+                                        <span className="content-add-now" >
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                                                <path fill='#fff' d="M13.939 4.939 6.879 12l7.06 7.061 2.122-2.122L11.121 12l4.94-4.939z" />
+                                            </svg>
+                                            <span className="add-now-name" id='add-adresse'>Retour</span>
+                                        </span>
+                                    </button>
+                                </Link>
+
+                  
+                                    <button className="btn add-now" id="add-now" onClick={ () => handleEditActe() }>
+                                        <span className="content-add-now" >
+                                        <box-icon name='edit-alt' type='solid' color='#fff' ></box-icon>
+                                            <span className="add-now-name" id='add-adresse'>Editer</span>
+                                        </span>
+                                    </button>
+                  
                             </div>
                         </div>
                     </header>

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom';
+import { regex } from '../../helpers/regex';
 
 const formTravail = ({travail, isEditForm}) => {
         
@@ -22,11 +23,13 @@ const formTravail = ({travail, isEditForm}) => {
 
         if (!value) {
             isValid = false;
-            error = "Ce champ est obligatoire";
-        } else if (/[^a-zA-Z0-9 ]/.test(value)) {
+            error = `Ce champ est obligatoire`;
+
+        } else if ( !regex.numberAndDigit.test(value)) {
             isValid = false;
-            error = "Caractères spéciaux non autorisés";
+            error = `Les caractères spéciaux ne sont pas autorisés à ce champ.`;
         }
+
         return { isValid, error };
     }
 

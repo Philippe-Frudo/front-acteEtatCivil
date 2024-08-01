@@ -1,38 +1,24 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect  } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
 
 import FormActeAndBirthday from './../../components/form_acte/FormActeAndActBirthday';
 import ACTES from '../../models/mock-acte';
+import PersonneService from '../../services/servicePersonne';
+import ActeService from '../../services/serviceActe';
 
 
 const FormAddActe = () => {
-    const { id } = useParams()
+    const { id } = useParams();
 
-    const navigate = useNavigate();
-    const handleClickBack = () => {
-        navigate("/acte-etat-civil", {replace:true});
-    }
-
-    const [personne, setPersonne] = useState(null);
-    const [acte, setActe] = useState(null);
+    const [personne, setPersonne] = useState([]);
+    const [acte, setActe] = useState([]);
 
     useEffect(() => {   
-        const foundPersonne = PERSONNES.find(p => { p.id_person == id; return; } );
-        if (foundPersonne) {
-            setPersonne(foundPersonne);
-        }
-        /*PokemonService.getPokemonById(+ID).then(pokemon => setPokemon(pokemon));*/
+        PersonneService.getPersonneById(+id).then(personne => setPersonne(personne));
+        
+        ActeService.getActeById(+id).then(acte => setActe(acte));
     }, [id]);
-    
-    useEffect(() => {   
-        const foundAct = ACTES.find(a => { id === a.id_person.toString(); return })
-        if (foundAct) {
-            setActe(foundAct); return; 
-        }
-        /*PokemonService.getPokemonById(+ID).then(pokemon => setPokemon(pokemon));*/
-    }, [id]);
-
-    
+  
     return (
         <>
             <FormActeAndBirthday personne={personne} acte={acte} isEditForm={true} />

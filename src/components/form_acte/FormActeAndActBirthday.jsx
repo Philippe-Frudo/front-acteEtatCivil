@@ -1,13 +1,15 @@
-import React, { useState } from 'react'
-import { useNavigate, Link } from 'react-router-dom';
-import {errorBorder, successBorder, messageValidator, hiddenList} from "./../../helpers/borderField";
+import React, { useEffect, useState} from 'react'
+import { Link } from 'react-router-dom';
+import {errorBorder, successBorder, messageValidator, hiddenList } from "./../../helpers/borderField";
 import FormPersonne from '../../components/form_personne/FormPersonne';
 import FormActe from '../../components/form_acte/FormActe';
 import { regex } from '../../helpers/regex';
+import PersonneService from '../../services/servicePersonne';
+import ActeService from '../../services/serviceActe';
 
 const FormActeAndBirthday = ({personne, acte, isEditForm}) => {
 
-    const navigate = useNavigate();
+    const [lastPersonne, setLastPersonne] = useState([]);
 
     document.querySelectorAll("input").forEach(input => {
         input.addEventListener("focus", () => {
@@ -26,7 +28,7 @@ const FormActeAndBirthday = ({personne, acte, isEditForm}) => {
 
     /* ================================= VALIDATION FORM PERSONNE ========================================= */
     const [formPersonne, setFormPersonne] = useState({
-        id_person: { value: personne.id_person },
+        // id_person: { value: personne.id_person },
         nom_person: { value: personne.nom_person, isValid: true },
         prenom_person: { value: personne.prenom_person, isValid: true },
         sexe_person: { value: personne.sexe_person, isValid: true },
@@ -50,6 +52,7 @@ const FormActeAndBirthday = ({personne, acte, isEditForm}) => {
         profession_p : {value: personne.profession_p, isValid: true }
        
     });
+
     const validFormPersonne = () => {
         let newForm = { ...formPersonne };
 
@@ -261,6 +264,7 @@ const FormActeAndBirthday = ({personne, acte, isEditForm}) => {
 
     /* ================================= VALIDATION FORM ACTE ========================================= */
     const [formActe, setFormActe] = useState({
+
         id_acte : {value: acte.id_acte, isValid: true },
         id_type : {value: acte.id_type, isValid: true },
         date_acte : {value: acte.date_acte, isValid: true },
@@ -278,15 +282,15 @@ const FormActeAndBirthday = ({personne, acte, isEditForm}) => {
         adrs_temoin : {value: acte.adrs_temoin, isValid: true },
         profession_temoin : {value: acte.profession_temoin, isValid: true },
 
-        id_person : {value: acte.id_person, isValid: true },
+        // id_person : {value: acte.id_person, isValid: true },
         id_fonkotany : {value: acte.id_fonkotany, isValid: true },
         code_commune : {value: acte.code_commune, isValid: true },
-        id_user : {value: acte.id_user, isValid: true }
+        id_off : {value: acte.id_off, isValid: true }
     });
     const validFormActe = () => {
         let newForm = { ...formActe };
 
-        /*//Validation de type 
+        //Validation de type 
         if (!formActe.id_type.value) {
             newForm.id_type = { value: formActe.id_type.value, error: "", isValid: false };
             errorBorder(".nom_type");
@@ -295,7 +299,7 @@ const FormActeAndBirthday = ({personne, acte, isEditForm}) => {
             newForm.id_type = { value: formActe.id_type.value, error: "", isValid: true };
             successBorder(".nom_type");
             messageValidator(".nom_type", "");
-        }*/
+        }
 
         //Validation de date_acte 
         if (!formActe.date_acte.value && !(formActe.date_acte.value <= newDate) ) {
@@ -482,18 +486,18 @@ const FormActeAndBirthday = ({personne, acte, isEditForm}) => {
         }  
     }
 
+    const [valid, setValid] = useState(false)
     const [message, setMessage] = useState("");
-    let isValid;
     const handleSubmit = (e) => {
         e.preventDefault();
 
         const isValidActe = validFormActe();
         const isValidPersonne = validFormPersonne();
-        var isValid = isValidActe && isValidPersonne;
+        let isValid = isValidActe && isValidPersonne;
 
         // if (isValid) {
-        if (true) {
-
+        if (isValid) {
+            setValid(isValid)
             setMessage("connexion enn cours ...");
             
             // Data ACTE
@@ -513,14 +517,14 @@ const FormActeAndBirthday = ({personne, acte, isEditForm}) => {
             acte.age_temoin =  formActe.age_temoin.value;
             acte.adrs_temoin =  formActe.adrs_temoin.value;
             acte.profession_temoin =  formActe.profession_temoin.value;
-    
-            acte.id_person =  formActe.id_person.value;
+
+            acte.id_person = lastPersonne;
             acte.id_fonkotany =  formActe.id_fonkotany.value;
             acte.code_commune =  formActe.code_commune.value;
-            acte.id_user =  formActe.id_user.value;
+            acte.id_off =  formActe.id_off.value;
 
             //Data Personne
-            personne.id_person = formPersonne.id_person.value ;           
+            // personne.id_person = formPersonne.id_person.value ;           
             personne.nom_person = formPersonne.nom_person.value ;           
             personne.prenom_person = formPersonne.prenom_person.value ;         
             personne.sexe_person = formPersonne.sexe_person.value ;           
@@ -542,17 +546,10 @@ const FormActeAndBirthday = ({personne, acte, isEditForm}) => {
             personne.age_p = formPersonne.age_p.value ;          
             personne.adrs_p = formPersonne.adrs_p.value ;         
             personne.profession_p = formPersonne.profession_p.value ;  
-            
-            /*API(Laraver)
-            .then(isAuthenticated => {
-                if (!isAuthenticated) {
-                    setMessage("Identifiant ou mot de passe incorrect."); return;
-                }
-                console.log(message); navigate("/dashboard");
-            });*/
 
             isEditForm ? updatePersone() : addPersonne();
         }else {
+            setValid(false)
             setMessage("Verifier le(s) champ(s) non valide");
         }
         setTimeout(() => setMessage("") , 6000);
@@ -560,14 +557,23 @@ const FormActeAndBirthday = ({personne, acte, isEditForm}) => {
     
 
     const updatePersone = () => {
-        // APIService.updatePersone(personne)
-        // .then( (response) => response.json() )
-        // .then( () => navigate("/acte-etat-civil/detail-acte"))
-    }
+        console.log(personne);
+        console.log(acte);
 
+        PersonneService.updatePersonne(personne);
+
+    }
+    
     const addPersonne = () => {
-        // APIService.addPersonne(personne)
-        // .then( () => navigate(`/pokemons/${pokemon.id}`) );
+        console.log(personne);
+        console.log(acte);
+        PersonneService.addPersonne(personne);
+
+        useEffect(() => {
+            PersonneService.getLastPersonne().then(personne => setLastPersonne(personne));
+        },[]);
+
+        ActeService.addActe(acte);
     }
 
     
@@ -608,14 +614,16 @@ const FormActeAndBirthday = ({personne, acte, isEditForm}) => {
                             <form className="form" id="form-add-act" onSubmit={handleSubmit} style={{paddingTop:"0"}}>
                                 {/* Message . status: success or error*/}
                                 <div className="alert-message">
-                                    {message && <span className={isValid ? 'success message': 'message error'} >{message}</span>}
+                                    {message && valid ?
+                                    (<span className='success message'>{message}</span>):
+                                    (<span className='message error'>{message}</span>)
+                                    }
                                 </div>
 
                                 <div className="content-user">
 
                                     <FormActe useFormActe={[formActe, setFormActe]} isEditForm={false} />
                                     <FormPersonne useFormPersonne={[formPersonne, setFormPersonne]} isEditForm={false} />
-
 
                                     <div className="action-group">
                                         {isEditForm ? 

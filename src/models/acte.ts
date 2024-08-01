@@ -19,7 +19,7 @@ export default class Acte {
     id_person: number;
     code_commune: String;
     id_fonkotany: number;
-    id_user: number;
+    id_off: number;
 
 
     constructor(
@@ -44,7 +44,7 @@ export default class Acte {
         adrs_temoin: string = "",
         profession_temoin: string = "",
 
-        id_user: number = 0,
+        id_off: number = 0,
 
 
 
@@ -69,7 +69,7 @@ export default class Acte {
         this.id_person = id_person;
         this.id_fonkotany = id_fonkotany;
         this.code_commune = code_commune;
-        this.id_user = id_user;
+        this.id_off = id_off;
 
     }
 }

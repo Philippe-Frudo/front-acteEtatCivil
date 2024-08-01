@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom';
-import { ADDRESS } from '../../models/mock-address';
+// import ADDRESSES from '../../models/mock-address';
 import { searchAddress } from '../../helpers/borderField';
+import { regex } from '../../helpers/regex';
+import CommuneService from '../../services/serviceCommune';
+import DistrictService from '../../services/serviceDistrict';
 
 const FormCommune = ({commune, isEditForm}) => {
 
+    const [districts, setDistricts] = useState(null);
     const [showList, setShowList] = useState(false);
-    const [district, setDistrict] = useState("");
+    const [nomDistrict, setNomDistrict] = useState("");
     
     const [formCommune, setFormCommune] = useState({
         code_commune: { value: "", isValid: true, error: "" },
@@ -15,6 +19,8 @@ const FormCommune = ({commune, isEditForm}) => {
     });
 
     useEffect(() => {
+        DistrictService.getDistrict().then(districts => setDistricts(districts));
+
         if (commune) {
             setFormCommune({
                 code_commune: { value: commune.code_commune || "", isValid: true, error: "" },
@@ -22,20 +28,20 @@ const FormCommune = ({commune, isEditForm}) => {
                 code_district: { value: commune.code_district || "", isValid: true, error: "" },
             });
 
-            ADDRESS?.forEach(f => {
+            districts?.forEach(f => {
                 if (f.code_district == commune.code_district) {
-                    setDistrict(f.nom_district); return;  
+                    setNomDistrict(f.nom_district); return;  
                 }
-            })
+            });
         }
     }, [commune]);
 
     
     //CHANGE VALUE DISTRICT
-    const setAddressPerson = (district) => {
+    const handleSetNomDIstrict = (district) => {
         const newField = { code_district: { value: district.code_district, isValid: true } };
         setFormCommune({ ...formCommune, ...newField });
-        setDistrict(district.nom_district)
+        setNomDistrict(district.nom_district)
         setShowList(false);
     }
 
@@ -48,17 +54,19 @@ const FormCommune = ({commune, isEditForm}) => {
         });
     });
 
+
     const validateField = (fieldName, value) => {
         let isValid = true;
         let error = "";
+        if (!value) {
+            isValid = false;
+            error = `Ce champ est obligatoire`;
 
-        if (!value.trim()) {
+        } else if ( !regex.numberAndDigit.test(value)) {
             isValid = false;
-            error = "Ce champ est obligatoire";
-        } else if (/[^a-zA-Z0-9 ]/.test(value)) {
-            isValid = false;
-            error = "Caractères spéciaux non autorisés";
+            error = `Les caractères spéciaux ne sont pas autorisés à ce champ.`;
         }
+
         return { isValid, error };
     }
 
@@ -74,7 +82,7 @@ const FormCommune = ({commune, isEditForm}) => {
 
     //INPUT change CODE DISTRICT
     const handleInputChangeDistrict = (e) => {
-        setDistrict(e.target.value);
+        setNomDistrict(e.target.value);
         if (!e.target.value) {
             const validation = validateField(e.target.name, e.target.value);
             const newField = { code_district: { value: "", isValid: validation.isValid , error: validation.error } };
@@ -90,7 +98,7 @@ const FormCommune = ({commune, isEditForm}) => {
         const isValid = Object.values(formCommune).every(field => field.isValid);
 
         if (isValid && formCommune.code_commune.value) {
-            setValid(true)
+            setValid(isValid);
             setMessage("En cours de connexion ...");
             commune.code_commune = formCommune.code_commune.value;
             commune.nom_commune = formCommune.nom_commune.value;
@@ -106,14 +114,13 @@ const FormCommune = ({commune, isEditForm}) => {
     
     const updateCommune = () => {
         console.log("Data commune:", commune);
-        /*APIService.updateFonkontany(fonkotany)
-        .then(response => console.log(response));*/
+        CommuneService.updateCommune(commune);
     }
 
     const addCommune = () => {
         console.log("Data commune:", commune);
-        /*APIService.addFonkontany(fonkotany)
-        .then(response => console.log(response));*/
+        const response = CommuneService.addCommune(commune);
+        console.log(response);
     }
 
   return (
@@ -180,25 +187,19 @@ const FormCommune = ({commune, isEditForm}) => {
                             name="nom_district"
                             id="nom_district"
                             placeholder="Code Commune"
-                            value={district}
+                            value={nomDistrict}
                             onChange={handleInputChangeDistrict}
                             onKeyUp={(e) => searchAddress(e.target.id, "list_district") }
                             onFocus={() => setShowList(true) }
                         />
           
                         <ul id="list_district" className={ showList ? "showList list":"list"}>
-                            {ADDRESS?.map(adrs => (
-                            <li key={adrs.id_adrs}>
-                                <p className='list-p' onClick={() => setAddressPerson(adrs)}>
-                                {adrs.code_postal} &nbsp;
-                                {adrs.nom_adrs} &nbsp;
-                                {adrs.nom_fonkotany} &nbsp;
-                                {adrs.code_commune} &nbsp;
-                                {adrs.nom_commune} &nbsp;
-                                {adrs.code_district} &nbsp;
-                                {adrs.nom_district} &nbsp;
-                                {adrs.code_region} &nbsp;
-                                {adrs.nom_region} &nbsp;
+                            {districts?.map(c => (
+                            <li key={c.code_district}>
+                                <p className='list-p' onClick={() => handleSetNomDIstrict(c.code_district)}>
+                                    {c.code_commune}
+                                    ({c.nom_district}) &nbsp; code region:
+                                    {c.code_region} &nbsp;
                                 </p>
                             </li>
                             ))}
@@ -210,8 +211,8 @@ const FormCommune = ({commune, isEditForm}) => {
 
                     <div className="action-group">
                         {isEditForm ? 
-                        (<button type="submit" className="btn btn-save" id="save">Modifier</button>):
-                        (<button type="submit" className="btn btn-save" id="save">Envoyer</button>)
+                            (<button type="submit" className="btn btn-save" id="save">Modifier</button>):
+                            (<button type="submit" className="btn btn-save" id="save">Envoyer</button>)
                         }
 
                         <button type="reset" className="btn btn-clear" id="clear">Annuler</button>

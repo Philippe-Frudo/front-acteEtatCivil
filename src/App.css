@@ -295,13 +295,6 @@
 }
 
 
-.btn-page-detail {
-  width: 100%;
-  display: flex;
-  justify-content: flex-end;
-  gap: 1rem;
-  flex-direction: column;
-}
 
 .action-local-nav .btn {
   padding: 0.5rem 0.8rem;
@@ -1046,7 +1039,6 @@ fieldset {
 
   .btn-page-detail {
     width: 100%;
-    /* justify-content: flex-start; */
     align-items: flex-start;
   }
 }
@@ -1175,7 +1167,6 @@ fieldset {
 
   .action-local-nav {
     width: 100%;
-    /* align-items: center; */
     column-gap: 0.5rem;
   }
 

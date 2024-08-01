@@ -1,17 +1,20 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import "./fonkotany.css";
-import { showAddModal, showDeleteModal, showUpdateModal } from '../../constants/modal';
-import { FONKOTANY } from '../../models/mock-fonkotany';
+// import FONKOTANY from '../../models/mock-fonkotany';
 import ModalDelete from '../../components/modal_delete/ModalDelete';
 import { Link, useNavigate } from 'react-router-dom';
+import { filterTable3Columns } from '../../helpers/searchTable';
+import FonkotanyService from '../../services/serviceFonkotany';
 
 const Fonkotany = () => {
-    const navigate = useNavigate();
 
-    const handleEditFonkotany = (id) => {
-        navigate(`/fonkotany/edit/${id}`);
-    }
+    const [fonkotany, setFonkotany] = useState([]);
+    useEffect(() => {
+        FonkotanyService.getFonkotany().then(fonkotany => setFonkotany(fonkotany))
+    }, []);
+    console.log(fonkotany);
 
+    
     return (
         <>
                     { /* <!-- ===== CARD 1 ===== --> */}
@@ -43,7 +46,7 @@ const Fonkotany = () => {
                                     <div className="search search-local-nav">
                                         <label className="content-search">
                                             <box-icon name='search-alt' flip='horizontal' animation='tada' color='rgba(0,0,0,0.73)' ></box-icon>
-                                            <input className="main-search " type="text" placeholder="chercher..." />
+                                            <input className="main-search " type="text" placeholder="chercher..." onInput={(e) =>filterTable3Columns(e.target.value , "table-fonkotany")}/>
                                         </label>
                                     </div>
                                 </div>
@@ -63,18 +66,19 @@ const Fonkotany = () => {
                                             <th>Supprimer</th>
                                         </tr>
                                     </thead>
-                                    <tbody id="body-nom-table">
-                                        {FONKOTANY?.map(fonkotany => (
-                                            <tr key={fonkotany.id_fonkotany}>
-                                                <td>{fonkotany.code_fonkotany}</td>
-                                                <td>{fonkotany.nom_fonkotany}</td>
-                                                <td>{fonkotany.code_commune}</td>
+                                    <tbody id="table-fonkotany">
+                                        {fonkotany?.map(f => (
+                                            <tr key={f.id_fonkotany}>
+                                                <td>{f.code_fonkotany}</td>
+                                                <td>{f.nom_fonkotany}</td>
+                                                <td>{f.code_commune}</td>
                                                 <td className="td-action">
-                                                <button className="btn btn-edit" id="edit" onClick={() => handleEditFonkotany(fonkotany.id_fonkotany)}>
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                                                        <path d="m16 2.012 3 3L16.713 7.3l-3-3zM4 14v3h3l8.299-8.287-3-3zm0 6h16v2H4z" />
-                                                    </svg>
-                                                </button>
+
+                                                <Link to={`/fonkotany/edit/${f.id_fonkotany}`}>
+                                                    <button className="btn btn-edit" id="edit">
+                                                    <box-icon name='edit-alt' type='solid' color='#fff' ></box-icon>
+                                                    </button>
+                                                </Link>
                                             </td>
                                             <td className="td-action">
                                                 <button className="btn btn-delete" id="remove" >

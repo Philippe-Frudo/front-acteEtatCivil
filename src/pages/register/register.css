@@ -1,27 +1,27 @@
 
-#main-scroll {
+/* #main-scroll {
     height: initial;
     overflow-y: auto;
     padding-bottom: initial;
-}
+} */
 
-.main {
+/* .main {
     min-width: 100%;
-}
+} */
 
-.container {
+/* .container {
     width: 100%;
     height: initial;
-}
+} */
 
 .modal {
     padding: 0 2rem;
     margin: 0 1rem;
 }
 
-.modal .form {
+/* .modal .form {
     padding: 0;
-}
+} */
 
 .action-group  {
     margin-top: 0;

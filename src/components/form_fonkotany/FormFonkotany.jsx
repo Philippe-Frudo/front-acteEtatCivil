@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { errorBorder, messageValidator, searchAddress, successBorder } from '../../helpers/borderField';
-import { ADDRESS } from '../../models/mock-address';
+import FonkotanyService from '../../services/serviceFonkotany';
+import CommuneService from '../../services/serviceCommune';
+// import ADDRESS from '../../models/mock-address';
 
 const FormFonkotany = ({ fonkotany, isEditForm }) => {
 
+    const [communes, setCommunes] = useState("");
     const [showList, setShowList] = useState(false);
-    const [commune, setCommune] = useState("");
+    const [nomCommune, setNomCommune] = useState("");
 
     document.querySelectorAll("input").forEach(input => {
         input.addEventListener("focus", () => {
@@ -24,6 +27,7 @@ const FormFonkotany = ({ fonkotany, isEditForm }) => {
     });
 
     useEffect(() => {
+        CommuneService.getCommune().then(communes => setCommunes(communes));
         if (fonkotany) {
             setFormFonkotany({
                 code_commune: { value: fonkotany.code_commune || "", isValid: true, error: "" },
@@ -31,9 +35,9 @@ const FormFonkotany = ({ fonkotany, isEditForm }) => {
                 code_fonkotany: { value: fonkotany.code_fonkotany || "", isValid: true, error: "" },
             });
                         
-            ADDRESS.forEach(f => {
+            communes?.forEach(f => {
                 if (f.code_commune == fonkotany.code_commune) {
-                    setDistrict(f.nom_commune); return; 
+                    setNomCommune(f.nom_commune); return; 
                 }
             })
         }
@@ -41,25 +45,26 @@ const FormFonkotany = ({ fonkotany, isEditForm }) => {
     
 
     //CHANGE VALUE COMMUNE
-    const setAddressPerson = (commune) => {
+    const handleSetNomCommune = (commune) => {
         const newField = { code_commune: { value: commune.code_commune, isValid: true } };
         setFormFonkotany({ ...formFonkotany, ...newField });
-        setCommune(commune.nom_commune)
+        setNomCommune(commune.nom_commune)
         setShowList(false);
     }
 
-    
+
     const validateField = (fieldName, value) => {
         let isValid = true;
         let error = "";
+        if (!value) {
+            isValid = false;
+            error = `Ce champ est obligatoire`;
 
-        if (!value.trim()) {
+        } else if ( !regex.numberAndDigit.test(value)) {
             isValid = false;
-            error = "Ce champ est obligatoire";
-        } else if (/[^a-zA-Z0-9 ]/.test(value)) {
-            isValid = false;
-            error = "Caractères spéciaux non autorisés";
+            error = `Les caractères spéciaux nom autorisés.`;
         }
+
         return { isValid, error };
     }
 
@@ -75,10 +80,9 @@ const FormFonkotany = ({ fonkotany, isEditForm }) => {
 
         //INPUT change CODE COMMUNE
      const handleInputChangeCommune = (e) => {
-            setCommune(e.target.value);
+            setNomCommune(e.target.value);
             if (!e.target.value) {
-                const validation = validateField(e.target.name, e.target.value);
-                const newField = { code_commune: { value: "", isValid: validation.isValid , error: validation.error } };
+                const newField = { code_commune: { value: "", isValid: false , error: "Ce champ est obligatoire" } };
                 setFormFonkotany({ ...formFonkotany , ...newField });
             }
     }
@@ -105,13 +109,11 @@ const FormFonkotany = ({ fonkotany, isEditForm }) => {
     }
 
     const updateFonkotany = () => {
-        /*APIService.updateFonkontany(fonkotany)
-        .then(response => console.log(response));*/
+        FonkotanyService.updateFonkotany(fonkotany).then(msg => setMessage(msg))
     }
 
     const addFonkotany = () => {
-        /*APIService.addFonkontany(fonkotany)
-        .then(response => console.log(response));*/
+        FonkotanyService.addFonkotany(fonkotany).then(msg => setMessage(msg))
     }
 
    /* const validFormFonkotany = () => {
@@ -168,8 +170,9 @@ const FormFonkotany = ({ fonkotany, isEditForm }) => {
                     <div className="modal-header">
                         <div>
                             {isEditForm ? 
-                            (<h3 className="modal-title">Modifier Fonkontany</h3>):
-                            (<h3 className="modal-title">Ajout Fonkontany</h3>)}
+                                (<h3 className="modal-title">Modifier Fonkontany</h3>):
+                                (<h3 className="modal-title">Ajout Fonkontany</h3>)
+                            }
                             <span className="modal-subtitle"></span>
                         </div>
                         <div>
@@ -201,6 +204,7 @@ const FormFonkotany = ({ fonkotany, isEditForm }) => {
                                 </span>
 
                             </div>
+
                             <div className="form-group">
                                 <label htmlFor="nom_fonkotany" className="form-group-label">Nom Fonkotany:</label>
                                 <input
@@ -216,6 +220,7 @@ const FormFonkotany = ({ fonkotany, isEditForm }) => {
                                     {!formFonkotany.nom_fonkotany.isValid && formFonkotany.nom_fonkotany.error}
                                 </span>
                             </div>
+
                             <div className="form-group" style={{position:"relative"}}>
                                 <label htmlFor="nom_commune" className="form-group-label">Code Commune:</label>
                                 <input
@@ -224,25 +229,19 @@ const FormFonkotany = ({ fonkotany, isEditForm }) => {
                                     name="nom_commune"
                                     id="nom_commune"
                                     placeholder="Commune"
-                                    defaultValue={commune}
+                                    defaultValue={nomCommune}
                                     onChange={handleInputChangeCommune}
                                     onKeyUp={(e) => searchAddress(e.target.id, "list_commune") }
                                     onFocus={() => setShowList(true) }
                                 />
                   
                                 <ul id="list_commune" className={ showList ? "showList list":"list"}>
-                                    {ADDRESS?.map(adrs => (
-                                    <li key={adrs.id_adrs}>
-                                        <p className='list-p' onClick={() => setAddressPerson(adrs)}>
-                                        {adrs.code_postal} &nbsp;
-                                        {adrs.nom_adrs} &nbsp;
-                                        {adrs.nom_fonkotany} &nbsp;
-                                        {adrs.code_commune} &nbsp;
-                                        {adrs.nom_commune} &nbsp;
-                                        {adrs.code_district} &nbsp;
-                                        {adrs.nom_district} &nbsp;
-                                        {adrs.code_region} &nbsp;
-                                        {adrs.nom_region} &nbsp;
+                                    {communes?.map(c => (
+                                    <li key={c.id_c}>
+                                        <p className='list-p' onClick={() => handleSetNomCommune(c)}>
+                                        {c.code_commune} &nbsp;
+                                        {c.nom_commune} &nbsp;
+                                        {c.code_district} &nbsp;
                                         </p>
                                     </li>
                                     ))}
@@ -253,8 +252,9 @@ const FormFonkotany = ({ fonkotany, isEditForm }) => {
                             </div>
                             <div className="action-group">
                                 {isEditForm ? 
-                                (<button type="submit" className="btn btn-save" id="save">Modifier</button>):
-                                (<button type="submit" className="btn btn-save" id="save">Envoyer</button>)}
+                                    (<button type="submit" className="btn btn-save" id="save">Modifier</button>):
+                                    (<button type="submit" className="btn btn-save" id="save">Envoyer</button>)
+                                }
 
                                 <button type="reset" className="btn btn-clear" id="clear">Annuler</button>
                             </div>

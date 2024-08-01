@@ -1,11 +1,20 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import "./district.css";
+import { filterTable3Columns } from '../../helpers/searchTable';
+import DistrictService from '../../services/serviceDistrict';
 import { showAddModal, showUpdateModal } from '../../constants/modal';
-
-import { DISTRICT } from '../../models/mock-district';
+// import DISTRICT from '../../models/mock-district';
 
 const District = () => {
+
+    const [districts, setDistricts] = useState([]);
+    useEffect(() => {
+        DistrictService.getDistrict().then(districts => setDistricts(districts));
+    }, []);
+    console.log(districts);
+
+
     return (
         <>
                     { /* <!-- ===== CARD 1 ===== --> */}
@@ -20,9 +29,7 @@ const District = () => {
                                     <Link to='/district/add'>
                                         <button className="btn add-now" id="add-now">
                                             <span className="content-add-now" >
-                                                <svg className="add-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                                                    <path d="M19 11h-6V5h-2v6H5v2h6v6h2v-6h6z" />
-                                                </svg>
+                                            <box-icon className="add-now" name='plus-medical' color="#fff" ></box-icon>
                                                 <span className="add-now-name" id='add-adresse'>Ajouter</span>
                                             </span>
                                         </button>
@@ -37,8 +44,8 @@ const District = () => {
 
                                     <div className="search search-local-nav">
                                         <label className="content-search">
-                                        <box-icon className="add-now" name='plus-medical' color="#fff" ></box-icon>
-                                            <input className="main-search " type="text" placeholder="chercher..." />
+                                        <box-icon name='search-alt' flip='horizontal' animation='tada' color='rgba(0,0,0,0.73)' ></box-icon>
+                                            <input className="main-search " type="text" placeholder="chercher..." onInput={(e) =>filterTable3Columns(e.target.value , "table-district")}/>
                                         </label>
                                     </div>
 
@@ -60,8 +67,8 @@ const District = () => {
                                         </tr>
                                     </thead>
 
-                                    <tbody id="body-nom-table">
-                                    {DISTRICT?.map(c => (
+                                    <tbody id="table-district">
+                                    {districts?.map(c => (
                                         <tr key={c.code_district}>
                                             <td>{c.code_district}</td>
                                             <td>{c.nom_district}</td>
@@ -69,9 +76,7 @@ const District = () => {
                                             <td className="td-action">
                                             <Link to={`/district/edit/${c.code_district}`}>
                                                 <button className="btn btn-edit" id="edit">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                                                <path d="m16 2.012 3 3L16.713 7.3l-3-3zM4 14v3h3l8.299-8.287-3-3zm0 6h16v2H4z" />
-                                                </svg>
+                                                <box-icon name='edit-alt' type='solid' color='#fff' ></box-icon>
                                                 </button>
                                             </Link>
                                             </td>

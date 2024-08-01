@@ -1,70 +1,74 @@
-export const ADDRESS = [
+const ADDRESSES = [
     {
-        id_adrs: 1,
-        code_postal: "109A",
-        nom_adrs: "Ampahateza",
-
-        id_fonkotany :1, //clé etrangère adresse
+        id_fonkotany: 1,
         nom_fonkotany :"Ambohito",
+        code_fonkotany :"109F",
+        code_commune:"109C",
 
-        code_commune:"109C", //clé etrangère fonkotany
-        nom_commune: "Anosivelo",
+        nom_commune :"Anosivelo",
+        code_district :"109D",
 
-        code_district: "109D", //clé etrangère commune
-        nom_district: "Manapatrana",
+        nom_district :"Anosivelo",
+        code_region:"109R",
 
-        code_region: "109R", //clé etrangère commune
-        nom_region: "Diana"
+        nom_region :"Anosivelo",
     },
     {
-        id_adrs: 2,
-        code_postal: "110A",
-        nom_adrs: "Morafeno",
+        id_fonkotany: 2,
+        nom_fonkotany :"Malaroka",
+        code_fonkotany :"110F",
+        code_commune:"110C",
 
-        id_fonkotany :2, //clé etrangère adresse
-        nom_fonkotany :"Ambalavao",
+        nom_commune :"Malaroka",
+        code_district :"110D",
 
-        code_commune:"110C", //clé etrangère fonkotany
-        nom_commune: "Mandiny",
+        nom_district :"Malaroka",
+        code_region:"110R",
 
-        code_district: "110D", //clé etrangère commune
-        nom_district: "Manapatrana",
-
-        code_region: "110R", //clé etrangère commune
-        nom_region: "Sava"
+        nom_region :"Malaroka",
     },
     {
-        id_adrs: 3,
-        code_postal: "111A",
-        nom_adrs: "Kamisy",
+        id_fonkotany: 3,
+        nom_fonkotany :"Sambilo",
+        code_fonkotany :"111F",
+        code_commune:"111C",
 
-        id_fonkotany :3, //clé etrangère adresse
-        nom_fonkotany :"Marofastsy",
+        nom_commune :"Sambilo",
+        code_district :"111D",
 
-        code_commune:"111C", //clé etrangère fonkotany
-        nom_commune: "Marohala",
+        nom_district :"Sambilo",
+        code_region:"111R", 
 
-        code_district: "111D", //clé etrangère commune
-        nom_district: "Manapatrana",
-
-        code_region: "111R", //clé etrangère commune
-        nom_region: "Alaotra Mangoro"
+        nom_region :"Ombaly",
     },
     {
-        id_adrs: 4,
-        code_postal: "112A",
-        nom_adrs: "Ampahateza",
+        id_fonkotany: 4,
+        nom_fonkotany :"Ombaly",
+        code_fonkotany :"112F",
+        code_commune:"112",
 
-        id_fonkotany :4, //clé etrangère adresse
-        nom_fonkotany :"Ambohito",
+        nom_commune :"Ombaly",
+        code_district :"112D",
 
-        code_commune:"112C", //clé etrangère fonkotany
-        nom_commune: "Anosivelo",
+        nom_district :"Ombaly",
+        code_region:"112R",
 
-        code_district: "112D", //clé etrangère commune
-        nom_district: "Manapatrana",
-
-        code_region: "112R", //clé etrangère commune
-        nom_region: "Betsiboka"
+        nom_region :"Ambolokandrina",
     },
+    {
+        id_fonkotany: 5,
+        nom_fonkotany :"Ambolokandrina",
+        code_fonkotany :"130F",
+        code_commune:"130C",
+        
+        nom_commune :"Ambolokandrina",
+        code_district :"130D",
+
+        nom_district :"Sambilo",
+        nom_region:"111C",
+
+        nom_region :"Ambolokandrina",
+    }
 ];
+
+export default ADDRESSES

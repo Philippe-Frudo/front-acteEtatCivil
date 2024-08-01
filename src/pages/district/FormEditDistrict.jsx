@@ -1,19 +1,16 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom';
-import { DISTRICT } from '../../models/mock-district';
 import FormDistrict from './../../components/form_district/FormDistrict';
+import DistrictService from '../../services/serviceDistrict';
+// import DISTRICT from '../../models/mock-district';
 
 const FormEditDistrict = () => {
-    let { id } = useParams();
+    const { id } = useParams();
     
     const [district, setDistrict] = useState({});
     
     useEffect(() => {   
-        const foundDistrict = DISTRICT.find(f => f.code_district == id);
-        if (foundDistrict) {
-            setDistrict(foundDistrict);
-        }
-        /*APIService.getPokemonById(+ID).then(pokemon => setPokemon(pokemon));*/
+        DistrictService.getDistrictById(+id).then(district => setDistrict(district));
     }, [id]);
 
     return (

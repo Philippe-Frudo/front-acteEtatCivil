@@ -1,4 +1,4 @@
-export const COMMUNE = [
+const COMMUNES = [
     {
         code_commune:"109C",
         nom_commune :"Anosivelo",
@@ -25,3 +25,5 @@ export const COMMUNE = [
         code_district :"130D",
     }
 ];
+
+export default COMMUNES

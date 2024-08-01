@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import handleSex from "../../constants/sexe";
 import { hiddenList, messageValidator, searchAddress, showList, successBorder} from '../../helpers/borderField';
-import { TRAVAILS } from '../../models/mock-travail';
+import TRAVAILS from '../../models/mock-travail';
 
 
 const FormPersonne = ({ useFormPersonne }) => {
@@ -22,7 +22,6 @@ const FormPersonne = ({ useFormPersonne }) => {
             messageValidator(`.${fieldName}`, "");
         }
     }
-
 
     
 /* =============== TRAVAIL PERSONNE =============== */
@@ -80,12 +79,27 @@ const FormPersonne = ({ useFormPersonne }) => {
                     <div className="form-group form-group-2">
                         <div>
                             <label htmlFor="nom_person" className="form-group-label">Nom:</label>
-                            <input type="text" className="form-group-input nom_person" name="nom_person" id="nom_person" placeholder="Nom" value={formPersonne.nom_person.value} onChange={handleInputChange} />
+                            <input 
+                                type="text" 
+                                className="form-group-input nom_person" 
+                                name="nom_person" id="nom_person" 
+                                placeholder="Nom" 
+                                value={formPersonne.nom_person.value} 
+                                onChange={handleInputChange} 
+                            />
                             <span className="msg-error"></span>
                         </div>
                         <div>
                             <label htmlFor="prenom_person " className="form-group-label">Prénom:</label>
-                            <input type="text" className="form-group-input prenom_person " name="prenom_person" id="prenom_person " placeholder="Prénom" value={formPersonne.prenom_person.value} onChange={handleInputChange} />
+                            <input 
+                                type="text" 
+                                className="form-group-input prenom_person " 
+                                name="prenom_person" 
+                                id="prenom_person" 
+                                placeholder="Prénom" 
+                                value={formPersonne.prenom_person.value} 
+                                onChange={handleInputChange} 
+                            />
                             <span className="msg-error"></span>
                         </div>
                     </div>
@@ -105,7 +119,15 @@ const FormPersonne = ({ useFormPersonne }) => {
                     <div className="form-group">
                         <div>
                             <label htmlFor="adrs_person" className="form-group-label">Adresse:</label>
-                            <input type="text" className="form-group-input adrs_person" name="adrs_person" id="adrs_person" placeholder="Adresse" value={formPersonne.adrs_person.value} onChange={handleInputChange}/>
+                            <input 
+                                type="text" 
+                                className="form-group-input adrs_person" 
+                                name="adrs_person" 
+                                id="adrs_person" 
+                                placeholder="Adresse" 
+                                value={formPersonne.adrs_person.value} 
+                                onChange={handleInputChange}
+                            />
                             <span className="msg-error"></span>
                         </div>
                     </div>
@@ -148,12 +170,27 @@ const FormPersonne = ({ useFormPersonne }) => {
                     <div className="form-group form-group-2">
                         <div>
                             <label htmlFor="nom_m" className="form-group-label">Nom:</label>
-                            <input type="text" className="form-group-input nom_m" name="nom_m" id="nom_m" placeholder="Nom" value={formPersonne.nom_m.value} onChange={handleInputChange}/>
+                            <input 
+                                type="text" 
+                                className="form-group-input nom_m" 
+                                name="nom_m" id="nom_m" 
+                                placeholder="Nom" 
+                                value={formPersonne.nom_m.value} 
+                                onChange={handleInputChange}
+                            />
                             <span className="msg-error"></span>
                         </div>
+
                         <div>
                             <label htmlFor="prenom_m" className="form-group-label">Prénom:</label>
-                            <input type="text" className="form-group-input prenom_m" name="prenom_m" id="prenom_m" placeholder="Prénom" value={formPersonne.prenom_m.value} onChange={handleInputChange}/>
+                            <input 
+                                type="text" 
+                                className="form-group-input prenom_m" 
+                                name="prenom_m" id="prenom_m" 
+                                placeholder="Prénom" 
+                                value={formPersonne.prenom_m.value} 
+                                onChange={handleInputChange}
+                            />
                             <span className="msg-error"></span>
                         </div>
                     </div>
@@ -161,12 +198,29 @@ const FormPersonne = ({ useFormPersonne }) => {
                     <div className="form-group form-group-2">
                         <div>
                             <label htmlFor="date_nais_m" className="form-group-label">Date de Naissance:</label>
-                            <input type="date" className="form-group-input date_nais_m" name="date_nais_m" id="date_nais_m" placeholder="Date de naissance" value={formPersonne.date_nais_m.value} onChange={handleInputChange}/>
+                            <input
+                                type="date" 
+                                className="form-group-input date_nais_m" 
+                                name="date_nais_m" 
+                                id="date_nais_m" 
+                                placeholder="Date de naissance" 
+                                value={formPersonne.date_nais_m.value} 
+                                onChange={handleInputChange}
+                            />
                             <span className="msg-error"></span>
                         </div>
+
                         <div>
                             <label htmlFor="lieu_nais_m" className="form-group-label">Lieu de naissance:</label>
-                            <input type="text" className="form-group-input lieu_nais_m" name="lieu_nais_m" id="lieu_nais_m" placeholder="Lieu de naissance" value={formPersonne.lieu_nais_m.value} onChange={handleInputChange} />
+                            <input 
+                                type="text" 
+                                className="form-group-input lieu_nais_m" 
+                                name="lieu_nais_m" 
+                                id="lieu_nais_m" 
+                                placeholder="Lieu de naissance" 
+                                value={formPersonne.lieu_nais_m.value} 
+                                onChange={handleInputChange} 
+                            />
                             <span className="msg-error"></span>
                         </div>
                     </div>
@@ -174,7 +228,15 @@ const FormPersonne = ({ useFormPersonne }) => {
                     <div className="form-group">
                         <div>
                             <label htmlFor="age_m" className="form-group-label">Age:</label>
-                            <input type="text" className="form-group-input age_m" name="age_m" id="age_m" placeholder="Age" value={formPersonne.age_m.value ? formPersonne.age_m.value :""} onChange={handleInputChange} disabled/>
+                            <input 
+                                type="text" 
+                                className="form-group-input age_m" 
+                                name="age_m" id="age_m" 
+                                placeholder="Age" 
+                                value={formPersonne.age_m.value ? formPersonne.age_m.value :""} 
+                                onChange={handleInputChange} 
+                                disabled
+                            />
                             <span className="msg-error"></span>
                         </div>
                     </div>
@@ -182,7 +244,15 @@ const FormPersonne = ({ useFormPersonne }) => {
                     <div className="form-group">
                         <div>
                             <label htmlFor="adrs_m" className="form-group-label">Adresse:</label>
-                            <input type="text" className="form-group-input adrs_m" name="adrs_m" id="adrs_m" placeholder="Adresse" value={formPersonne.adrs_m.value} onChange={handleInputChange} />
+                            <input 
+                                type="text" 
+                                className="form-group-input adrs_m" 
+                                name="adrs_m" 
+                                id="adrs_m" 
+                                placeholder="Adresse" 
+                                value={formPersonne.adrs_m.value} 
+                                onChange={handleInputChange} 
+                            />
                             <span className="msg-error"></span>
                         </div>
                     </div>
@@ -225,12 +295,28 @@ const FormPersonne = ({ useFormPersonne }) => {
                     <div className="form-group form-group-2">
                         <div>
                             <label htmlFor="nom_p" className="form-group-label">Nom:</label>
-                            <input type="text" className="form-group-input nom_p" name="nom_p" id="nom_p" placeholder="Nom" value={formPersonne.nom_p.value} onChange={handleInputChange}/>
+                            <input 
+                                type="text" 
+                                className="form-group-input nom_p" 
+                                name="nom_p" 
+                                id="nom_p" 
+                                placeholder="Nom" 
+                                value={formPersonne.nom_p.value} 
+                                onChange={handleInputChange}
+                            />
                             <span className="msg-error"></span>
                         </div>
+
                         <div>
                             <label htmlFor="prenom_p" className="form-group-label">Prénom:</label>
-                            <input type="text" className="form-group-input prenom_p" name="prenom_p" id="prenom_p" placeholder="Prénom" value={formPersonne.prenom_p.value} onChange={handleInputChange}/>
+                            <input 
+                                type="text" 
+                                className="form-group-input prenom_p" 
+                                name="prenom_p" id="prenom_p" 
+                                placeholder="Prénom" 
+                                value={formPersonne.prenom_p.value} 
+                                onChange={handleInputChange}
+                            />
                             <span className="msg-error"></span>
                         </div>
                     </div>
@@ -238,26 +324,62 @@ const FormPersonne = ({ useFormPersonne }) => {
                     <div className="form-group form-group-2">
                         <div>
                             <label htmlFor="date_nais_p" className="form-group-label">Date de Naissance:</label>
-                            <input type="date" className="form-group-input date_nais_p" name="date_nais_p" id="date_nais_p" placeholder="Date de naissance" value={formPersonne.date_nais_p.value} onChange={handleInputChange}/>
+                            <input 
+                                type="date" 
+                                className="form-group-input date_nais_p" 
+                                name="date_nais_p" 
+                                id="date_nais_p" 
+                                placeholder="Date de naissance" 
+                                value={formPersonne.date_nais_p.value} 
+                                onChange={handleInputChange}
+                            />
                             <span className="msg-error"></span>
                         </div>
+
                         <div>
                             <label htmlFor="age_p" className="form-group-label">Age:</label>
-                            <input type="text" className="form-group-input age_p" name="age_p" id="age_p" placeholder="Age" value={formPersonne.age_p.value ? formPersonne.age_p.value:""} onChange={handleInputChange} disabled/>
+                            <input t
+                                ype="text" 
+                                className="form-group-input age_p" 
+                                name="age_p" 
+                                id="age_p" 
+                                placeholder="Age" 
+                                value={formPersonne.age_p.value ? formPersonne.age_p.value:""} 
+                                onChange={handleInputChange} 
+                                disabled
+                            />
                             <span className="msg-error"></span>
                         </div>
                     </div>
+
                     <div className="form-group">
                         <div>
                             <label htmlFor="lieu_nais_p" className="form-group-label">Lieu de naissance:</label>
-                            <input type="text" className="form-group-input lieu_nais_p" name="lieu_nais_p" id="lieu_nais_p" placeholder="Lieu de naissance" value={formPersonne.lieu_nais_p.value} onChange={handleInputChange}/>
+                            <input 
+                                type="text" 
+                                className="form-group-input lieu_nais_p" 
+                                name="lieu_nais_p" 
+                                id="lieu_nais_p" 
+                                placeholder="Lieu de naissance" 
+                                value={formPersonne.lieu_nais_p.value} 
+                                onChange={handleInputChange}
+                            />
                             <span className="msg-error"></span>
                         </div>
                     </div>
+
                     <div className="form-group">
                         <div>
                             <label htmlFor="adrs_p" className="form-group-label">Adresse:</label>
-                            <input type="text" className="form-group-input adrs_p" name="adrs_p" id="adrs_p" placeholder="Adresse" value={formPersonne.adrs_p.value} onChange={handleInputChange}/>
+                            <input 
+                                type="text" 
+                                className="form-group-input adrs_p" 
+                                name="adrs_p" 
+                                id="adrs_p" 
+                                placeholder="Adresse" 
+                                value={formPersonne.adrs_p.value} 
+                                onChange={handleInputChange}
+                            />
                             <span className="msg-error"></span>
                         </div>
                     </div>
@@ -287,10 +409,8 @@ const FormPersonne = ({ useFormPersonne }) => {
                                 ))}
                             </ul>
                             <span className="msg-error"></span>
-
                         </div>
                     </div>
-
                 </fieldset>
             </div>
         </>

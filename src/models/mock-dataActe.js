@@ -16,7 +16,6 @@ const DETAILS = [
         age_temoin: 22,
         adrs_temoin: "Analasily-Ambalakininy Farafangana 309",
         profession_temoin: "Officier de police",
-        id_person: 1,
         id_fonkotany: 2,
         nom_fonkotany: "Ambalakininy",
         code_commune: "309C",
@@ -24,8 +23,8 @@ const DETAILS = [
         code_region: "309R",
         nom_region: "ANTSIMO-ANTSINANANA",
         id_user: 1,
-
-        id_person: 2,
+        
+        id_person: 1,
         nom_person: "Frudo",
         prenom_person: "Philippe",
         sexe_person: "M",
@@ -68,7 +67,6 @@ const DETAILS = [
         age_temoin: 21,
         adrs_temoin: "Analasily-Vohipeno Farafangana 309",
         profession_temoin: "Officier de police",
-        id_person: 2,
         id_fonkotany: 2,
         nom_fonkotany: "Ambalakininy",
         code_commune: "309C",
@@ -77,7 +75,7 @@ const DETAILS = [
         nom_region: "ANTSIMO-ANTSINANANA",
         id_user: 1,
 
-        id_person: 1,
+        id_person: 2,
         nom_person: "Frudo",
         prenom_person: "Philippe",
         sexe_person: "M",
@@ -128,7 +126,7 @@ const DETAILS = [
         nom_region: "ANTSIMO-ANTSINANANA",
         id_user: 1,
 
-        id_person: 1,
+        id_person: 3,
         nom_person: "Frudo",
         prenom_person: "Philippe",
         sexe_person: "M",

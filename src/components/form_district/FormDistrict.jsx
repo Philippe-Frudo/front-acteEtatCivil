@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom';
 import { searchAddress } from '../../helpers/borderField';
-import { ADDRESS } from '../../models/mock-address';
+import RegionService from '../../services/serviceRegion';
+import DistrictService from '../../services/serviceDistrict';
+// import ADDRESSES from '../../models/mock-address';
+
 const FormDistrict = ({district, isEditForm}) => {
-    console.log(district);
+
+    const [regions, setRegions] = useState(null);
     const [showList, setShowList] = useState(false);
-    const [region, setRegion] = useState("");
+    const [nomRegion, setNomRegion] = useState("");
 
     const [formDistrict, setFormDistrict] = useState({
         code_district: { value: "", isValid: false, error: "" },
@@ -14,6 +18,7 @@ const FormDistrict = ({district, isEditForm}) => {
     });
 
     useEffect(() => {
+        RegionService.getRegion().then(regions => setRegions(regions));
         if (district) {
             setFormDistrict({
                 code_district: { value: district.code_district || "", isValid: true, error: "" },
@@ -21,9 +26,9 @@ const FormDistrict = ({district, isEditForm}) => {
                 code_region: { value: district.code_region || "", isValid: true, error: "" },
             });
 
-            ADDRESS?.forEach(f => {
+            regions?.forEach(f => {
                 if (f.code_region == district.code_region) {
-                    setRegion(f.nom_region); return;  
+                    setNomRegion(f.nom_region); return;  
                 }
             })
         }
@@ -31,10 +36,10 @@ const FormDistrict = ({district, isEditForm}) => {
 
         
     //CHANGE VALUE REGION
-    const setAddressPerson = (region) => {
+    const handleSetNomRegion = (region) => {
         const newField = { code_region: { value: region.code_region, isValid: true } };
         setFormDistrict({ ...formDistrict, ...newField });
-        setRegion(region.nom_region)
+        setNomRegion(region.nom_region)
         setShowList(false);
     }
 
@@ -47,18 +52,19 @@ const FormDistrict = ({district, isEditForm}) => {
         });
     });
  
-    
+
     const validateField = (fieldName, value) => {
         let isValid = true;
         let error = "";
-
         if (!value) {
             isValid = false;
-            error = "Ce champ est obligatoire";
-        } else if (/[^a-zA-Z0-9 ]{3,30}/.test(value)) {
+            error = `Ce champ est obligatoire`;
+
+        } else if ( !regex.numberAndDigit.test(value)) {
             isValid = false;
-            error = "Caractères spéciaux non autorisés";
+            error = `Les caractères spéciaux ne sont pas autorisés à ce champ.`;
         }
+
         return { isValid, error };
     }
 
@@ -77,14 +83,13 @@ const FormDistrict = ({district, isEditForm}) => {
     
     //INPUT change CODE DISTRICT
     const handleInputChangeRegion = (e) => {
-        setRegion(e.target.value);
+        setNomRegion(e.target.value);
         if (!e.target.value) {
-            const validation = validateField(e.target.name, e.target.value);
-            const newField = { code_region: { value: "", isValid: validation.isValid , error: validation.error } };
+            const newField = { code_region: { value: "", isValid: false , error: 'Ce champs est obligatoire' } };
             setFormDistrict({ ...formDistrict, ...newField });
         }
     }
-    console.log("Valeur de Code REGION: ",formDistrict.code_region.value);  
+    // console.log("Valeur de Code REGION: ",formDistrict.code_region.value);  
     
 
     const [valid, setValid] = useState(false);
@@ -111,14 +116,12 @@ const FormDistrict = ({district, isEditForm}) => {
     
     const updateDistrict = () => {
         console.log("Data District:", district);
-        /*APIService.updateFonkontany(fonkotany)
-        .then(response => console.log(response));*/
+        const response = DistrictService.updateDistrict(district);
     }
 
     const addDistrict = () => {
         console.log("Data District:", district);
-        /*APIService.addFonkontany(fonkotany)
-        .then(response => console.log(response));*/
+        const response = DistrictService.addDistrict(district);
     }
 
   return (
@@ -185,25 +188,18 @@ const FormDistrict = ({district, isEditForm}) => {
                             name="nom_region"
                             id="nom_region"
                             placeholder="Nom region"
-                            value={region}
+                            value={nomRegion}
                             onChange={handleInputChangeRegion}
                             onKeyUp={(e) => searchAddress(e.target.id, "list_district") }
                             onFocus={() => setShowList(true) }
                         />
           
                         <ul id="list_district" className={ showList ? "showList list":"list"}>
-                            {ADDRESS?.map(adrs => (
-                            <li key={adrs.id_adrs}>
-                                <p className='list-p' onClick={() => setAddressPerson(adrs)}>
-                                {adrs.code_postal} &nbsp;
-                                {adrs.nom_adrs} &nbsp;
-                                {adrs.nom_fonkotany} &nbsp;
-                                {adrs.code_commune} &nbsp;
-                                {adrs.nom_commune} &nbsp;
-                                {adrs.code_district} &nbsp;
-                                {adrs.nom_district} &nbsp;
-                                {adrs.code_region} &nbsp;
-                                {adrs.nom_region} &nbsp;
+                            {regions?.map(c => (
+                            <li key={c.id_adrs}>
+                                <p className='list-p' onClick={() => handleSetNomRegion(c)}>
+                                {c.code_region} &nbsp;
+                                ({c.nom_region})
                                 </p>
                             </li>
                             ))}
@@ -215,7 +211,7 @@ const FormDistrict = ({district, isEditForm}) => {
                     <div className="action-group">
                         {isEditForm ? 
                             (<button type="submit" className="btn btn-save" id="save">Modifier</button>):
-                            (<button type="submit" className="btn btn-save" id="save">Envoyer</button>)
+                            (<button type="reset" className="btn btn-save" id="save">Envoyer</button>)
                         }
 
                         <button type="reset" className="btn btn-clear" id="clear">Annuler</button>

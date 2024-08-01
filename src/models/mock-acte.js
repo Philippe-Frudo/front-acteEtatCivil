@@ -1,5 +1,5 @@
 
-export const ACTES = [
+const ACTES = [
     {
         id_acte: 1,
         id_type: 1,

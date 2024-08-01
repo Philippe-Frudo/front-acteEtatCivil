@@ -1,4 +1,4 @@
-export const PERSONNES = [
+const PERSONNES = [
     {
 
         id_person: 2,

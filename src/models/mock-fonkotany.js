@@ -1,4 +1,4 @@
-export const FONKOTANY = [
+const FONKOTANY = [
     {
         id_fonkotany: 1,
         nom_fonkotany :"Ambohito",
@@ -30,3 +30,5 @@ export const FONKOTANY = [
         code_commune:"130C",
     }
 ];
+
+export default FONKOTANY

@@ -1,67 +1,60 @@
 import React, { useEffect, useState } from 'react'
 import { messageValidator, searchAddress, successBorder } from '../../helpers/borderField';
 import { showList, hiddenList } from './../../helpers/borderField';
-import { ADDRESS } from '../../models/mock-address';
-import { TRAVAILS } from '../../models/mock-travail';
-import { FONKOTANY } from '../../models/mock-fonkotany';
+// import ADDRESSES from '../../models/mock-address';
+// import TRAVAILS from './../../models/mock-travail'
+// import FONKOTANY from '../../models/mock-fonkotany';
+import FonkotanyService from '../../services/serviceFonkotany';
+import TravailService from '../../services/serviceTravail';
+import CommuneService from '../../services/serviceCommune';
 
 const FormActe = ({ useFormActe }) => {
+      
+  const [travails, setTravails] = useState([]);
+  const [fonkotany, setFonkotany] = useState([]);
+  const [communes, setCommunes] = useState([]);
+  const [nomCommune, setNomCommune] = useState("");
 
-  const [formAddress, setFormAddress] = useState({
-    nom_commune : {value: ""},
-    nom_district : {value: ""},
-    nom_region : {value: ""}
-  });
-  
-  const handleInputChangeAddress = (e) => {
-    const fieldName = e.target.name.trim();
-    const fieldValue = e.target.value.trim();
-    const newField = { [fieldName]: { value: fieldValue } };
-
-    setFormAddress(prevState => ({ ...prevState, ...newField }));
-  }
   
   useEffect(() => {
-    if (!formAddress.nom_commune.value) {
-      const newField = { nom_district: { value: "" }, nom_region: { value: "" } };  
-      setFormAddress(prevState => ({ ...prevState, ...newField }));
-    }
-  }, [])
+      TravailService.getTravail().then(travails => setTravails(travails));
+      FonkotanyService.getFonkotany().then(fonkotany => setFonkotany(fonkotany));
+      CommuneService.getCommune().then(communes => setCommunes(communes));
+  },[]);
 
 
     const [formActe, setFormActe] = useFormActe;
     const handleInputChange = (e) => {
-    const fieldName = e.target.name.trim();
-    const fieldValue = e.target.value.trim();
-    const newField = { [fieldName]: { value: fieldValue } };
 
-    setFormActe(prevState => ({ ...prevState, ...newField }));
-    if (fieldName) {
-      successBorder(`.${fieldName}`);
-      messageValidator(`.${fieldName}`, "");
+      const fieldName = e.target.name.trim();
+      const fieldValue = e.target.value.trim();
+      const newField = { [fieldName]: { value: fieldValue } };
+
+      setFormActe(prevState => ({ ...prevState, ...newField }));
+      if (fieldName) {
+        successBorder(`.${fieldName}`);
+        messageValidator(`.${fieldName}`, "");
+      }
+  }
+
+  const handleInputChangeCommune = (e) => {
+    setNomCommune(e.target.value);
+
+    if (!e.target.value) {
+      const newField = { code_commune: { value: "" } };  
+      setFormActe(prevState => ({ ...prevState, ...newField }));
     }
   }
 
+  //========== CHANCGE INPUT FIELD nom COMMUNE ==========
+  const handleSetCodeCommune = (address) => {
 
-  const setAddressPerson = (address) => {
-    const listAddress = ["code_commune"];
-    const listClassNameAddress = ["nom_commune", "nom_district", "nom_region"];
+    const newField = { code_commune: { value: address.code_commune } };
+    setFormActe(prevState => ({ ...prevState, ...newField })); 
 
-    for (let [key, val] of Object.entries(address)) {
-        if ( listAddress.includes(key) ) {
-          const newField = { [key]: { value: val } };
-          setFormActe(prevState => ({ ...prevState, ...newField })); 
-          formActe[key].value = val;
-        }
-
-        if (listClassNameAddress.includes(key)) {
-          //setFieldCommune(address.nom_commune,"(" + address.code_commune.value + "), ",address.nom_district.value + "("+address.code_district.value+ ") ", )
-          const newField = { [key]: { value: val } };
-          setFormAddress({ ...formAddress, ...newField }); 
-          formAddress[key].value = val;
-        }
-    } 
-    hiddenList(".list_adrs_acte")
+    setNomCommune(address.nom_commune);
+    
+    hiddenList(".list_adrs_acte");
   }
 
   
@@ -69,9 +62,10 @@ const FormActe = ({ useFormActe }) => {
   const [fieldFonkotany, setFieldFonkotany] = useState("");
   const handleInputChangeFonkotany = (e) => {
     setFieldFonkotany(e.target.value);
-  }
-  if (!fieldFonkotany) {
-    formActe.id_fonkotany.value = 0;
+
+    if (!fieldFonkotany) {
+      formActe.id_fonkotany.value = 0;
+    }
   }
 
   const handleClickFonkotany = (fonkotany) => {
@@ -83,24 +77,16 @@ const FormActe = ({ useFormActe }) => {
     }
       
     if (fonkotany.nom_fonkotany) {
-       setFieldFonkotany(fonkotany.nom_fonkotany + "(" + fonkotany.code_fonkotany + ") code_commune: " + fonkotany.code_commune );
+       setFieldFonkotany(fonkotany.nom_fonkotany + "(" + fonkotany.code_fonkotany + ")");
       }
     hiddenList(".nom_fonkotany_acte")
   }
-
-
 
 //========== CHANCGE INPUT FIELD PROFESSION ==========
   const [fieldTravail, setFieldTravail] = useState("");
   const handleInputChangeTravailTemoin = (e) => {
     setFieldTravail(e.target.value);
   }
-
-  /*
-  if (!fieldTravail) {
-    const newFieldTrav = { id_travail: { value: 0 } };
-    setFormActe(prevState => ({ ...prevState, ...newFieldTrav }));
-  }*/
 
   const handleClickTravail = (travail) => {
     setFieldTravail(travail.nom_travail);
@@ -115,9 +101,9 @@ const FormActe = ({ useFormActe }) => {
           <div >
             <label htmlFor="type_acte" className="form-group-label">Type d'acte:</label>
             <select className="form-group-input select type_acte" name="type_acte" id="type_acte" onChange={handleInputChange}>
-              <option value={formActe.id_acte.value ? formActe.id_acte.value : ""}>Naissance</option>
-              <option value={formActe.id_acte.value ? formActe.id_acte.value : ""}>Mariage</option>
-              <option value={formActe.id_acte.value ? formActe.id_acte.value : ""}>Divorce</option>
+              <option value='1'>Naissance</option>
+              <option value='2'>Mariage</option>
+              <option value='3'>Divorce</option>
             </select>
             <span className="msg-error"></span>
           </div>
@@ -125,12 +111,27 @@ const FormActe = ({ useFormActe }) => {
           <div className="form-group form-group-2">
             <div>
               <label htmlFor="date_acte" className="form-group-label">Date de l'acte:</label>
-              <input type="date" className="form-group-input date_acte" name="date_acte" id="date_act" placeholder="Date de l'acte" value={formActe.date_acte.value} onChange={handleInputChange} />
+              <input 
+                type="date" 
+                className="form-group-input date_acte" 
+                name="date_acte" id="date_act" 
+                placeholder="Date de l'acte" 
+                value={formActe.date_acte.value} 
+                onChange={handleInputChange} 
+              />
               <span className="msg-error"></span>
             </div>
+            
             <div>
               <label htmlFor="heure_acte" className="form-group-label">Heure:</label>
-              <input type="time" className="form-group-input heure_acte" name="heure_acte" id="heure_acte" placeholder="Heure de l'acte" value={formActe.heure_acte.value} onChange={handleInputChange} />
+              <input 
+                type="time" 
+                className="form-group-input heure_acte" 
+                name="heure_acte" id="heure_acte" 
+                placeholder="Heure de l'acte" 
+                value={formActe.heure_acte.value} 
+                onChange={handleInputChange} 
+              />
               <span className="msg-error"></span>
             </div>
           </div>
@@ -138,7 +139,14 @@ const FormActe = ({ useFormActe }) => {
           <div className="form-group">
             <div>
               <label htmlFor="lieu_acte" className="form-group-label">Lieu d'acte:</label>
-              <input type="text" className="form-group-input lieu_acte" name="lieu_acte" id="lieu_acte" placeholder="Lieu de l'acte" value={formActe.lieu_acte.value} onChange={handleInputChange} />
+              <input 
+                type="text" 
+                className="form-group-input lieu_acte" 
+                name="lieu_acte" id="lieu_acte" 
+                placeholder="Lieu de l'acte" 
+                value={formActe.lieu_acte.value} 
+                onChange={handleInputChange} 
+              />
               <span className="msg-error"></span>
             </div>
           </div>
@@ -146,12 +154,28 @@ const FormActe = ({ useFormActe }) => {
           <div className="form-group form-group-2">
             <div>
               <label htmlFor="date_enreg" className="form-group-label">Date d'enregistrement d'acte:</label>
-              <input type="date" className="form-group-input date_enreg" name="date_enreg" id="date_enreg" placeholder="Date d'enregistrement d'acte" value={formActe.date_enreg.value} onChange={handleInputChange} />
+              <input 
+                type="date" 
+                className="form-group-input date_enreg"
+                name="date_enreg" 
+                id="date_enreg" 
+                placeholder="Date d'enregistrement d'acte" 
+                value={formActe.date_enreg.value} 
+                onChange={handleInputChange} 
+               />
               <span className="msg-error"></span>
             </div>
             <div>
               <label htmlFor="heure_enreg" className="form-group-label">Heure d'enregistrement:</label>
-              <input type="time" className="form-group-input heure_enreg" name="heure_enreg" id="heure_enreg" placeholder="Heure d'enregistrement d'acte" value={formActe.heure_enreg.value} onChange={handleInputChange} />
+              <input 
+                type="time" 
+                className="form-group-input heure_enreg" 
+                name="heure_enreg" 
+                id="heure_enreg" 
+                placeholder="Heure d'enregistrement d'acte" 
+                value={formActe.heure_enreg.value} 
+                onChange={handleInputChange} 
+              />
               <span className="msg-error"></span>
             </div>
           </div>
@@ -172,7 +196,7 @@ const FormActe = ({ useFormActe }) => {
                   // onBlur={() => hiddenList(".adrs_person")}
                 />
                 <ul id="list_fonkotany" className="list nom_fonkotany_acte">
-                    {FONKOTANY.map(fonk => (
+                    {fonkotany?.map(fonk => (
                       <li key={fonk.id_fonkotany}>
                         <p onClick={() => handleClickFonkotany(fonk)} className='list-p'>
                           {fonk.nom_fonkotany} code commune({fonk.code_commune})
@@ -195,26 +219,20 @@ const FormActe = ({ useFormActe }) => {
                       name="nom_commune"
                       id="nom_commune"
                       placeholder="Commune" 
-                      onChange={handleInputChangeAddress}
-                      value={formAddress.nom_commune.value} 
+                      value={nomCommune} 
+                      onChange={handleInputChangeCommune}
                       onKeyUp={(e) => searchAddress(e.target.id, "list_adrs_acte") }
                       onFocus={() => showList(".list_adrs_acte") } 
                       // onBlur={() => hiddenList(".adrs_person")}
                     />
 
                     <ul id="list_adrs_acte" className="list list_adrs_acte">
-                        {ADDRESS.map(adrs => (
-                          <li key={adrs.id_adrs}>
-                            <p className='list-p' onClick={() => setAddressPerson(adrs)}>
-                              {adrs.code_postal} &nbsp;
-                              {adrs.nom_adrs} &nbsp;
-                              {adrs.nom_fonkotany} &nbsp;
-                              {adrs.code_commune} &nbsp;
-                              {adrs.nom_commune} &nbsp;
-                              {adrs.code_district} &nbsp;
-                              {adrs.nom_district} &nbsp;
-                              {adrs.code_region} &nbsp;
-                              {adrs.nom_region} &nbsp;
+                        {communes?.map(c => (
+                          <li key={c.code_commune}>
+                            <p className='list-p' onClick={() => handleSetCodeCommune(c)}>
+                              {c.code_commune} &nbsp;
+                              {c.nom_commune} &nbsp;
+                              {c.code_district} &nbsp;
                             </p>
                           </li>
                         ))}
@@ -222,19 +240,6 @@ const FormActe = ({ useFormActe }) => {
 
                     <span className="msg-error"></span>
                 </div>
-          </div>
-         
-          <div className="form-group form-group-2">
-            <div>
-              <label htmlFor="nom_district" className="form-group-label">District:</label>
-              <input type="text" className="form-group-input nom_district" name="nom_district" id="nom_district" placeholder="District" value={formAddress.nom_district.value} onChange={handleInputChangeAddress} disabled/>
-              <span className="msg-error"></span>
-            </div>
-            <div>
-              <label htmlFor="nom_region" className="form-group-label">Région:</label>
-              <input type="text" className="form-group-input nom_region" name="nom_region" id="nom_region" placeholder="région" value={formAddress.nom_region.value} onChange={handleInputChangeAddress} disabled/>
-              <span className="msg-error"></span>
-            </div>
           </div>
 
         </fieldset>
@@ -246,34 +251,77 @@ const FormActe = ({ useFormActe }) => {
             <div className="form-group form-group-2">
                 <div>
                     <label htmlFor="nom_temoin" className="form-group-label">Nom:</label>
-                    <input type="text" className="form-group-input nom_temoin" name="nom_temoin" id="nom_temoin" placeholder="Nom" value={formActe.nom_temoin.value} onChange={handleInputChange}/>
+                    <input 
+                      type="text" 
+                      className="form-group-input nom_temoin" 
+                      name="nom_temoin" 
+                      id="nom_temoin" 
+                      placeholder="Nom" 
+                      value={formActe.nom_temoin.value} 
+                      onChange={handleInputChange}
+                    />
                     <span className="msg-error"></span>
                 </div>
                 <div>
                     <label htmlFor="prenom_temoin" className="form-group-label">Prénom:</label>
-                    <input type="text" className="form-group-input prenom_temoin" name="prenom_temoin" id="prenom_temoin" placeholder="Prénom" value={formActe.prenom_temoin.value} onChange={handleInputChange}/>
+                    <input 
+                      type="text" 
+                      className="form-group-input prenom_temoin" 
+                      name="prenom_temoin" id="prenom_temoin" 
+                      placeholder="Prénom" 
+                      value={formActe.prenom_temoin.value} 
+                      onChange={handleInputChange}
+                    />
                     <span className="msg-error"></span>
                 </div>
             </div>
+
             <div className="form-group form-group-2">
                 <div>
                     <label htmlFor="date_nais_temoin" className="form-group-label">Date de Naissance:</label>
-                    <input type="date" className="form-group-input date_nais_temoin" name="date_nais_temoin" id="date_nais_temoin" placeholder="Date de naissance" value={formActe.date_nais_temoin.value} onChange={handleInputChange}/>
+                    <input 
+                      type="date" 
+                      className="form-group-input date_nais_temoin" 
+                      name="date_nais_temoin" 
+                      id="date_nais_temoin" 
+                      placeholder="Date de naissance" 
+                      value={formActe.date_nais_temoin.value} 
+                      onChange={handleInputChange}
+                    />
                     <span className="msg-error"></span>
                 </div>
                 <div>
                     <label htmlFor="age_temoin" className="form-group-label">Age:</label>
-                    <input type="text" className="form-group-input age_temoin" name="age_temoin" id="age_temoin" placeholder="Age" value={formActe.age_temoin.value ? formActe.age_temoin.value:""} onChange={handleInputChange} disabled/>
+                    <input 
+                      type="text" 
+                      className="form-group-input age_temoin" 
+                      name="age_temoin" 
+                      id="age_temoin" 
+                      placeholder="Age" 
+                      value={formActe.age_temoin.value ? formActe.age_temoin.value:""} 
+                      onChange={handleInputChange} 
+                      disabled
+                    />
                     <span className="msg-error"></span>
                 </div>
             </div>
+
             <div className="form-group">
                 <div>
                     <label htmlFor="lieu_nais_temoin" className="form-group-label">Lieu de naissance:</label>
-                    <input type="text" className="form-group-input lieu_nais_temoin" name="lieu_nais_temoin" id="lieu_nais_temoin" placeholder="Lieu de naissance" value={formActe.lieu_nais_temoin.value} onChange={handleInputChange}/>
+                    <input 
+                      type="text" 
+                      className="form-group-input lieu_nais_temoin" 
+                      name="lieu_nais_temoin" 
+                      id="lieu_nais_temoin" 
+                      placeholder="Lieu de naissance" 
+                      value={formActe.lieu_nais_temoin.value} 
+                      onChange={handleInputChange}
+                    />
                     <span className="msg-error"></span>
                 </div>
             </div>
+
             <div className="form-group">
                 <div >
                     <label htmlFor="" className="form-group-label sexe_temoin">Sexe:</label>
@@ -289,7 +337,15 @@ const FormActe = ({ useFormActe }) => {
             <div className="form-group">
                 <div>
                     <label htmlFor="adrs_temoin" className="form-group-label">Adresse:</label>
-                    <input type="text" className="form-group-input adrs_temoin" name="adrs_temoin" id="adrs_temoin" placeholder="Adresse" value={formActe.adrs_temoin.value} onChange={handleInputChange}/>
+                    <input 
+                      type="text" 
+                      className="form-group-input adrs_temoin" 
+                      name="adrs_temoin" 
+                      id="adrs_temoin" 
+                      placeholder="Adresse" 
+                      value={formActe.adrs_temoin.value} 
+                      onChange={handleInputChange}
+                    />
                     <span className="msg-error"></span>
                 </div>
             </div>
@@ -310,7 +366,7 @@ const FormActe = ({ useFormActe }) => {
                     // onBlur={() => hiddenList(".adrs_person")}
                   />
                   <ul id="list_profession_temion" className="list list_profession_temion">
-                      {TRAVAILS.map(trav => (
+                      {travails?.map(trav => (
                         <li key={trav.id_travail}>
                           <p onClick={() => handleClickTravail(trav)} className='list-p'>
                             {trav.nom_travail}

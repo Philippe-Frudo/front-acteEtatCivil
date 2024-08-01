@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import "./acte.css";
-import { ACTES } from '../../models/mock-acte';
 import { showDeleteModal } from '../../constants/modal';
 import ModalDelete from '../../components/modal_delete/ModalDelete';
+import { filterTable3Columns } from '../../helpers/searchTable';
+import ActeService from '../../services/serviceActe';
+// import ACTES from '../../models/mock-acte';
 
 /*import ActeNaissance from './ActeNaissance';
 import ActeMariage from './ActeMariage';
@@ -12,6 +14,12 @@ import ActeDivorce from './ActeDivorce';*/
 
 
 const Acte = () => {
+
+    const [actes, setActes] = useState([]);
+    useEffect(() => {
+        ActeService.getActe().then(actes => setActes(actes));
+    },[]);
+    console.log(actes);
 
     function cardActive(classe) {
         const cards = document.querySelectorAll(".card");
@@ -57,7 +65,7 @@ const Acte = () => {
                             <Link to='/acte-etat-civil/add'>
                                 <button className="btn add-now" id="add-now">
                                     <span className="content-add-now">
-                                    <box-icon className="add-now" name='plus-medical' color="#fff" ></box-icon>
+                                        <box-icon className="add-now" name='plus-medical' color="#fff" ></box-icon>
                                         <span className="add-now-name">Ajouter</span>
                                     </span>
                                 </button>
@@ -66,7 +74,11 @@ const Acte = () => {
                             <div className="search search-local-nav">
                                 <label className="content-search">
                                     <box-icon name='search-alt' flip='horizontal' animation='tada' color='rgba(0,0,0,0.73)' ></box-icon>
-                                    <input className="main-search " type="text" placeholder="chercher..." />
+                                    <input 
+                                        className="main-search " 
+                                        type="text" placeholder="chercher..." 
+                                        onInput={(e) =>filterTable3Columns(e.target.value , "table-acte")}
+                                    />
                                 </label>
                             </div>
                         </div>
@@ -98,8 +110,8 @@ const Acte = () => {
                                         </tr>
                                     </thead>
                                     {/* <div className="table-scroll"> */}
-                                    <tbody id="body-nom-table">
-                                        {ACTES.map((acte) => (
+                                    <tbody id="table-acte">
+                                        {actes?.map((acte) => (
                                             <tr key={acte.id_acte}>
                                                 <td>{acte.id_acte}</td>
                                                 <td>{acte.type_acte}</td>

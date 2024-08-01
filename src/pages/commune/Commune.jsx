@@ -1,15 +1,22 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import "./commune.css";
-import MainTop from '../../components/main_top/MainTop';
-import { COMMUNE } from '../../models/mock-commune';
-import { filterTableCommune } from '../../helpers/searchTable';
+import { filterTable3Columns } from '../../helpers/searchTable';
+import CommuneService from '../../services/serviceCommune';
+// import { COMMUNE } from '../../models/mock-commune';
 
 const Commune = () => {
+
+  const [communes, setCommunes] = useState([]);
+  useEffect(() => {
+    CommuneService.getCommune().then(communes => setCommunes(communes));
+  },[]);
+  console.log(communes);
+
   const [search, setSearch] = useState("");
+
   return (
     <>
-
           { /* <!-- ===== CARD 1 ===== --> */}
           <div className="card active-main" id="card-1">
             { /* <!-- ===== HEADER CARD 1 ===== --> */}
@@ -38,7 +45,7 @@ const Commune = () => {
                   <div className="search search-local-nav">
                     <label className="content-search">
                       <box-icon name='search-alt' flip='horizontal' animation='tada' color='rgba(0,0,0,0.73)' ></box-icon>
-                      <input className="main-search " type="text" placeholder="chercher..." onInput={(e) =>filterTableCommune(e.target.value , "table-commune")}/>
+                      <input className="main-search " type="text" placeholder="chercher..." onInput={(e) =>filterTable3Columns(e.target.value , "table-commune")}/>
                     </label>
                   </div>
                 </div>
@@ -59,7 +66,7 @@ const Commune = () => {
                     </tr>
                   </thead>
                   <tbody id="" className='table-commune' >
-                  {COMMUNE?.map(c => (
+                  {communes?.map(c => (
                       <tr key={c.code_commune}>
                         <td>{c.code_commune}</td>
                         <td>{c.nom_commune}</td>
@@ -67,9 +74,7 @@ const Commune = () => {
                         <td className="td-action">
                           <Link to={`/commune/edit/${c.code_commune}`}>
                             <button className="btn btn-edit" id="edit">
-                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                              <path d="m16 2.012 3 3L16.713 7.3l-3-3zM4 14v3h3l8.299-8.287-3-3zm0 6h16v2H4z" />
-                              </svg>
+                            <box-icon name='edit-alt' type='solid' color='#fff' ></box-icon>
                             </button>
                           </Link>
                         </td>
