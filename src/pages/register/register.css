@@ -1,0 +1,48 @@
+
+/* #main-scroll {
+    height: initial;
+    overflow-y: auto;
+    padding-bottom: initial;
+} */
+
+/* .main {
+    min-width: 100%;
+} */
+
+/* .container {
+    width: 100%;
+    height: initial;
+} */
+
+.modal {
+    padding: 0 2rem;
+    margin: 0 1rem;
+}
+
+/* .modal .form {
+    padding: 0;
+} */
+
+.action-group  {
+    margin-top: 0;
+}
+
+.action-group button {
+    margin-left: 1rem;
+}
+
+.message {
+    width: 100%;
+    color: initial;
+    padding: 0;
+}
+
+@media screen and (max-width:"570px") {
+    .modal {
+        padding: initial    ;
+        margin: 0 0;
+    }
+    .btn {
+        padding: 1em 1em;
+    }
+}

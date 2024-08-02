@@ -1,5 +1,4 @@
 import CroissantPerYear from "../../components/chart/CroissantPerYear";
-import MainTop from "../../components/main_top/MainTop";
 import Chart from "chart.js/auto";
 import { CategoryScale } from "chart.js";
 import "./dashboard.css";
@@ -19,12 +18,6 @@ const Dashboard = () => {
 
   return (
     <>
-      <main className="main">
-        { /* <!-- =====HEADER MAIN ==== --> */}
-        <MainTop />
-
-        { /* <!-- ====== CONTAINER MAIN ===== --> */}
-        <div className="main-container main-container-2" id="main-scroll">
           { /* <!-- ===== HEADER CARD 1 ===== --> */}
           <header className="main-header-content">
             <h3 className="main-header-content-title">Tableau de bord</h3>
@@ -110,9 +103,6 @@ const Dashboard = () => {
           <div className="card" id="card-2">
             <main className="main-main-content" id="main-main-content-2">CARD 2</main>
           </div>
-        </div>
-      </main>
-
     </>
   )
 }
