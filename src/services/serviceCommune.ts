@@ -1,10 +1,9 @@
-import { resolve } from 'chart.js/helpers';
 import COMMUNES from '../models/mock-commune';
 
 
 export default class CommuneService {
 
-    static url = "http://localhost:3001";
+    static url = "http://localhost:8000";
 
     static communes = COMMUNES;
 

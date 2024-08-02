@@ -3,7 +3,7 @@ import DISTRICTS from '../models/mock-district';
 
 export default class DistrictService {
 
-    static url = "http://localhost:3001";
+    static url = "http://localhost:8000";
 
     static districts = DISTRICTS;
 

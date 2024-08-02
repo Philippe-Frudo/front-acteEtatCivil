@@ -4,7 +4,7 @@ import PERSONNES from './../models/mock-personne'
 
 export default class PersonneService {
 
-    static url = "htttp://localhost:3001";
+    static url = "htttp://localhost:8000";
 
     static personnes = PERSONNES;
 

@@ -4,7 +4,7 @@ import TRAVAILS from '../models/mock-travail';
 
 export default class TravailService {
 
-    static url = "http://localhost:3001";
+    static url = "http://localhost:8000";
 
     static travails = TRAVAILS;
 

@@ -1,10 +1,9 @@
-import { resolve } from 'chart.js/helpers';
 import ACTES from '../models/mock-acte'
 
 
 export default class ActeService {
 
-    static url = "http://localhost:3001";
+    static url = "http://localhost:8000";
 
     static actes = ACTES;
 

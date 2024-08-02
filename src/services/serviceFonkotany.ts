@@ -4,7 +4,7 @@ import FONKOTANY from './../models/mock-fonkotany'
 
 export default class FonkotanyService {
 
-    static url = "http://localhost:3001";
+    static url = "http://localhost:8000";
 
     static fonkotany = FONKOTANY;
 

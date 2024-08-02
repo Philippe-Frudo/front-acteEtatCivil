@@ -3,7 +3,7 @@ import REGIONS from '../models/mock-region';
 
 export default class RegionService {
 
-    static url = "http://localhost:3001";
+    static url = "http://localhost:8000";
 
     static regions = REGIONS;
 
