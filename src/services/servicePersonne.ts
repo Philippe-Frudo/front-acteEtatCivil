@@ -61,7 +61,7 @@ export default class PersonneService {
     static updatePersonne(personne):Object {
         if (this.isDev) {
             return fetch(`${this.url}/${personne.id_person}`, {
-                method:"POST",
+                method:"PUT",
                 body: JSON.stringify(personne),
                 headers: {"Content-Type":"application/json"}
             })
@@ -82,7 +82,7 @@ export default class PersonneService {
     static deletePersonne(personne):Object {
         if (this.isDev) {
             return fetch(`${this.url}/personnes/${personne}`, {
-                method:"POST",
+                method:"DELETE",
                 body: JSON.stringify(personne),
                 headers: {"Content-Type":"application/json"}
             })

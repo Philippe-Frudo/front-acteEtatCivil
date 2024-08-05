@@ -49,10 +49,31 @@ export default class DistrictService {
     }
 
 
+    static addAllDistrict(district): Object {
+        if (this.isDev) {
+            return fetch(`${this.url}/Alldistricts`, {
+                method:"POST",
+                body: JSON.stringify(district),
+                headers: {"Content-Type":"application/json"}
+            })
+            .then(response => response.json())
+            .catch(error => this.handleError(error));
+        }
+
+        return new Promise(resolve => { 
+            district.forEach(d => {
+                this.districts.push(d);
+                resolve(d);
+              
+            });
+        });
+    }
+
+
     static updateDistrict(district):Object {
         if (this.isDev) {
             return fetch(`${this.url}/${district.code_district}`, {
-                method:"POST",
+                method:"PUT",
                 body: JSON.stringify(district),
                 headers: {"Content-Type":"application/json"}
             })
@@ -71,7 +92,7 @@ export default class DistrictService {
     static deleteDistrict(district):Object {
         if (this.isDev) {
             return fetch(`${this.url}/districts/${district}`, {
-                method:"POST",
+                method:"DELETE",
                 body: JSON.stringify(district),
                 headers: {"Content-Type":"application/json"}
             })

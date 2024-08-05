@@ -49,10 +49,31 @@ export default class FonkotanyService {
     }
 
 
+    static addAllFonkotany(fonk): Object {
+        if (this.isDev) {
+            return fetch(`${this.url}/Allfonkotany`, {
+                method:"POST",
+                body: JSON.stringify(fonk),
+                headers: {"Content-Type":"application/json"}
+            })
+            .then(response => response.json())
+            .catch(error => this.handleError(error));
+        }
+
+        return new Promise(resolve => { 
+            fonk.forEach(f => {
+                this.fonkotany.push(f);
+                resolve(f);
+              
+            });
+        });
+    }
+
+
     static updateFonkotany(fonk):Object {
         if (this.isDev) {
             return fetch(`${this.url}/${fonk.id_fonkotany}`, {
-                method:"POST",
+                method:"PUT",
                 body: JSON.stringify(fonk),
                 headers: {"Content-Type":"application/json"}
             })
@@ -73,7 +94,7 @@ export default class FonkotanyService {
     static deleteFonkotany(fonk):Object {
         if (this.isDev) {
             return fetch(`${this.url}/fonkotany/${fonk}`, {
-                method:"POST",
+                method:"DELETE",
                 body: JSON.stringify(fonk),
                 headers: {"Content-Type":"application/json"}
             })

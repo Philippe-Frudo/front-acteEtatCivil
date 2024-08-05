@@ -46,11 +46,30 @@ export default class TravailService {
         });
     }
 
+    static addAllTravail(datasTravails): Object {
+        if (this.isDev) {
+            return fetch(`${this.url}/travails`, {
+                method:"POST",
+                body: JSON.stringify(datasTravails),
+                headers: {"Content-Type":"application/json"}
+            })
+            .then(response => response.json())
+            .catch(error => this.handleError(error));
+        }
+
+        return new Promise(resolve => { 
+            datasTravails.forEach(dataTravail => {
+                this.travails.push(dataTravail);
+                resolve(dataTravail);
+            });
+        });
+    }
+
 
     static updateTravail(dataTravail):Object {
         if (this.isDev) {
             return fetch(`${this.url}/${dataTravail.id_travail}`, {
-                method:"POST",
+                method:"PUT",
                 body: JSON.stringify(dataTravail),
                 headers: {"Content-Type":"application/json"}
             })
@@ -71,7 +90,7 @@ export default class TravailService {
     static deleteTravail(dataTravail):Object {
         if (this.isDev) {
             return fetch(`${this.url}/travails/${dataTravail}`, {
-                method:"POST",
+                method:"DELETE",
                 body: JSON.stringify(dataTravail),
                 headers: {"Content-Type":"application/json"}
             })

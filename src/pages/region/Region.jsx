@@ -1,17 +1,59 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { filterTable3Columns } from '../../helpers/searchTable';
 import Regionservice from '../../services/serviceRegion';
+import * as XLSX from 'xlsx';
 // import  REGION from '../../helpers/mock-region';
 // import "region.css";
+import { convertFile } from './../../helpers/convertFile';
+import TableFileRegion from '../../components/tableFile/TableFileRegion';
+
 
 const Region = () => {
-
+  const fileInputRef = useRef(null);
   const [regions, setRegions] = useState([]);
   useEffect(() => {
     Regionservice.getRegion().then(regions => setRegions(regions));
   }, []);
 
+
+
+  const [errorFile, setErrorFile] = useState(); 
+  const [acceptFile, setAcceptFile] = useState(false); 
+  const [dataImport, setDataImport] = useState([]); 
+
+  const handleImportFile = (e) => {
+    setDataImport("")
+    const file = e.target.files[0];
+    const fileName = file.name;
+    const fileExtension = fileName.slice((fileName.lastIndexOf(".") - 1 >>> 0) + 2); // Récupère l'extension du fichier
+    
+    if (fileExtension !== 'xlsx') {
+      setAcceptFile(false)
+      setErrorFile('Le fichier doit être au format .xlsx'); // Met à jour l'état d'erreur
+      if (fileInputRef.current) {
+        fileInputRef.current.value = null; // Réinitialise la valeur du champ
+      }
+      return; // Arrête le traitement si l'extension n'est pas .xlsx
+    }
+
+    setErrorFile(null); // Réinitialise l'erreur si le fichier est valide
+    setAcceptFile(true)
+    convertFile(e)
+      .then((parseData) => {
+        setDataImport(parseData);
+      })
+      .catch((error) => {
+        console.error('Erreur lors de la lecture du fichier:', error);
+        setErrorFile('Une erreur s\'est produite lors de la lecture du fichier.');
+      });
+
+      if (fileInputRef.current) {
+        fileInputRef.current.value = null; // Réinitialise la valeur du champ
+      }
+    };
+    
+    console.log(dataImport);
 
   return (
     <>
@@ -35,12 +77,19 @@ const Region = () => {
                     </button>
                   </Link>
 
-                  <label htmlFor='add-file' className="btn add-file" id="add-file">
-                    <span className="content-add-now" >
-                      {/* <input type='file' className="add-now-name" id='add-file' /> */}
-                      <span>Importer de fichier</span>
-                    </span>
-                  </label>
+                 
+                    <p className="content-add-now" >
+                      <input 
+                        id="add-file"
+                        type='file' 
+                        className="add-now-name btn add-file" 
+                        title='Ajouter de fichier region en format excel' 
+                        ref={fileInputRef}
+                        onChange={handleImportFile}
+                      />
+                    </p>
+                 
+                      {errorFile && <span>{errorFile}</span>}
 
                   <div className="search search-local-nav">
                     <label className="content-search">
@@ -124,8 +173,7 @@ const Region = () => {
             <main className="main-main-content" id="main-main-content-2">CARD 2</main>
           </div>
 
-        {/* <FormAddRegion />
-        <FormUpdateRegion /> */}
+        {acceptFile ? (<TableFileRegion useData={[dataImport, setDataImport]} useAccept={ [acceptFile, setAcceptFile]} />):(null)}
 
     </>
   )
