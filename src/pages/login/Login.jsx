@@ -6,7 +6,6 @@ import {errorBorder, successBorder} from "./../../helpers/borderField";
 
 
 const Login = () => {
-
     let navigate = useNavigate()
 
     const [form, setForm] = useState(
@@ -170,6 +169,10 @@ const Login = () => {
                     </div>
                 </div>
             </section>
+
+            {/* <div style={{minWidth:"500px", minHeight:"500px"}}>
+            <box-icon name='loader' animation='spin' width="200px" color='rgba(0,0,0,0.74)' ></box-icon>
+            </div> */}
         </>
     )
 }

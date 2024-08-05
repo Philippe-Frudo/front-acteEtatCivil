@@ -3,7 +3,7 @@ import COMMUNES from '../models/mock-commune';
 
 export default class CommuneService {
 
-    static url = "http://localhost:8000";
+    static url = import.meta.env.VITE_API_URL;
 
     static communes = COMMUNES;
 

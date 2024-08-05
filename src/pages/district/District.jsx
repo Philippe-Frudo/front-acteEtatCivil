@@ -69,12 +69,12 @@ const District = () => {
 
                                     <tbody id="table-district">
                                     {districts?.map(c => (
-                                        <tr key={c.code_district}>
+                                        <tr key={c.id_district}>
                                             <td>{c.code_district}</td>
                                             <td>{c.nom_district}</td>
                                             <td>{c.code_region}</td>
                                             <td className="td-action">
-                                            <Link to={`/district/edit/${c.code_district}`}>
+                                            <Link to={`/district/edit/${c.id_district}`}>
                                                 <button className="btn btn-edit" id="edit">
                                                 <box-icon name='edit-alt' type='solid' color='#fff' ></box-icon>
                                                 </button>
@@ -108,10 +108,10 @@ const District = () => {
                                 <span className="nbr-table">
                                     <span id="nbr-table">1</span>
                                     { /* <!-- <span id="nbr-table">2</span>
-                            <span id="nbr-table">3</span>
-                            <span id="nbr-table">.</span>
-                            <span id="nbr-table">.</span>
-                            <span id="nbr-table">.</span> --> */}
+                                    <span id="nbr-table">3</span>
+                                    <span id="nbr-table">.</span>
+                                    <span id="nbr-table">.</span>
+                                    <span id="nbr-table">.</span> --> */}
                                 </span>
                                 <span className="next">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">

@@ -9,9 +9,8 @@ const Region = () => {
 
   const [regions, setRegions] = useState([]);
   useEffect(() => {
-    Regionservice.getRegion(regions => setRegions(regions));
+    Regionservice.getRegion().then(regions => setRegions(regions));
   }, []);
-  console.log(regions);
 
 
   return (
@@ -67,12 +66,12 @@ const Region = () => {
                   </thead>
                   {/* <div className="table-scroll"> */}
                   <tbody id="table-region">
-                    {REGION?.map(c => (
-                        <tr key={c.code_region}>
+                    {regions?.map(c => (
+                        <tr key={c.id_region}>
                           <td>{c.code_region}</td>
                           <td>{c.nom_region}</td>
                           <td className="td-action">
-                            <Link to={`/region/edit/${c.code_region}`}>
+                            <Link to={`/region/edit/${c.id_region}`}>
                                 <button className="btn btn-edit" id="edit">
                                 <box-icon name='edit-alt' type='solid' color='#fff' ></box-icon>
                                 </button>

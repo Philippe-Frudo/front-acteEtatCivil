@@ -1,10 +1,7 @@
-import { resolve } from 'chart.js/helpers';
 import TRAVAILS from '../models/mock-travail';
-
-
 export default class TravailService {
 
-    static url = "http://localhost:8000";
+    static url = import.meta.env.VITE_API_URL;
 
     static travails = TRAVAILS;
 

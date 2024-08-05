@@ -1,10 +1,9 @@
-import { resolve } from 'chart.js/helpers';
 import FONKOTANY from './../models/mock-fonkotany'
 
 
 export default class FonkotanyService {
 
-    static url = "http://localhost:8000";
+    static url = import.meta.env.VITE_API_URL;
 
     static fonkotany = FONKOTANY;
 
