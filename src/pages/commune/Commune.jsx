@@ -13,7 +13,7 @@ const Commune = () => {
   },[]);
   console.log(communes);
 
-  const [search, setSearch] = useState("");
+  // const [search, setSearch] = useState("");
 
   return (
     <>
@@ -67,12 +67,12 @@ const Commune = () => {
                   </thead>
                   <tbody id="" className='table-commune' >
                   {communes?.map(c => (
-                      <tr key={c.code_commune}>
+                      <tr key={c.id_commune}>
                         <td>{c.code_commune}</td>
                         <td>{c.nom_commune}</td>
                         <td>{c.code_district}</td>
                         <td className="td-action">
-                          <Link to={`/commune/edit/${c.code_commune}`}>
+                          <Link to={`/commune/edit/${c.id_commune}`}>
                             <button className="btn btn-edit" id="edit">
                             <box-icon name='edit-alt' type='solid' color='#fff' ></box-icon>
                             </button>

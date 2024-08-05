@@ -3,7 +3,7 @@ import REGIONS from '../models/mock-region';
 
 export default class RegionService {
 
-    static url = "http://localhost:8000";
+    static url = import.meta.env.VITE_API_URL;
 
     static regions = REGIONS;
 

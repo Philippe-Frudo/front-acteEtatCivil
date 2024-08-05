@@ -3,7 +3,8 @@ import ACTES from '../models/mock-acte'
 
 export default class ActeService {
 
-    static url = "http://localhost:8000";
+    static url =import.meta.env.VITE_API_URL;
+    
 
     static actes = ACTES;
 
@@ -12,11 +13,11 @@ export default class ActeService {
 
     static getActe(): Object {
         if (this.isDev) {
+            // console.log('Bonjour ! ',import.meta.env.VITE_API_URL);
             return fetch(`${this.url}/actes`)
             .then(response => response.json())
             .catch(error => this.handleError(error)); 
         }
-
         return new Promise(resolve => {resolve(this.actes)})
     }
 

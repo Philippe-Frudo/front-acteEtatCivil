@@ -1,9 +1,9 @@
 import DISTRICTS from '../models/mock-district';
 
-
 export default class DistrictService {
 
-    static url = "http://localhost:8000";
+    static url = import.meta.env.VITE_API_URL;
+
 
     static districts = DISTRICTS;
 

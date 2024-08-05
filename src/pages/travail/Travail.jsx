@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { filterTable3Columns } from '../../helpers/searchTable'
 import TravailService from '../../services/serviceTravail'
@@ -9,9 +9,8 @@ const Travail = () => {
 
     const [travails, setTravails] = useState([]);
     useEffect(() => {
-       TravailService.getTravail(travails => setTravails(travails))
+       TravailService.getTravail().then(travails => setTravails(travails));
     }, []);
-    console.log(travails);
 
 
     return (

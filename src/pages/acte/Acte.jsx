@@ -19,7 +19,6 @@ const Acte = () => {
     useEffect(() => {
         ActeService.getActe().then(actes => setActes(actes));
     },[]);
-    console.log(actes);
 
     function cardActive(classe) {
         const cards = document.querySelectorAll(".card");
