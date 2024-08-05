@@ -48,11 +48,33 @@ export default class CommuneService {
         });
     }
 
+    static addAllCommune(dataComm): Object {
+        if (this.isDev) {
+            return fetch(`${this.url}/Allcommunes`, {
+                method:"POST",
+                body: JSON.stringify(dataComm),
+                headers: {"Content-Type":"application/json"}
+            })
+            .then(response => response.json())
+            .catch(error => this.handleError(error));
+        }
+
+        return new Promise(resolve => { 
+            dataComm.forEach(c => {
+                this.communes.push(c);
+                resolve(c);
+              
+            });
+            this.communes.push(dataComm);
+            resolve(dataComm);
+        });
+    }
+
 
     static updateCommune(dataComm):Object {
         if (this.isDev) {
             return fetch(`${this.url}/${dataComm.code_commune}`, {
-                method:"POST",
+                method:"PUT",
                 body: JSON.stringify(dataComm),
                 headers: {"Content-Type":"application/json"}
             })
@@ -71,7 +93,7 @@ export default class CommuneService {
     static deleteCommune(dataComm):Object {
         if (this.isDev) {
             return fetch(`${this.url}/communes/${dataComm}`, {
-                method:"POST",
+                method:"DELETE",
                 body: JSON.stringify(dataComm),
                 headers: {"Content-Type":"application/json"}
             })

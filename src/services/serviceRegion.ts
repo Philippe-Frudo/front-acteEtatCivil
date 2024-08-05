@@ -9,7 +9,6 @@ export default class RegionService {
 
     static isDev = (!process.env.NODE_ENV || process.env.NODE_ENV === "development");
 
-
     static getRegion(): Object {
         if (this.isDev) {
             return fetch(`${this.url}/regions`)
@@ -27,6 +26,24 @@ export default class RegionService {
             .catch(error => this.handleError(error));
         }
         return new Promise(resolve => {resolve(this.regions.find(f => id === f.code_region))})
+    }
+
+    static addObjectRegion(Fileregions): Object {
+        if (this.isDev) {
+            return fetch(`${this.url}/regions/AllRegions`, {
+                method:"POST",
+                body: JSON.stringify(Fileregions),
+                headers: {"Content-Type":"application/json"}
+            })
+            .then(response => response.json())
+            .catch(error => this.handleError(error));
+        }
+        return new Promise(resolve => { 
+            Fileregions.forEach(region => {
+                this.regions.push(region);
+                resolve(region);
+            });
+        });
     }
 
     static addRegion(region): Object {
@@ -49,7 +66,7 @@ export default class RegionService {
     static updateRegion(region):Object {
         if (this.isDev) {
             return fetch(`${this.url}/${region.code_region}`, {
-                method:"POST",
+                method:"PUT",
                 body: JSON.stringify(region),
                 headers: {"Content-Type":"application/json"}
             })
@@ -67,7 +84,7 @@ export default class RegionService {
     static deleteRegion(region):Object {
         if (this.isDev) {
             return fetch(`${this.url}/regions/${region}`, {
-                method:"POST",
+                method:"DELETE",
                 body: JSON.stringify(region),
                 headers: {"Content-Type":"application/json"}
             })

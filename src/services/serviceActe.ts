@@ -53,7 +53,7 @@ export default class ActeService {
     static updateActe(acte):Object {
         if (this.isDev) {
             return fetch(`${this.url}/${acte.id_acte}`, {
-                method:"POST",
+                method:"PUT",
                 body: JSON.stringify(acte),
                 headers: {"Content-Type":"application/json"}
             })
@@ -74,7 +74,7 @@ export default class ActeService {
     static deleteActe(acte):Object {
         if (this.isDev) {
             return fetch(`${this.url}/actes/${acte}`, {
-                method:"POST",
+                method:"DELETE",
                 body: JSON.stringify(acte),
                 headers: {"Content-Type":"application/json"}
             })
