@@ -7,52 +7,65 @@ import { showList, hiddenList } from './../../helpers/borderField';
 import FonkotanyService from '../../services/serviceFonkotany';
 import TravailService from '../../services/serviceTravail';
 import CommuneService from '../../services/serviceCommune';
+import ActeService from '../../services/serviceActe';
 
 const FormActe = ({ useFormActe }) => {
       
+  const [typesActe, setTypesActes] = useState([]);
   const [travails, setTravails] = useState([]);
   const [fonkotany, setFonkotany] = useState([]);
   const [communes, setCommunes] = useState([]);
   const [nomCommune, setNomCommune] = useState("");
 
-  
+
   useEffect(() => {
+      ActeService.getTypes().then(types => setTypesActes(types));
       TravailService.getTravail().then(travails => setTravails(travails));
       FonkotanyService.getFonkotany().then(fonkotany => setFonkotany(fonkotany));
       CommuneService.getCommune().then(communes => setCommunes(communes));
   },[]);
 
-
+  
     const [formActe, setFormActe] = useFormActe;
     const handleInputChange = (e) => {
-
       const fieldName = e.target.name.trim();
       const fieldValue = e.target.value.trim();
       const newField = { [fieldName]: { value: fieldValue } };
-
+      
       setFormActe(prevState => ({ ...prevState, ...newField }));
       if (fieldName) {
         successBorder(`.${fieldName}`);
         messageValidator(`.${fieldName}`, "");
       }
+      
   }
 
-  const handleInputChangeCommune = (e) => {
-    setNomCommune(e.target.value);
+//========== CHANGE ON CLICK TRAVAIL PROFESSION ==========
+const handleClickTravailTemoin = (trav) => {
+  const newField = { profession_temoin: { value: trav.nom_travail } };
+  setFormActe(prevState => ({ ...prevState, ...newField })); 
+  hiddenList(".list_profession_temion");
+}
 
+
+  //==========INPUT  CHANGE value FIELD nom COMMUNE ==========
+  const inputChangeCommune = (e) => {
+    setNomCommune(e.target.value);
+    
+    //Si le champ est null id_commune est null
     if (!e.target.value) {
-      const newField = { code_commune: { value: "" } };  
+      const newField = { id_commune: { value: '' } };  
       setFormActe(prevState => ({ ...prevState, ...newField }));
     }
   }
 
-  //========== CHANCGE INPUT FIELD nom COMMUNE ==========
-  const handleSetCodeCommune = (address) => {
 
-    const newField = { code_commune: { value: address.code_commune } };
+  // ======CHANGE ID CIMMUNE PAR UN CLICK DE NOM COMMUNE=====
+  const handleSetCodeCommune = (commune) => {
+    const newField = { id_commune: { value: commune.id_commune } };
     setFormActe(prevState => ({ ...prevState, ...newField })); 
 
-    setNomCommune(address.nom_commune);
+    setNomCommune(commune.nom_commune);
     
     hiddenList(".list_adrs_acte");
   }
@@ -64,12 +77,11 @@ const FormActe = ({ useFormActe }) => {
     setFieldFonkotany(e.target.value);
 
     if (!fieldFonkotany) {
-      formActe.id_fonkotany.value = 0;
+      formActe.id_fonkotany.value = "";
     }
   }
 
   const handleClickFonkotany = (fonkotany) => {
-
     if (fonkotany.id_fonkotany) {
       const newField = { id_fonkotany: { value: fonkotany.id_fonkotany } };
       setFormActe(prevState => ({ ...prevState, ...newField })); 
@@ -82,39 +94,43 @@ const FormActe = ({ useFormActe }) => {
     hiddenList(".nom_fonkotany_acte")
   }
 
-//========== CHANCGE INPUT FIELD PROFESSION ==========
-  const [fieldTravail, setFieldTravail] = useState("");
-  const handleInputChangeTravailTemoin = (e) => {
-    setFieldTravail(e.target.value);
-  }
-
-  const handleClickTravail = (travail) => {
-    setFieldTravail(travail.nom_travail);
-    hiddenList(".list_profession_temion");
-  }
-
   return (
     <>
       <div className="content-mere">
         <h3 className="card-acte">Acte</h3>
         <fieldset>
           <div >
-            <label htmlFor="type_acte" className="form-group-label">Type d'acte:</label>
-            <select className="form-group-input select type_acte" name="type_acte" id="type_acte" onChange={handleInputChange}>
-              <option value='1'>Naissance</option>
-              <option value='2'>Mariage</option>
-              <option value='3'>Divorce</option>
+            <label htmlFor="id_type" className="form-group-label">Type d'acte:</label>
+            <select className="form-group-input select id_type" name="id_type" id="id_type" onChange={handleInputChange}>
+              <option value=''>Selectionner le type d'acte</option>
+              {typesActe.map(type => ( 
+                  <option key={type.id_type} value={type.id_type}>{type.nom_type}</option>
+              ))}
             </select>
             <span className="msg-error"></span>
           </div>
 
+          <div className="form-group">
+            <div>
+              <label htmlFor="num_acte" className="form-group-label">Numéro d'acte:</label>
+              <input 
+                type="text" 
+                className="form-group-input num_acte" 
+                name="num_acte" id="num_acte" 
+                placeholder="Numéro dàacte" 
+                value={formActe.num_acte.value} 
+                onChange={handleInputChange} 
+              />
+              <span className="msg-error"></span>
+            </div>
+          </div>
           <div className="form-group form-group-2">
             <div>
               <label htmlFor="date_acte" className="form-group-label">Date de l'acte:</label>
               <input 
                 type="date" 
                 className="form-group-input date_acte" 
-                name="date_acte" id="date_act" 
+                name="date_acte" id="date_acte" 
                 placeholder="Date de l'acte" 
                 value={formActe.date_acte.value} 
                 onChange={handleInputChange} 
@@ -199,7 +215,7 @@ const FormActe = ({ useFormActe }) => {
                     {fonkotany?.map(fonk => (
                       <li key={fonk.id_fonkotany}>
                         <p onClick={() => handleClickFonkotany(fonk)} className='list-p'>
-                          {fonk.nom_fonkotany} code commune({fonk.code_commune})
+                        {fonk.code_fonkotany} {fonk.nom_fonkotany} code commune({fonk.code_commune})
                         </p>
                       </li>
                     ))}
@@ -220,7 +236,7 @@ const FormActe = ({ useFormActe }) => {
                       id="nom_commune"
                       placeholder="Commune" 
                       value={nomCommune} 
-                      onChange={handleInputChangeCommune}
+                      onChange={inputChangeCommune}
                       onKeyUp={(e) => searchAddress(e.target.id, "list_adrs_acte") }
                       onFocus={() => showList(".list_adrs_acte") } 
                       // onBlur={() => hiddenList(".adrs_person")}
@@ -228,7 +244,7 @@ const FormActe = ({ useFormActe }) => {
 
                     <ul id="list_adrs_acte" className="list list_adrs_acte">
                         {communes?.map(c => (
-                          <li key={c.code_commune}>
+                          <li key={c.id_commune}>
                             <p className='list-p' onClick={() => handleSetCodeCommune(c)}>
                               {c.code_commune} &nbsp;
                               {c.nom_commune} &nbsp;
@@ -359,8 +375,8 @@ const FormActe = ({ useFormActe }) => {
                     name="profession_temoin" 
                     id="profession_temoin" 
                     placeholder="profession" 
-                    value={fieldTravail} 
-                    onChange={handleInputChangeTravailTemoin}
+                    value={formActe.profession_temoin.value} 
+                    onChange={handleInputChange}
                     onKeyUp={(e) => searchAddress(e.target.id, "list_profession_temion") }
                     onFocus={() => showList(".list_profession_temion") } 
                     // onBlur={() => hiddenList(".adrs_person")}
@@ -368,7 +384,7 @@ const FormActe = ({ useFormActe }) => {
                   <ul id="list_profession_temion" className="list list_profession_temion">
                       {travails?.map(trav => (
                         <li key={trav.id_travail}>
-                          <p onClick={() => handleClickTravail(trav)} className='list-p'>
+                          <p onClick={() => handleClickTravailTemoin(trav)} className='list-p'>
                             {trav.nom_travail}
                           </p>
                         </li>

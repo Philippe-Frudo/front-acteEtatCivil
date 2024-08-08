@@ -51,7 +51,7 @@ export default class DistrictService {
 
     static addAllDistrict(district): Object {
         if (this.isDev) {
-            return fetch(`${this.url}/Alldistricts`, {
+            return fetch(`${this.url}/addAlldistrict`, {
                 method:"POST",
                 body: JSON.stringify(district),
                 headers: {"Content-Type":"application/json"}
@@ -70,9 +70,14 @@ export default class DistrictService {
     }
 
 
+    /**
+     * 
+     * @param {Object} district 
+     * @returns 
+     */
     static updateDistrict(district):Object {
         if (this.isDev) {
-            return fetch(`${this.url}/${district.code_district}`, {
+            return fetch(`${this.url}/districts/${district.id_district}`, {
                 method:"PUT",
                 body: JSON.stringify(district),
                 headers: {"Content-Type":"application/json"}
@@ -89,11 +94,16 @@ export default class DistrictService {
         });
     }
 
-    static deleteDistrict(district):Object {
+
+    /**
+     * 
+     * @param {number} id 
+     * @returns 
+     */
+    static deleteDistrict(id):Object {
         if (this.isDev) {
-            return fetch(`${this.url}/districts/${district}`, {
+            return fetch(`${this.url}/districts/${id}`, {
                 method:"DELETE",
-                body: JSON.stringify(district),
                 headers: {"Content-Type":"application/json"}
             })
             .then(response => response.json())
@@ -101,7 +111,7 @@ export default class DistrictService {
         }
 
         return new Promise(resolve => {
-            const {code_district } = district;
+            const {code_district } = id;
             this.districts = this.districts.filter(f => f.code_district !== code_district );
             resolve({});
         })

@@ -1,10 +1,17 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import handleSex from "../../constants/sexe";
 import { hiddenList, messageValidator, searchAddress, showList, successBorder} from '../../helpers/borderField';
 import TRAVAILS from '../../models/mock-travail';
+import TravailService from '../../services/serviceTravail';
 
 
 const FormPersonne = ({ useFormPersonne }) => {
+
+    const [travails, setTravails] = useState([]);
+    useEffect(() => {
+        TravailService.getTravail().then(travails => setTravails(travails));   
+    }, []);
+
 
     const [formPersonne, setFormPersonne] = useFormPersonne;
     /**
@@ -24,7 +31,7 @@ const FormPersonne = ({ useFormPersonne }) => {
     }
 
     
-/* =============== TRAVAIL PERSONNE =============== */
+/* ===============CHANGE TRAVAIL personne=============== */
     const [fieldTravailPersonne, setFieldTravailPersonne] = useState("");
     const handleInputChangeTravailPerson = (e) => {
         const fieldName = e.target.name;
@@ -36,6 +43,8 @@ const FormPersonne = ({ useFormPersonne }) => {
         }
     }
     
+
+    //====== CHANGE (id_person ) PAR CLICK TRAVAIL PERSON========
   const handleClickTravailPerson = (trav) => {
     if (trav.id_travail) {
       const newField = { id_travail: { value: trav.id_travail } };
@@ -47,22 +56,23 @@ const FormPersonne = ({ useFormPersonne }) => {
     hiddenList(".list_travail_person")
   }
 
-      
-/* =============== TRAVAIL MERE =============== */
+   
+/* ===============CHANGE PAR CLICK TRAVAIL MERE =============== */
     const handleClickTravailMere = (trav) => {
-        const newFieldMere = { profession_p: {value: trav.profession_m } }
+        const newFieldMere = { profession_m: {value: trav.nom_travail } }
         setFormPersonne(prevState => ({...prevState, ...newFieldMere}));
-
         hiddenList(".list_travail_mere")
     }
+    
 
     
 /* =============== TRAVAIL PERE =============== */
     const handleClickTravailPere = (trav) => {
-        const newFieldPere = { profession_p: { value: trav.profession_p } }
+        
+        const newFieldPere = { profession_p: { value: trav.nom_travail } }
         setFormPersonne(prevState => ({...prevState, ...newFieldPere}));
-
-        hiddenList(".list_travail_mere")
+        
+        hiddenList(".list_travail_pere")
     }
 
   
@@ -148,7 +158,7 @@ const FormPersonne = ({ useFormPersonne }) => {
                                 // onBlur={() => hiddenList(".adrs_person")}
                             />
                             <ul id="list_travail_person" className="list list_travail_person">
-                                {TRAVAILS.map(trav => (
+                                {travails?.map(trav => (
                                     <li key={trav.id_travail}>
                                     <p onClick={() => handleClickTravailPerson(trav)} className='list-p'>
                                         {trav.nom_travail}
@@ -156,7 +166,6 @@ const FormPersonne = ({ useFormPersonne }) => {
                                     </li>
                                 ))}
                             </ul>
-
                             <span className="msg-error"></span>
                         </div>
                     </div>
@@ -273,7 +282,7 @@ const FormPersonne = ({ useFormPersonne }) => {
                                 // onBlur={() => hiddenList(".adrs_person")}
                             />
                             <ul id="list_travail_mere" className="list list_travail_mere">
-                                {TRAVAILS.map(trav => (
+                                {travails?.map(trav => (
                                     <li key={trav.id_travail}>
                                         <p onClick={() => handleClickTravailMere(trav)} className='list-p'>
                                             {trav.nom_travail}
@@ -400,7 +409,7 @@ const FormPersonne = ({ useFormPersonne }) => {
                                 // onBlur={() => hiddenList(".adrs_person")}
                             />
                             <ul id="list_travail_pere" className="list list_travail_pere">
-                                {TRAVAILS.map(trav => (
+                                {travails?.map(trav => (
                                     <li key={trav.id_travail}>
                                         <p onClick={() => handleClickTravailPere(trav)} className='list-p'>
                                             {trav.nom_travail}

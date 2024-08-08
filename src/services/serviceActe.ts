@@ -5,15 +5,21 @@ export default class ActeService {
 
     static url =import.meta.env.VITE_API_URL;
     
-
     static actes = ACTES;
 
     static isDev = (!process.env.NODE_ENV || process.env.NODE_ENV === "development");
 
 
+    static getTypes(): Object {
+        if (this.isDev) {
+            return fetch(`${this.url}/typesActe`)
+            .then(response => response.json())
+            .catch(error => this.handleError(error)); 
+        }
+    }
+
     static getActe(): Object {
         if (this.isDev) {
-            // console.log('Bonjour ! ',import.meta.env.VITE_API_URL);
             return fetch(`${this.url}/actes`)
             .then(response => response.json())
             .catch(error => this.handleError(error)); 
@@ -52,7 +58,7 @@ export default class ActeService {
 
     static updateActe(acte):Object {
         if (this.isDev) {
-            return fetch(`${this.url}/${acte.id_acte}`, {
+            return fetch(`${this.url}/actes/${acte.id_acte}`, {
                 method:"PUT",
                 body: JSON.stringify(acte),
                 headers: {"Content-Type":"application/json"}
@@ -71,11 +77,15 @@ export default class ActeService {
     }
     
 
-    static deleteActe(acte):Object {
+    /**
+     * 
+     * @param {number} id 
+     * @returns 
+     */
+    static deleteActe(id):Object {
         if (this.isDev) {
-            return fetch(`${this.url}/actes/${acte}`, {
+            return fetch(`${this.url}/actes/${id}`, {
                 method:"DELETE",
-                body: JSON.stringify(acte),
                 headers: {"Content-Type":"application/json"}
             })
             .then(response => response.json())
@@ -83,7 +93,7 @@ export default class ActeService {
         }
 
         return new Promise(resolve => {
-            const {id_acte } = acte;
+            const {id_acte } = id;
             this.actes = this.actes.filter(acte => acte.id_acte !== id_acte );
             resolve({});
         })
@@ -96,6 +106,6 @@ export default class ActeService {
 
     static handleError(error: Error) {
         console.log(error);
-        
+     
     }
 }

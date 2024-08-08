@@ -1,8 +1,6 @@
 import React from 'react'
 import MainTop from '../../components/main_top/MainTop';
-import FormUpdateOfficier from '../../components/form_officier/FormUpdateOfficier';
 import { showAddModal, showUpdateModal } from '../../constants/modal';
-import FormAddOfficier from '../../components/form_officier/FormAddOfficier';
 // import "./utilisateur.css";
 
 const Utilisateur = () => {
@@ -181,8 +179,8 @@ const Utilisateur = () => {
                 </div>
             </main>
 
-            <FormAddOfficier />
-            <FormUpdateOfficier />
+            {/* <FormAddOfficier />
+            <FormUpdateOfficier /> */}
         </>
     )
 }

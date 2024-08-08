@@ -51,7 +51,7 @@
 .logo-image{
   min-width: 50px;
   height: 50px;
-  background-color: white;
+  /* background-color: white; */
   border-radius: 50%;
 }
 
@@ -1222,4 +1222,8 @@ fieldset {
 
 .showList {
   display: block !important;
+}
+
+.textRed {
+  color: #f00;
 }

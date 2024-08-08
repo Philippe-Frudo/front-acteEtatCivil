@@ -7,7 +7,7 @@ export function successBorder(nameClass) {
     document.querySelector(nameClass).classList.remove("error-border");
 }
 
-export function messageValidator(nameClass, msg) {
+export function messageValidator(nameClass, msg = '') {
     if (msg) {
         document.querySelector(nameClass).parentElement.querySelector(".msg-error").innerHTML = msg;   
     }else {

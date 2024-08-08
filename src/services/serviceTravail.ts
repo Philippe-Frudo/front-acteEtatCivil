@@ -48,7 +48,7 @@ export default class TravailService {
 
     static addAllTravail(datasTravails): Object {
         if (this.isDev) {
-            return fetch(`${this.url}/travails`, {
+            return fetch(`${this.url}/addAlltravail`, {
                 method:"POST",
                 body: JSON.stringify(datasTravails),
                 headers: {"Content-Type":"application/json"}
@@ -68,8 +68,8 @@ export default class TravailService {
 
     static updateTravail(dataTravail):Object {
         if (this.isDev) {
-            return fetch(`${this.url}/${dataTravail.id_travail}`, {
-                method:"PUT",
+            return fetch(`${this.url}/travails/${dataTravail.id_travail}`, {
+                method:"PATCH",
                 body: JSON.stringify(dataTravail),
                 headers: {"Content-Type":"application/json"}
             })
@@ -87,11 +87,10 @@ export default class TravailService {
     }
     
 
-    static deleteTravail(dataTravail):Object {
+    static deleteTravail(id):Object {
         if (this.isDev) {
-            return fetch(`${this.url}/travails/${dataTravail}`, {
+            return fetch(`${this.url}/travails/${id}`, {
                 method:"DELETE",
-                body: JSON.stringify(dataTravail),
                 headers: {"Content-Type":"application/json"}
             })
             .then(response => response.json())
@@ -99,7 +98,7 @@ export default class TravailService {
         }
 
         return new Promise(resolve => {
-            const {id_travail } = dataTravail;
+            const {id_travail } = id;
             this.travails = this.travails.filter(f => f.id_travail !== id_travail );
             resolve({});
         })

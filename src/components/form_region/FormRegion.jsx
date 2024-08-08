@@ -41,7 +41,7 @@ const FormRegion = ({region, isEditForm}) => {
         const validation = validateField(fieldName, fieldValue);
 
         const newField = { [fieldName]: { value: fieldValue, isValid: validation.isValid , error: validation.error  } };
-        setFormDistrict({ ...formDistrict, ...newField });
+        setFormRegion({ ...formRegion, ...newField });
     }
          
     const [message, setMessage] = useState("");
@@ -64,12 +64,34 @@ const FormRegion = ({region, isEditForm}) => {
 
     const updateRegion = () => {
         console.log("Data region:", region);
-        const response = RegionService.updateRegion(region);
+        RegionService.updateRegion(region)
+        .then(resp => {
+            setValid(resp.status)
+            setMessage(resp.message)
+            if (resp.satatus) {
+            setFormRegion({
+                code_region: { value: "", isValid: false, error: "" },
+                nom_region: { value: "", isValid: false, error: "" },
+            });
+            
+            }
+        });
     }
 
     const addRegion = () => {
         console.log("Data region:", region);
-        const response = RegionService.addRegion(region)
+        RegionService.addRegion(region)
+        .then(resp =>{
+            setValid(resp.status)
+            setMessage(resp.message)
+            if (resp.sattus) {
+            setFormRegion({
+                code_region: { value: "", isValid: false, error: "" },
+                nom_region: { value: "", isValid: false, error: "" },
+            });
+            
+            }
+        });
     }
 
 

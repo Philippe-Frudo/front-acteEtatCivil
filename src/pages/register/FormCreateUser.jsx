@@ -1,18 +1,26 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Officier from '../../models/officier';
 import handleSex from './../../constants/sexe'
 import ADDRESS from '../../models/mock-address';
-import { searchAddress } from '../../helpers/borderField';
+import { hiddenList, searchAddress } from '../../helpers/borderField';
 import './register.css';
 import { regex } from '../../helpers/regex';
+import OfficierService from '../../services/serviceOfficier';
+import CommuneService from '../../services/serviceCommune';
 
 
 const FormCreateUser = () => {
 
     const [cMotPass, setCMotPass] = useState("")
     const [showList, setShowList] = useState(false);
-    const [commune, setCommune] = useState("");
+    const [communes, setCommunes] = useState([]);
+    const [nomCommune, setNomCommune] = useState("");
+  
+  
+    useEffect(() => {
+        CommuneService.getCommune().then(communes => setCommunes(communes));
+    },[]);
 
     document.querySelectorAll("input").forEach(input => {
         input.addEventListener("focus", () => {
@@ -24,26 +32,37 @@ const FormCreateUser = () => {
 
 
     const [officier] = useState(new Officier());
-
     const [formOfficier, setFormOfficier] = useState({
         photo_off: { value: officier?.photo_off , isValid: true, error: "" },
         nom_off: { value: officier?.nom_off, isValid: false, error: "" },
         prenom_off: { value: officier?.prenom_off, isValid: false, error: "" },
         sexe_off: { value: officier?.sexe_off, isValid: false, error: "" },
         email_off: { value: officier?.email_off, isValid: false, error: "" },
-        code_commune: { value: officier?.code_commune, isValid: false, error: "" },
+        id_commune: { value: officier?.id_commune, isValid: false, error: "" },
         motPass_off: { value: officier?.motPass_off , isValid: false, error: "" }
     });
 
-
+      //==========INPUT  CHANGE value FIELD nom COMMUNE ==========
+  const inputChangeCommune = (e) => {
+    setNomCommune(e.target.value);
     
-    //CHANGE VALUE COMMUNE
-    const setAddressPerson = (commune) => {
-        const newField = { code_commune: { value: commune.code_commune, isValid: true } };
-        setFormOfficier({ ...formOfficier, ...newField });
-        setCommune(commune.nom_commune)
-        setShowList(false);
+    //Si le champ est null id_commune est null
+    if (!e.target.value) {
+      const newField = { id_commune: { value: '' } };  
+      setFormOfficier({ ...formOfficier, ...newField });
     }
+  }
+
+  // ======CHANGE ID CIMMUNE PAR UN CLICK DE NOM COMMUNE=====
+  const handleSetCodeCommune = (commune) => {
+    const newField = { id_commune: { value: commune.id_commune } };
+    setFormOfficier({ ...formOfficier, ...newField });
+
+    setNomCommune(commune.nom_commune);
+    
+    setShowList(false);
+  }
+  
 
     const validateField = (fieldName, value) => {
         let isValid = true;
@@ -87,8 +106,6 @@ const FormCreateUser = () => {
         setFormOfficier({ ...formOfficier, ...newField });
         console.log(fieldName, newField[fieldName].isValid);
     }
-    console.log(formOfficier.code_commune.isValid);
-
 
      //INPUT change CODE COMMUNE
      const handleInputChangeCommune = (e) => {
@@ -99,15 +116,12 @@ const FormCreateUser = () => {
                 setFormOfficier({ ...formOfficier , ...newField });
             }
     }
-    // console.log("Valeur de Code COMMUNE: ",formFonkotany.code_commune.value);  
-      
-
 
     const [message, setMessage] = useState("");
     const [valid, setValid] = useState(false);
     const handleSubmit = (e) => {
         e.preventDefault()
-        const isValid = Object.values(formOfficier).every(field => field.isValid);
+        let isValid = Object.values(formOfficier).every(field => field.isValid);
         console.log("valid:", isValid);
         if (isValid) {
             setValid(isValid);
@@ -121,14 +135,32 @@ const FormCreateUser = () => {
             officier.motPass_off = formOfficier.motPass_off.value;
             
             console.log(officier);
-                    
-            /*useEffect(() => {
-                // API
-                console.log({message});
-            })*/
+            
+            register();
+
         }else {
             setValid(false);
             setMessage("Vérifie les champs obligatoire ou non valide");
+        }
+
+
+        const register = () => {
+            OfficierService.addOfficier(officier).then(resp => {
+                setMessage(resp.message)
+                setValid(resp.status)
+                if (resp.status) {
+                    setFormOfficier({
+                        photo_off: { value: '' , isValid: true, error: "" },
+                        nom_off: { value:'', isValid: false, error: "" },
+                        prenom_off: { value: '', isValid: false, error: "" },
+                        sexe_off: { value: '', isValid: false, error: "" },
+                        email_off: { value: '', isValid: false, error: "" },
+                        code_commune: { value: '', isValid: false, error: "" },
+                        motPass_off: { value: '' , isValid: false, error: "" }
+                    });
+                }
+            })
+            // .then( () => useNavigate('/login') );
         }
     }
 
@@ -232,40 +264,35 @@ const FormCreateUser = () => {
                                 <span className="msg-error">{!formOfficier.email_off.isValid && formOfficier.email_off.error}</span>
                             </div>
                         </div>
-
+                        
                         <div className="form-group">
                             <div style={{position:"relative"}}>
                                 <label htmlFor="nom_commune" className="form-group-label">Commune:</label>
-                                <input 
+                                <input
                                     type="text" 
                                     className="form-group-input nom_commune" 
-                                    name="nom_commune" 
-                                    id="nom_commune" 
-                                    placeholder='commune'
-                                    value={commune}
-                                    onChange={handleInputChangeCommune}
+                                    name="nom_commune"
+                                    id="nom_commune"
+                                    placeholder="Commune" 
+                                    value={nomCommune} 
+                                    onChange={inputChangeCommune}
                                     onKeyUp={(e) => searchAddress(e.target.id, "list_commune") }
-                                    onFocus={() => setShowList(true) }
-                            />
-              
+                                    onFocus={() => setShowList(true) } 
+                                />
+
                                 <ul id="list_commune" className={ showList ? "showList list":"list"}>
-                                    {ADDRESS?.map(adrs => (
-                                    <li key={adrs.id_adrs}>
-                                        <p className='list-p' onClick={() => setAddressPerson(adrs)}>
-                                        {adrs.code_postal} &nbsp;
-                                        {adrs.nom_adrs} &nbsp;
-                                        {adrs.nom_fonkotany} &nbsp;
-                                        {adrs.code_commune} &nbsp;
-                                        {adrs.nom_commune} &nbsp;
-                                        {adrs.code_district} &nbsp;
-                                        {adrs.nom_district} &nbsp;
-                                        {adrs.code_region} &nbsp;
-                                        {adrs.nom_region} &nbsp;
+                                    {communes?.map(c => (
+                                    <li key={c.id_commune}>
+                                        <p className='list-p' onClick={() => handleSetCodeCommune(c)}>
+                                        {c.code_commune} &nbsp;
+                                        {c.nom_commune} &nbsp;
+                                        {c.code_district} &nbsp;
                                         </p>
                                     </li>
                                     ))}
                                 </ul>
-                                <span className="msg-error">{!formOfficier.code_commune.isValid && formOfficier.code_commune.error}</span>
+
+                                <span className="msg-error"></span>
                             </div>
                         </div>
 
@@ -299,7 +326,6 @@ const FormCreateUser = () => {
                                 <span className="msg-error">{!formOfficier.motPass_off.isValid && formOfficier.motPass_off.error}</span>
                             </div>
                         </div>
-
 
                         <div className="action-group">
                             <button type="submit" className="btn btn-save" id="save">S'inscrire</button>

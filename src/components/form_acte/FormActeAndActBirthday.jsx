@@ -6,10 +6,19 @@ import FormActe from '../../components/form_acte/FormActe';
 import { regex } from '../../helpers/regex';
 import PersonneService from '../../services/servicePersonne';
 import ActeService from '../../services/serviceActe';
+import TravailService from '../../services/serviceTravail';
 
 const FormActeAndBirthday = ({personne, acte, isEditForm}) => {
 
-    const [lastPersonne, setLastPersonne] = useState([]);
+    const [travails, setTravails] = useState([]);
+    // travails.some(travail => travail.nom_travail === 'Ombiasa'); // Verification de valeur dans une tableau
+    useEffect(() => {
+        TravailService.getTravail().then(travails => setTravails(travails));
+    },[]);
+
+    let newDate = new Date().toUTCString();
+
+    // const [lastPersonne, setLastPersonne] = useState(null);
 
     document.querySelectorAll("input").forEach(input => {
         input.addEventListener("focus", () => {
@@ -28,7 +37,7 @@ const FormActeAndBirthday = ({personne, acte, isEditForm}) => {
 
     /* ================================= VALIDATION FORM PERSONNE ========================================= */
     const [formPersonne, setFormPersonne] = useState({
-        // id_person: { value: personne.id_person },
+        id_person: { value:null },
         nom_person: { value: personne.nom_person, isValid: true },
         prenom_person: { value: personne.prenom_person, isValid: true },
         sexe_person: { value: personne.sexe_person, isValid: true },
@@ -54,204 +63,262 @@ const FormActeAndBirthday = ({personne, acte, isEditForm}) => {
     });
 
     const validFormPersonne = () => {
-        let newForm = { ...formPersonne };
+        const newForm = { ...formPersonne };
 
         /* =============== VALIDATION PERSONNE =============== */
         //Validation de nom du personne
-        if (!formPersonne.nom_person.value && !regex.character.test(formPersonne.nom_person.value)) {
-            newForm.nom_person = { value: formPersonne.nom_person.value, error: "Le nom doit etre une chaine de caractére de longueur 3 à 30", isValid: false };
+        if (!formPersonne.nom_person.value) {
+            newForm.nom_person = { value: formPersonne.nom_person.value, error: '', isValid: false };
             errorBorder(".nom_person");
-            messageValidator(".nom_person", newForm.nom_person.error);
         } else {
-            newForm.nom_person = { value: formPersonne.nom_person.value, error: "", isValid: true };
+            let msg = '', isValid = true;
+            if (!regex.nom.test(formPersonne.nom_person.value)) {
+                isValid = false
+                msg =  "Le nom doit etre une chaine de caractére de longueur 3 à 30";
+            }
+            newForm.nom_person = { value: formPersonne.nom_person.value, error: msg, isValid: isValid };
             successBorder(".nom_person");
-            messageValidator(".nom_person", "");
+            messageValidator(".nom_person", msg );
         }
 
         //Validation de prenom du personne
         if (formPersonne.prenom_person.value) {
-            if (!regex.character.test(formPersonne.prenom_person.value)) {
+            if (!regex.prenom.test(formPersonne.prenom_person.value)) {
                 newForm.prenom_person = { value: formPersonne.prenom_person.value, error: "Le prenom doit etre des chaines de caractéres, de 3 à 50 de long.", isValid: false };
                 errorBorder(".prenom_person");
                 messageValidator(".prenom_person", newForm.prenom_person.error);
             } else {
                 newForm.prenom_person = { value: formPersonne.prenom_person.value, error: "", isValid: true };
                 successBorder(".prenom_person");
-                messageValidator(".prenom_person", "");
+                messageValidator(".prenom_person" );
             }   
         }
 
         //Validation de l'adresse du perssone
-        if ( !(formPersonne.adrs_person.value.length < 10) ) {
-            newForm.adrs_person = { value: formPersonne.adrs_person.value, error: "Cette adresse est invalide", isValid: false };
-            errorBorder(".adrs_person");
-            messageValidator(".adrs_person", newForm.adrs_person.error);
-        } else {
-            newForm.adrs_person = { value: formPersonne.adrs_person.value, error: "", isValid: true };
-            successBorder(".adrs_person");
-            messageValidator(".adrs_person", "");
+        if (formPersonne.adrs_person.value) {
+            if ( formPersonne.adrs_person.value.length < 10 ) {
+                newForm.adrs_person = { value: formPersonne.adrs_person.value, error: "L'adresse doit au mois de 10 caractéres", isValid: false };
+                errorBorder(".adrs_person");
+                messageValidator(".adrs_person", newForm.adrs_person.error);
+            } else {
+                newForm.adrs_person = { value: formPersonne.adrs_person.value, error: "", isValid: true };
+                successBorder(".adrs_person");
+                messageValidator(".adrs_person");
+            }  
         }
 
         //Validation de l'adresse
-        if (!formPersonne.id_travail.value) {
+        if (!document.querySelector(".nom_travail_person").value) {
             newForm.id_travail = { value: formPersonne.id_travail.value, error: "", isValid: false };
             errorBorder(".nom_travail_person");
-            messageValidator(".nom_travail_person", newForm.id_travail.error);
-        } else {
-            newForm.id_travail = { value: formPersonne.id_travail.value, error: "", isValid: true };
+        }else {
+            let msg = '', isValid = true;
+            if (!formPersonne.id_travail.value) {
+                msg= "Assurez-vous de sélectionner la valeur charcher";
+                isValid = false
+                errorBorder(".nom_travail_person");
+            }
+            newForm.id_travail = { value: formPersonne.id_travail.value, error: msg, isValid: isValid };
             successBorder(".nom_travail_person");
-            messageValidator(".nom_travail_person", "");
+            messageValidator(".nom_travail_person", msg );
+
         }
 
 
         /* =============== VALIDATION MERE =============== */
          //Validation de nom de la mère
-         if (!formPersonne.nom_m.value && !regex.character.test(formPersonne.nom_m.value) ) {
-            newForm.nom_m = { value: formPersonne.nom_m.value, error: "Le nom est invalide, des chaines de caractéres seulement, de 3 à 30 de long", isValid: false };
+         if (!formPersonne.nom_m.value) {
+            newForm.nom_m = { value: formPersonne.nom_m.value, error: '', isValid: false };
             errorBorder(".nom_m");
-            messageValidator(".nom_m", newForm.nom_m.error);
         } else {
-            newForm.nom_m = { value: formPersonne.nom_m.value, error: "", isValid: true };
+            let msg = '', isValid = true
+            if (!regex.nom.test(formPersonne.nom_m.value) ){
+                isValid = false
+                msg = "caractéres spéciaux invalide , longueur de 3 à 30"
+            }
+            newForm.nom_m = { value: formPersonne.nom_m.value, error: msg, isValid: isValid };
             successBorder(".nom_m");
-            messageValidator(".nom_m", "");
+            messageValidator(".nom_m", msg );
         }
 
         //Validation de prenom de la mère
         if (formPersonne.prenom_m.value) {
-            if (!regex.character.test(formPersonne.prenom_m.value) ) {
-                newForm.prenom_m = { value: formPersonne.prenom_m.value, error: "Le prenom doit simplement composé que des chaines de caractéres, de 3 à 50 de long.", isValid: false };
+            if (!regex.prenom.test(formPersonne.prenom_m.value) ) {
+                newForm.prenom_m = { value: formPersonne.prenom_m.value, error: "caractéres spéciaux invalide, et longueur de 3 à 50.", isValid: false };
                 errorBorder(".prenom_m");
                 messageValidator(".prenom_m", newForm.prenom_m.error);
             } else {
                 newForm.prenom_m = { value: formPersonne.prenom_m.value, error: "", isValid: true };
                 successBorder(".prenom_m");
-                messageValidator(".prenom_m", "");
+                messageValidator(".prenom_m");
             }  
         }
 
         //Validation date de naissance mère
-        const dateNais = formPersonne.date_nais_m.value;
-        if (!dateNais && (formPersonne.age_m.value < 12) ) {
-            newForm.date_nais_m = { value: formPersonne.date_nais_m.value, error: "Invalide date de naissance de la mère.", isValid: false };
+        if (!formPersonne.date_nais_m.value) {
+            newForm.date_nais_m = { value: formPersonne.date_nais_m.value, error: '', isValid: false };
             errorBorder(".date_nais_m");
-            messageValidator(".date_nais_m", newForm.date_nais_m.error);
         } else {
-            newForm.date_nais_m = { value: formPersonne.date_nais_m.value, error: "", isValid: true };
+            let msg = '', isValid = true
+            if ( formPersonne.age_m.value && (formPersonne.age_m.value < 12) ) {
+                isValid = false
+                msg = "Entre la date d'acte et la date de naissance de la mère, l'age de la mère doit >=12.";
+            }
+
+            newForm.date_nais_m = { value: formPersonne.date_nais_m.value, error: msg, isValid: isValid };
             successBorder(".date_nais_m");
-            messageValidator(".date_nais_m", "");
+            messageValidator(".date_nais_m", msg );
         }
 
 
         //Validation de lieu de naissance
-        if (formPersonne.lieu_nais_m.value.length < 10) {
-            newForm.lieu_nais_m = { value: formPersonne.lieu_nais_m.value, error: "Lieu de naissance invalide", isValid: false };
+        if (!formPersonne.lieu_nais_m.value) {
+            newForm.lieu_nais_m = { value: formPersonne.lieu_nais_m.value, error: '', isValid: false };
             errorBorder(".lieu_nais_m");
-            messageValidator(".lieu_nais_m", newForm.lieu_nais_m.error);
         } else {
+            let msg = '', isValid = true
+            if (formPersonne.lieu_nais_m.value.length < 10) {
+                isValid = false
+                msg = "ce champ doitau minimum de 10 caractéres.";
+            }
             newForm.lieu_nais_m = { value: formPersonne.lieu_nais_m.value, error: "", isValid: true };
             successBorder(".lieu_nais_m");
-            messageValidator(".lieu_nais_m", "");
+            messageValidator(".lieu_nais_m", msg );
         }
 
 
         //Validation de profession mere
-        if (formPersonne.profession_m.value === "") {
-            newForm.profession_m = { value: formPersonne.profession_m.value, error: "", isValid: false };
+        if (!formPersonne.profession_m.value) {
+            newForm.profession_m = { value: formPersonne.profession_m.value, error: '', isValid: false };
             errorBorder(".profession_m");
-            messageValidator(".profession_m", newForm.profession_m.error);
         } else {
-            newForm.profession_m = { value: formPersonne.profession_m.value, error: "", isValid: true };
+            let msg = '', isValid = true
+            //Verification de profession de la mère dans la table travail"
+            if (!travails.some(trav => trav.nom_travail === formPersonne.profession_m.value) ) {
+                isValid = false
+                msg = 'Entre de travail valide, Ce travail n\'existe pas';
+            }
+            newForm.profession_m = { value: formPersonne.profession_m.value, error: msg, isValid: isValid };
             successBorder(".profession_m");
-            messageValidator(".profession_m", "");
+            messageValidator(".profession_m", msg );
         }
 
 
         //Validation de l'adresse de la mère
-        if (formPersonne.adrs_m.value.length < 10) {
-            newForm.adrs_m = { value: formPersonne.adrs_m.value, error: "Cette adresse est invalid", isValid: false };
+        if (!formPersonne.adrs_m.value) {
+            newForm.adrs_m = { value: formPersonne.adrs_m.value, error: '', isValid: false };
             errorBorder(".adrs_m");
-            messageValidator(".adrs_m", newForm.adrs_m.error);
         } else {
-            newForm.adrs_m = { value: formPersonne.adrs_m.value, error: "", isValid: true };
+             let msg = ''
+             let isValid = true
+            if (formPersonne.adrs_m.value.length < 10) {
+                isValid = false
+                msg = "L'adresse doit au moins de 10 caractére de long.";
+            }
+            newForm.adrs_m = { value: formPersonne.adrs_m.value, error: msg, isValid: isValid };
             successBorder(".adrs_m");
-            messageValidator(".adrs_m", "");
+            messageValidator(".adrs_m", msg );
         }
 
 
 
         /* =============== VALIDATION PERE =============== */
          //Validation nom du pere
-         if (!formPersonne.nom_p.value && !regex.character.test(formPersonne.nom_p.value)) {
-            newForm.nom_p = { value: formPersonne.nom_p.value, error: "Le nom doit simplement composé des chaines de caractéres, de 3 à 30 de long", isValid: false };
+         if (!formPersonne.nom_p.value) {
+            newForm.nom_p = { value: formPersonne.nom_p.value, error: '', isValid: false };
             errorBorder(".nom_p");
-            messageValidator(".nom_p", newForm.nom_p.error);
         } else {
-            newForm.nom_p = { value: formPersonne.nom_p.value, error: "", isValid: true };
+            let msg = ''
+            let isValid = true;
+            if (formPersonne.nom_p.value.length > 0 && !regex.nom.test(formPersonne.nom_p.value)) {
+                isValid = false;
+                msg = "Invalide les caractéres spéciaux: , longueur du champ de 3 à 30."
+            }
+            newForm.nom_p = { value: formPersonne.nom_p.value, error: msg, isValid: isValid };
             successBorder(".nom_p");
-            messageValidator(".nom_p", "");
+            messageValidator(".nom_p", msg );
         }
 
 
         //Validation de prenom du père 
         if (formPersonne.prenom_p.value) {
-            if (!regex.character.test(formPersonne.nom_p.value)) {
-                newForm.prenom_p = { value: formPersonne.prenom_p.value, error: "Le prenom doit simplement composé des chaines des caractéres de 3 à 50 de long.", isValid: false };
+            if (!regex.prenom.test(formPersonne.prenom_p.value)) {
+                newForm.prenom_p = { value: formPersonne.prenom_p.value, error: "caractéres spéciaux invalide, longueur de 3 à 50.", isValid: false };
                 errorBorder(".prenom_p");
                 messageValidator(".prenom_p", newForm.prenom_p.error);
             } else {
                 newForm.prenom_p = { value: formPersonne.prenom_p.value, error: "", isValid: true };
                 successBorder(".prenom_p");
-                messageValidator(".prenom_p", "");
+                messageValidator(".prenom_p");
             }  
         }
 
         // Validation de date de naissance du père
-        if (!formPersonne.date_nais_p.value && (formPersonne.date_nais_p.value > formActe.date_acte.value) && (formPersonne.age_p.value < 12) ) {
-            newForm.date_nais_p = { value: formPersonne.date_nais_p.value, error: "Invalide date de naissance du père.", isValid: false };
+        if (!formPersonne.date_nais_p.value) {
+            newForm.date_nais_p = { value: formPersonne.date_nais_p.value, error: '', isValid: false };
             errorBorder(".date_nais_p");
-            messageValidator(".date_nais_p", newForm.date_nais_p.error);
         } else {
-            newForm.date_nais_m = { value: formPersonne.date_nais_p.value, error: "", isValid: true };
+            let msg = ''
+            let isValid = true
+            if ( formPersonne.age_p.value && (formPersonne.age_p.value < 14) ) {
+                isValid = false
+                msg = "Entre la date de naissance du père et la date de l'acte. L'age du père doit >= 14"
+            }
+
+            newForm.date_nais_m = { value: formPersonne.date_nais_p.value, error: msg, isValid: isValid };
             successBorder(".date_nais_p");
-            messageValidator(".date_nais_p", "");
+            messageValidator(".date_nais_p", msg );
         }
 
 
         //Validation de lieu de naissance père
-        if (!formPersonne.lieu_nais_p.value && (formPersonne.lieu_nais_p.value.length < 5) ) {
-            newForm.lieu_nais_p = { value: formPersonne.lieu_nais_p.value, error: "Lieu de naissane invalide", isValid: false };
+        if (!formPersonne.lieu_nais_p.value ){
+            newForm.lieu_nais_p = { value: formPersonne.lieu_nais_p.value, error: '', isValid: false };
             errorBorder(".lieu_nais_p");
-            messageValidator(".lieu_nais_p", newForm.lieu_nais_p.error);
         } else {
-            newForm.lieu_nais_p = { value: formPersonne.lieu_nais_p.value, error: "", isValid: true };
+            let msg = ''
+            let isValid = true
+            if (formPersonne.lieu_nais_p.value.length < 10) {
+                msg = "La longueur doit au mois de 10 caractére."
+                isValid = false
+            }
+            newForm.lieu_nais_p = { value: formPersonne.lieu_nais_p.value, error: msg, isValid: isValid };
             successBorder(".lieu_nais_p");
-            messageValidator(".lieu_nais_p", "");
+            messageValidator(".lieu_nais_p", msg );
         }
 
 
         //Validation de l'adresse du PERE
-        if (!formPersonne.adrs_p.value && formPersonne.adrs_p.value.length < 5) {
-            newForm.adrs_p = { value: formPersonne.adrs_p.value, error: "Cette adresse est invalide", isValid: false };
+        if (!formPersonne.adrs_p.value) {
+            newForm.adrs_p = { value: formPersonne.adrs_p.value, error: '', isValid: false };
             errorBorder(".adrs_p");
-            messageValidator(".adrs_p", newForm.adrs_p.error);
         } else {
-            newForm.adrs_p = { value: formPersonne.adrs_p.value, error: "", isValid: true };
+            let msg = ''
+            let isValid = true
+            if (formPersonne.adrs_p.value.length < 5) {
+                msg = "Ce champ doit au moins 10 caractére"
+                isValid = false
+            }
+            newForm.adrs_p = { value: formPersonne.adrs_p.value, error: msg, isValid: isValid };
             successBorder(".adrs_p");
-            messageValidator(".adrs_p", "");
+            messageValidator(".adrs_p", msg );
         }
 
         //Validation de profession PERE
         if (!formPersonne.profession_p.value) {
             newForm.profession_p = { value: formPersonne.profession_p.value, error: "", isValid: false };
             errorBorder(".profession_p");
-            messageValidator(".profession_p", newForm.profession_p.error);
         } else {
-            newForm.profession_p = { value: formPersonne.profession_p.value, error: "", isValid: true };
+            let msg = ""
+            let isValid = true
+            if (!travails.some(trav => trav.nom_travail === formPersonne.profession_p.value)) {
+                msg = "Ce travail n'existe pas"
+                isValid = false
+            }
+            newForm.profession_p = { value: formPersonne.profession_p.value, error: msg, isValid: isValid };
             successBorder(".profession_p");
-            messageValidator(".profession_p", "");
+            messageValidator(".profession_p", msg );
         }
-
-
 
         setFormPersonne(newForm);
 
@@ -267,6 +334,7 @@ const FormActeAndBirthday = ({personne, acte, isEditForm}) => {
 
         id_acte : {value: acte.id_acte, isValid: true },
         id_type : {value: acte.id_type, isValid: true },
+        num_acte : {value: acte.num_acte, isValid: true },
         date_acte : {value: acte.date_acte, isValid: true },
         heure_acte : {value: acte.heure_acte, isValid: true },
         lieu_acte : {value: acte.lieu_acte, isValid: true },
@@ -282,68 +350,95 @@ const FormActeAndBirthday = ({personne, acte, isEditForm}) => {
         adrs_temoin : {value: acte.adrs_temoin, isValid: true },
         profession_temoin : {value: acte.profession_temoin, isValid: true },
 
-        // id_person : {value: acte.id_person, isValid: true },
+        id_person : {value: acte.id_person, isValid: true },
         id_fonkotany : {value: acte.id_fonkotany, isValid: true },
-        code_commune : {value: acte.code_commune, isValid: true },
+        id_commune : {value: acte.id_commune, isValid: true },
         id_off : {value: acte.id_off, isValid: true }
     });
+
     const validFormActe = () => {
-        let newForm = { ...formActe };
+        const newForm = { ...formActe };
 
         //Validation de type 
         if (!formActe.id_type.value) {
             newForm.id_type = { value: formActe.id_type.value, error: "", isValid: false };
-            errorBorder(".nom_type");
-            messageValidator(".nom_type", newForm.id_type.error);
+            errorBorder(".id_type");
         } else {
             newForm.id_type = { value: formActe.id_type.value, error: "", isValid: true };
-            successBorder(".nom_type");
-            messageValidator(".nom_type", "");
+            successBorder(".id_type");
+        }
+
+        //Validation de numero acte 
+        if (!formActe.num_acte.value) {
+            newForm.num_acte = { value: formActe.num_acte.value, error: "", isValid: false };
+            errorBorder(".num_acte");
+        } else {
+            let msg = '', isValid = true;
+            if (!regex.number(formActe.num_acte.value) ) {
+                isValid = false
+                msg = "Seul le nombre entier est autorise";
+            }
+            newForm.num_acte = { value: formActe.num_acte.value, error: "", isValid: isValid };
+            successBorder(".num_acte");
         }
 
         //Validation de date_acte 
-        if (!formActe.date_acte.value && !(formActe.date_acte.value <= newDate) ) {
-            newForm.date_acte = { value: formActe.date_acte.value, error: "La date d'acte n'est pas valide", isValid: false };
+        if (!formActe.date_acte.value) {
+            newForm.date_acte = { value: formActe.date_acte.value, error: '', isValid: false };
             errorBorder(".date_acte");
-            messageValidator(".date_acte", newForm.date_acte.error);
-
         } else {
-            newForm.date_acte = { value: formActe.date_acte.value, error: "", isValid: true };
+            let msg = '', isValid = true;
+            if (formActe.date_acte.value >= newDate ) {
+                isValid = false
+                msg = "La date d'acte n'est pas valide";
+            }
+            newForm.date_acte = { value: formActe.date_acte.value, error: msg, isValid: isValid };
             successBorder(".date_acte");
-            messageValidator(".date_acte", "");
+            messageValidator(".date_acte", msg );
         }
 
         //Validation de heure_acte 
         if (!formActe.heure_acte.value) {
-            newForm.heure_acte = { value: formActe.heure_acte.value, error: "L'heure d'acte est obligatoire non null", isValid: false };
+            newForm.heure_acte = { value: formActe.heure_acte.value, error: "", isValid: false };
             errorBorder(".heure_acte");
-            messageValidator(".heure_acte", newForm.heure_acte.error);
         } else {
             newForm.heure_acte = { value: formActe.heure_acte.value, error: "", isValid: true };
             successBorder(".heure_acte");
-            messageValidator(".heure_acte", "");
         }
 
         //Validation de lieu d'acte 
-        if (!formActe.lieu_acte.value && formActe.lieu_acte.value.length < 10) {
-            newForm.lieu_acte = { value: formActe.lieu_acte.value, error: "Lieu d'acte invalide", isValid: false };
+        if (!formActe.lieu_acte.value) {
             errorBorder(".lieu_acte");
-            messageValidator(".lieu_acte", newForm.lieu_acte.error);
+            newForm.lieu_acte = { value: formActe.lieu_acte.value, error: '' , isValid: false };
         } else {
-            newForm.lieu_acte = { value: formActe.lieu_acte.value, error: "", isValid: true };
+            let msg = '', isValid = true;
+            if (formActe.lieu_acte.value.length < 10) {
+                isValid = false
+                msg = "Le lieu ne doit pas au moins de 10 caractéres";
+            }
+            newForm.lieu_acte = { value: formActe.lieu_acte.value, error: msg, isValid: isValid };
             successBorder(".lieu_acte");
-            messageValidator(".lieu_acte", "");
+            messageValidator(".lieu_acte", msg );
         }
 
         //Validation de date_enreg 
-        if (!formActe.date_enreg.value && formActe.date_enreg.value <= newDate ) {
-            newForm.date_enreg = { value: formActe.date_enreg.value, error: "La date d'enregistrement d'acte n'est pas valide", isValid: false };
+        if (!formActe.date_enreg.value ) { 
+            newForm.date_enreg = { value: formActe.date_enreg.value, error: '', isValid: false };
             errorBorder(".date_enreg");
-            messageValidator(".date_enreg", newForm.date_enreg.value);
         } else {
-            newForm.date_enreg = { value: formActe.date_enreg.value, error: "", isValid: true };
+            let msg = '', isValid = true;
+            if (formActe.date_acte.value && formActe.date_enreg.value <= formActe.date_acte.value ) {
+                isValid = false
+                msg = "La date d'enregistrement doit superieur ou égale à la date de l'acte."
+            }
+
+            if (formActe.date_enreg.value >= newDate) {
+                isValid = false
+                msg = "La date d'enregistrement d'acte n'est pas valide."
+            }
+            newForm.date_enreg = { value: formActe.date_enreg.value, error: msg, isValid: isValid };
             successBorder(".date_enreg");
-            messageValidator(".date_enreg", "");
+            messageValidator(".date_enreg", msg );
         }
 
         //Validation de heure_enreg
@@ -354,174 +449,185 @@ const FormActeAndBirthday = ({personne, acte, isEditForm}) => {
         } else {
             newForm.heure_enreg = { value: formActe.heure_enreg.value, error: "", isValid: true };
             successBorder(".heure_enreg");
-            messageValidator(".heure_enreg", "");
+            messageValidator(".heure_enreg");
         }
 
         //validation nom temoin
-        if (!regex.character.test(formActe.nom_temoin.value)) {
-            newForm.nom_temoin = { value: formActe.nom_temoin.value, error: "nom invalide, chaine de caractére seulement, de longueur 3 à 30", isValid: false };
+        if (!formActe.nom_temoin.value) {
+            newForm.nom_temoin = { value: formActe.nom_temoin.value, error: '', isValid: false };
             errorBorder(".nom_temoin");
-            messageValidator(".nom_temoin", newForm.nom_temoin.error);
         } else {
-            newForm.nom_temoin = { value: formActe.nom_temoin.value, error: "", isValid: true };
+            let msg = '', isValid = true;
+            if (!regex.nom.test(formActe.nom_temoin.value)) {
+                isValid = false
+                msg = "nom invalide, caractére spéciaux  ,non autorisés, de longueur 3 à 30"
+            }
+            newForm.nom_temoin = { value: formActe.nom_temoin.value, error: msg, isValid: isValid };
             successBorder(".nom_temoin");
-            messageValidator(".nom_temoin", "");
+            messageValidator(".nom_temoin", msg );
         }
 
         //Validation de prenom du temoin 
         if (formActe.prenom_temoin.value) {
-            if (!regex.character.test(formActe.prenom_temoin.value)) {
-                newForm.prenom_temoin = { value: formActe.prenom_temoin.value, error: "prenom invalide, chaine de caractére seulement de longuer 3 à 50.", isValid: false };
+            if (!regex.prenom.test(formActe.prenom_temoin.value) ) {
+                newForm.prenom_temoin = { value: formActe.prenom_temoin.value, error: "nom invalide, caractére non valide, de longueur 3 à 30.", isValid: false };
                 errorBorder(".prenom_temoin");
                 messageValidator(".prenom_temoin", newForm.prenom_temoin.error);
             } else {
                 newForm.prenom_temoin = { value: formActe.prenom_temoin.value, error: "", isValid: true };
                 successBorder(".prenom_temoin");
-                messageValidator(".prenom_temoin", "");
+                messageValidator(".prenom_temoin");
             }  
         }
 
         //Validation date de naissance du temoin
-        if (!formActe.date_nais_temoin.value && !formActe.age_temoin.value && !(formActe.age_temoin.value >= 18)) {
-            newForm.date_nais_temoin = { value: formActe.date_nais_temoin.value, error: "L'age n'est doit pas inférieur à 18.", isValid: false };
+        if (!formActe.date_nais_temoin.value) {
+            newForm.date_nais_temoin = { value: formActe.date_nais_temoin.value, error: '', isValid: false };
             errorBorder(".date_nais_temoin");
-            messageValidator(".date_nais_temoin", newForm.date_nais_temoin.error);
         } else {
-            newForm.date_nais_temoin = { value: formActe.date_nais_temoin.value, error: "", isValid: true };
+            let msg = '', isValid = true;
+            if ( formActe.age_temoin.value && (formActe.age_temoin.value <= 18) ) {
+                isValid =false
+                msg = "L'age n'est doit pas inférieur à 18."
+            }
+            newForm.date_nais_temoin = { value: formActe.date_nais_temoin.value, error: msg, isValid: isValid };
             successBorder(".date_nais_temoin");
-            messageValidator(".date_nais_temoin", "");
+            messageValidator(".date_nais_temoin", msg );
         }
+
 
         //Validation de lieu de naissance du temoin
-        if (!formActe.lieu_nais_temoin.value && formActe.lieu_nais_temoin.value.length < 10) {
-            newForm.lieu_nais_temoin = { value: formActe.lieu_nais_temoin.value, error: "Lieu non valide", isValid: false };
+        if (!formActe.lieu_nais_temoin.value) {
+            newForm.lieu_nais_temoin = { value: formActe.lieu_nais_temoin.value, error: '', isValid: false };
             errorBorder(".lieu_nais_temoin");
-            messageValidator(".lieu_nais_temoin", newForm.lieu_nais_temoin.error);
         } else {
-            newForm.lieu_nais_temoin = { value: formActe.lieu_nais_temoin.value, error: "", isValid: true };
+            let msg = '', isValid = true;
+            if (formActe.lieu_nais_temoin.value.length < 10) {
+                isValid = false
+                msg = "Lieu au mois de 10 caractére"
+            }
+            newForm.lieu_nais_temoin = { value: formActe.lieu_nais_temoin.value, error: msg, isValid: isValid };
             successBorder(".lieu_nais_temoin");
-            messageValidator(".lieu_nais_temoin", "");
+            messageValidator(".lieu_nais_temoin", msg );
         }
 
+
         //Validation de l'adresse du temoin
-        if (!parseInt(formActe.adrs_temoin.value)) {
-            newForm.adrs_temoin = { value: formActe.adrs_temoin.value, error: "Cette adresse est invalid", isValid: false };
+        if (!formActe.adrs_temoin.value ) {
+            newForm.adrs_temoin = { value: formActe.adrs_temoin.value, error: '', isValid: false };
             errorBorder(".adrs_temoin");
-            messageValidator(".adrs_temoin", newForm.adrs_temoin.error);
         } else {
-            newForm.adrs_temoin = { value: formActe.adrs_temoin.value, error: "", isValid: true };
+            let msg = '', isValid = true;
+            if (formActe.adrs_temoin.value.length < 10) {
+                isValid = false;
+                msg = "L'adresse doit au mois de 10 caractére"
+            }
+            newForm.adrs_temoin = { value: formActe.adrs_temoin.value, error: msg, isValid: isValid };
             successBorder(".adrs_temoin");
-            messageValidator(".adrs_temoin", "");
+            messageValidator(".adrs_temoin", msg );
         }
 
         //Validation de la profession du temoin
-        if (!parseInt(!formActe.profession_temoin.value && formActe.profession_temoin.value.length < 3)) {
-            newForm.profession_temoin = { value: formActe.profession_temoin.value, error: "", isValid: false };
+        if (!formActe.profession_temoin.value) {
+            newForm.profession_temoin = { value: formActe.profession_temoin.value, error: '', isValid: false };
             errorBorder(".profession_temoin");
-            messageValidator(".profession_temoin", newForm.profession_temoin.error);
         } else {
-            newForm.profession_temoin = { value: formActe.profession_temoin.value, error: "", isValid: true };
+            let msg = '', isValid = true
+            if (!travails.some(trav => trav.nom_travail === formActe.profession_temoin.value) ) {
+                isValid = false
+                msg = 'ce travail n\'existe pas'
+            }
+            newForm.profession_temoin = { value: formActe.profession_temoin.value, error: msg, isValid: isValid };
             successBorder(".profession_temoin");
-            messageValidator(".profession_temoin", "");
+            messageValidator(".profession_temoin", msg );
         }
-
 
 
         //Validation de fonkotany fonkotany
-        if (!formActe.id_fonkotany.value) {
-            newForm.id_fonkotany = { value: formActe.id_fonkotany.value, error: "Fonkotany invalide", isValid: false };
+        if (!document.querySelector(".nom_fonkotany").value) {
+            newForm.id_fonkotany = { value: formActe.id_fonkotany.value, error: '', isValid: false };
             errorBorder(".nom_fonkotany");
-            messageValidator(".nom_fonkotany", newForm.code_commune.error);
         } else {
-            newForm.id_fonkotany = { value: formActe.id_fonkotany.value, error: "", isValid: true };
+            let msg = '', isValid = true;
+            if (!formActe.id_fonkotany.value) {
+                msg= "Assurez-vous de sélectionner la valeur charcher";
+                isValid = false
+                errorBorder(".nom_fonkotany");
+            }
+            newForm.id_fonkotany = { value: formActe.id_fonkotany.value, error: msg, isValid: isValid };
             successBorder(".nom_fonkotany");
-            messageValidator(".nom_fonkotany", "");
+            messageValidator(".nom_fonkotany", msg );
         }
 
-        //Validation de Code commune
-        if (!formActe.code_commune.value) {
-            newForm.code_commune = { value: formActe.code_commune.value, error: "", isValid: false };
+        //Validation de idantifiant du commune
+        if (!document.querySelector(".nom_commune").value) {
+            newForm.id_commune = { value: formActe.id_commune.value, error: '', isValid: false };
             errorBorder(".nom_commune");
-            messageValidator(".nom_commune", newForm.code_commune.error);
         } else {
-            newForm.code_commune = { value: formActe.code_commune.value, error: "", isValid: true };
+            let msg = '', isValid = true;
+            if (!formActe.id_commune.value) {
+                msg = "Assurez-vous de sélectionner la valeur charcher";
+                isValid = false
+                errorBorder(".nom_commune");
+            }
+            newForm.id_commune = { value: formActe.id_commune.value, error: msg, isValid: isValid };
             successBorder(".nom_commune");
-            messageValidator(".nom_commune", "");
+            messageValidator(".nom_commune", msg );
         }
-
-        setFormActe(newForm);
 
         if (newForm.nom_temoin.value && newForm.lieu_nais_temoin.value && newForm.date_nais_temoin.value) {
             setFormActe(newForm);
             return newForm.date_acte.isValid && newForm.heure_acte.isValid && newForm.lieu_acte.isValid
-            && newForm.date_enreg.isValid && newForm.heure_enreg.isValid && newForm.id_fonkotany.isValid 
-            && newForm.code_commune.isValid && newForm.nom_temoin.isValid && newForm.prenom_temoin.isValid 
-            && newForm.date_nais_temoin.isValid && newForm.lieu_nais_temoin.isValid && newForm.adrs_temoin.isValid 
-            && newForm.profession_temoin.isValid;
+                && newForm.date_enreg.isValid && newForm.heure_enreg.isValid && newForm.id_fonkotany.isValid 
+                && newForm.id_commune.isValid && newForm.nom_temoin.isValid && newForm.prenom_temoin.isValid 
+                && newForm.date_nais_temoin.isValid && newForm.lieu_nais_temoin.isValid && newForm.adrs_temoin.isValid 
+                && newForm.profession_temoin.isValid;
         }
 
+        setFormActe(newForm);
         return newForm.date_acte.isValid && newForm.heure_acte.isValid && newForm.lieu_acte.isValid
-        && newForm.date_enreg.isValid && newForm.heure_enreg.isValid 
-        && newForm.id_fonkotany.isValid && newForm.code_commune.isValid;
-
+            && newForm.date_enreg.isValid && newForm.heure_enreg.isValid 
+            && newForm.id_fonkotany.isValid && newForm.id_commune.isValid;
     }
-          
-    /* ===== Calcule age de naissance des parents, à la naissance de la [ersonne =====*/
+
+
+    /* ===== Calcul age des parents et du témoin, à la naissance de la personne =====*/
     const age = (dateActe, dateNaisX) => {
         if (dateActe && dateNaisX) {
             let age = 0;
             age = parseInt(( new Date(dateActe) - new Date(dateNaisX) ) / 31536000000 );  
-            console.log("Age pere= " + age);
+            console.log("Age = " + age);
             return age;
         }
     }
-
-    if (formActe.date_acte.value) {
+    const dateActe = formActe.date_acte.value
+    if (dateActe) {
         if (formPersonne.date_nais_m.value) {
-            formPersonne.age_m.value =  age(formActe.date_acte.value, formPersonne.date_nais_m.value )
+            formPersonne.age_m.value =  age(dateActe, formPersonne.date_nais_m.value )
         }
 
         if (formPersonne.date_nais_p.value) { 
-            formPersonne.age_p.value = age(formActe.date_acte.value, formPersonne.date_nais_p.value );
+            formPersonne.age_p.value = age(dateActe, formPersonne.date_nais_p.value );
         }  
+
+        if (formActe.date_nais_temoin.value) { 
+            formActe.age_temoin.value = age(dateActe, formActe.date_nais_temoin.value );
+        }
     }
 
+    // EMVOI DE DONNE ET LEUR VALIDATION VALIDATION
     const [valid, setValid] = useState(false)
     const [message, setMessage] = useState("");
     const handleSubmit = (e) => {
         e.preventDefault();
-
         const isValidActe = validFormActe();
         const isValidPersonne = validFormPersonne();
-        let isValid = isValidActe && isValidPersonne;
-
-        // if (isValid) {
-        if (isValid) {
+        
+        const isValid = isValidActe && isValidPersonne;
+        
+        if (true) {
             setValid(isValid)
             setMessage("connexion enn cours ...");
-            
-            // Data ACTE
-            acte.id_acte =  formActe.id_acte.value;
-            acte.id_type =  formActe.id_type.value;
-            acte.date_acte =  formActe.date_acte.value;
-            acte.heure_acte =  formActe.heure_acte.value;
-            acte.lieu_acte =  formActe.lieu_acte.value;
-            acte.date_enreg =  formActe.date_enreg.value;
-            acte.heure_enreg =  formActe.heure_enreg.value;
-    
-            acte.nom_temoin =  formActe.nom_temoin.value;
-            acte.prenom_temoin =  formActe.prenom_temoin.value;
-            acte.sexe_temoin =  formActe.sexe_temoin.value;
-            acte.date_nais_temoin =  formActe.date_nais_temoin.value;
-            acte.lieu_nais_temoin =  formActe.lieu_nais_temoin.value;
-            acte.age_temoin =  formActe.age_temoin.value;
-            acte.adrs_temoin =  formActe.adrs_temoin.value;
-            acte.profession_temoin =  formActe.profession_temoin.value;
-
-            acte.id_person = lastPersonne;
-            acte.id_fonkotany =  formActe.id_fonkotany.value;
-            acte.code_commune =  formActe.code_commune.value;
-            acte.id_off =  formActe.id_off.value;
 
             //Data Personne
             // personne.id_person = formPersonne.id_person.value ;           
@@ -547,37 +653,179 @@ const FormActeAndBirthday = ({personne, acte, isEditForm}) => {
             personne.adrs_p = formPersonne.adrs_p.value ;         
             personne.profession_p = formPersonne.profession_p.value ;  
 
+            
+            // Data ACTE
+            acte.id_acte =  formActe.id_acte.value;
+            acte.id_type =  parseInt(formActe.id_type.value);
+            acte.num_acte = formActe.num_acte.value;
+            acte.date_acte =  formActe.date_acte.value;
+            acte.heure_acte =  formActe.heure_acte.value;
+            acte.lieu_acte =  formActe.lieu_acte.value;
+            acte.date_enreg =  formActe.date_enreg.value;
+            acte.heure_enreg =  formActe.heure_enreg.value;
+    
+            acte.nom_temoin =  formActe.nom_temoin.value;
+            acte.prenom_temoin =  formActe.prenom_temoin.value;
+            acte.sexe_temoin =  formActe.sexe_temoin.value;
+            acte.date_nais_temoin =  formActe.date_nais_temoin.value;
+            acte.lieu_nais_temoin =  formActe.lieu_nais_temoin.value;
+            acte.age_temoin =  formActe.age_temoin.value;
+            acte.adrs_temoin =  formActe.adrs_temoin.value;
+            acte.profession_temoin =  formActe.profession_temoin.value;
+
+            acte.id_person = isEditForm ? formActe.id_person.value:lastPersonne;
+
+            acte.id_fonkotany =  formActe.id_fonkotany.value;
+            acte.id_commune =  formActe.id_commune.value;
+            acte.id_off =  formActe.id_off.value;
+
             isEditForm ? updatePersone() : addPersonne();
         }else {
             setValid(false)
-            setMessage("Verifier le(s) champ(s) non valide");
+            setMessage("Verifier le(s) champ(s) non valide ou null");
         }
         setTimeout(() => setMessage("") , 6000);
     }
     
+    
+    /*Ajouter personne. Aprés l'ajout personne personne on va recupérer 
+    l'id de dernier personne pour affecter à l'id personne dans la table ACTE*/
+    const addPersonne = () => {
+        console.log(personne, '<br>', acte);
+        PersonneService.addPersonne(personne).then(resp => {
+            // setMessage(resp.message)
+            setValid(resp.status)
+            if (resp.status) {
+                setFormPersonne(
+                    {
+                    // id_person: { value: null },
+                    nom_person: { value: "", isValid: true },
+                    prenom_person: { value: "", isValid: true },
+                    sexe_person: { value: "", isValid: true },
+                    adrs_person: { value: "", isValid: true },
+                    id_travail: { value: "", isValid: true },
+            
+                    nom_m : {value: "", isValid: true },
+                    prenom_m : {value: "", isValid: true },
+                    date_nais_m : {value: "", isValid: true },
+                    lieu_nais_m : {value: "", isValid: true },
+                    age_m : {value: "", isValid: true },
+                    adrs_m : {value:"", isValid: true },
+                    profession_m : {value: "", isValid: true },
+            
+                    nom_p : {value: "", isValid: true },
+                    prenom_p : {value: "", isValid: true },
+                    date_nais_p : {value: "", isValid: true },
+                    lieu_nais_p : {value: "", isValid: true },
+                    age_p : {value: "", isValid: true },
+                    adrs_p : {value: "", isValid: true },
+                    profession_p : {value: "", isValid: true }
+                   
+                });
+
+                addActe(status.data) //Appeler la fonction ajouter acte
+            }
+        });
+    }
+    
+    const addActe = (id_last_person) => {
+
+        // Récupération de la dernière ID de personne aprés l'ajout
+        acte.id_person = id_last_person; 
+        
+        ActeService.addActe(acte).then(resp => {
+            setMessage(resp.message)
+            setValid(resp.status)
+            if (resp.status) {
+                setFormActe({
+                    id_type : {value: '' , isValid: true },
+                    date_acte : {value: '' , isValid: true },
+                    heure_acte : {value: '' , isValid: true },
+                    lieu_acte : {value: '' , isValid: true },
+                    date_enreg : {value: '' , isValid: true },
+                    heure_enreg : {value: '' , isValid: true },
+            
+                    nom_temoin : {value: '' , isValid: true },
+                    prenom_temoin : {value: '' , isValid: true },
+                    sexe_temoin : {value: '' , isValid: true },
+                    date_nais_temoin : {value: '' , isValid: true },
+                    lieu_nais_temoin : {value: '' , isValid: true },
+                    age_temoin : {value: '' , isValid: true },
+                    adrs_temoin : {value: '' , isValid: true },
+                    profession_temoin : {value: '' , isValid: true },
+            
+                    id_person : {value: null, isValid: true },
+                    id_fonkotany : {value: null , isValid: true },
+                    id_commune : {value: null , isValid: true },
+                    id_off : {value: null , isValid: true }
+                });
+            }
+        });  
+    }
+
 
     const updatePersone = () => {
         console.log(personne);
         console.log(acte);
 
-        PersonneService.updatePersonne(personne);
+        PersonneService.updatePersonne(personne).then(resp => {
+            setMessage(resp.message)
+            setValid(resp.status)
+            if (resp.status) {
+                setFormPersonne(
+                    {
+                    // id_person: { value: null },
+                    nom_person: { value: "", isValid: true },
+                    prenom_person: { value: "", isValid: true },
+                    sexe_person: { value: "", isValid: true },
+                    adrs_person: { value: "", isValid: true },
+                    id_travail: { value: "", isValid: true },
+            
+                    nom_m : {value: "", isValid: true },
+                    prenom_m : {value: "", isValid: true },
+                    date_nais_m : {value: "", isValid: true },
+                    lieu_nais_m : {value: "", isValid: true },
+                    age_m : {value: "", isValid: true },
+                    adrs_m : {value:"", isValid: true },
+                    profession_m : {value: "", isValid: true },
+            
+                    nom_p : {value: "", isValid: true },
+                    prenom_p : {value: "", isValid: true },
+                    date_nais_p : {value: "", isValid: true },
+                    lieu_nais_p : {value: "", isValid: true },
+                    age_p : {value: "", isValid: true },
+                    adrs_p : {value: "", isValid: true },
+                    profession_p : {value: "", isValid: true }
+                   
+                });
 
+                setFormActe({
+                    id_type : {value: '' , isValid: true },
+                    date_acte : {value: '' , isValid: true },
+                    heure_acte : {value: '' , isValid: true },
+                    lieu_acte : {value: '' , isValid: true },
+                    date_enreg : {value: '' , isValid: true },
+                    heure_enreg : {value: '' , isValid: true },
+            
+                    nom_temoin : {value: '' , isValid: true },
+                    prenom_temoin : {value: '' , isValid: true },
+                    sexe_temoin : {value: '' , isValid: true },
+                    date_nais_temoin : {value: '' , isValid: true },
+                    lieu_nais_temoin : {value: '' , isValid: true },
+                    age_temoin : {value: '' , isValid: true },
+                    adrs_temoin : {value: '' , isValid: true },
+                    profession_temoin : {value: '' , isValid: true },
+            
+                    id_person : {value: null, isValid: true },
+                    id_fonkotany : {value: null , isValid: true },
+                    id_commune : {value: null , isValid: true },
+                    id_off : {value: null , isValid: true }
+                });
+            }
+        });
     }
-    
-    const addPersonne = () => {
-        console.log(personne);
-        console.log(acte);
-        PersonneService.addPersonne(personne);
-
-        useEffect(() => {
-            PersonneService.getLastPersonne().then(personne => setLastPersonne(personne));
-        },[]);
-
-        ActeService.addActe(acte);
-    }
 
     
-
     return (
         <>
                     { /* <!-- ===== CARD 1 ===== --> */}
@@ -612,7 +860,6 @@ const FormActeAndBirthday = ({personne, acte, isEditForm}) => {
                         <main className="main-main-content" id="main-main-content-1" style={{marginTop: "0", paddingTop:"0"}}>
 
                             <form className="form" id="form-add-act" onSubmit={handleSubmit} style={{paddingTop:"0"}}>
-                                {/* Message . status: success or error*/}
                                 <div className="alert-message">
                                     {message && valid ?
                                     (<span className='success message'>{message}</span>):
@@ -622,8 +869,8 @@ const FormActeAndBirthday = ({personne, acte, isEditForm}) => {
 
                                 <div className="content-user">
 
-                                    <FormActe useFormActe={[formActe, setFormActe]} isEditForm={false} />
-                                    <FormPersonne useFormPersonne={[formPersonne, setFormPersonne]} isEditForm={false} />
+                                    <FormActe useFormActe={[formActe, setFormActe]} />
+                                    <FormPersonne useFormPersonne={[formPersonne, setFormPersonne]} />
 
                                     <div className="action-group">
                                         {isEditForm ? 
