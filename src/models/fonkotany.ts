@@ -3,7 +3,7 @@ export default class Fonkotany {
     id_fonkotany: number;
     code_fonkotany: String;
     nom_fonkotany: String;
-    code_commune: String;
+    id_commune: number;
 
 
     // 2. Definition des valeurs par defaut des proprietes du Fonkotany
@@ -11,12 +11,12 @@ export default class Fonkotany {
         id_fonkotany: number,
         code_fonkotany: String = "",
         nom_fonkotany: String = "",
-        code_commune: String = ""
+        id_commune: number
     ) {
         // 3. Initialisation des proprietes du Fonkotany
         id_fonkotany = id_fonkotany;
         code_fonkotany = nom_fonkotany;
         nom_fonkotany = nom_fonkotany;
-        code_commune = code_commune;
+        id_commune = id_commune;
     }
 }

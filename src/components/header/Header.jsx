@@ -1,10 +1,23 @@
 import React, { useEffect, useState } from "react";
 import DataNav from "./../../constants/dataLinks";
 import { Link, useNavigate } from "react-router-dom";
+import Logo from "../Logo";
+// import {logo_instat} from './../../assets/logo_instat';
 // import Nav from "./../nav/Nav";
 // import "./header.css";
+import Auth from "../../services/Auth";
 
 const Header = () => {
+
+    // ======= AUTHENTIFICATION ========
+    /*const auth = new Auth();
+
+    document.querySelector("#logout").addEventListener("click", (e) => {
+        e.preventDefault()
+        auth.logOut();
+        navagate('/login');
+        console.log("Logout");
+    })*/
 
     const navigate = useNavigate();
 
@@ -57,10 +70,10 @@ const Header = () => {
                     <div className="header-content header-content-1">
                         <div className={isOn ? "logo flex-start" : "logo"}>
                             <div className="logo-image">
-                                LPNF
+                                <Logo/>
                             </div>
                             <div className={isOn ? "logo-name show-details-menu" : "logo-name"}>
-                                <h3 className="logo-tagName">Tsenantsika</h3>
+                                <h3 className="logo-tagName">INSTAT</h3>
                             </div>
                         </div>
                     </div>
@@ -94,7 +107,6 @@ const Header = () => {
                                 </div>
                                 <div className="card-user-info">
                                     <a href="#" className="link user-image">
-                                        { /* <!-- <img src="" alt="User-name"> --> */}
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
                                             <path fill="#fff" d="M7.5 6.5C7.5 8.981 9.519 11 12 11s4.5-2.019 4.5-4.5S14.481 2 12 2 7.5 4.019 7.5 6.5zM20 21h1v-1c0-3.859-3.141-7-7-7h-4c-3.86 0-7 3.141-7 7v1h17z" />
                                         </svg>
@@ -103,7 +115,7 @@ const Header = () => {
                                     <p className={isOn ? "user-name show-details-menu" : "user-name"} id="fullname">L.P.N.F</p>
                                     <p className={isOn ? "user-email show-details-menu" : "user-email"}>l.p.n.frudo@gmail.com</p>
                                 </div>
-                                <h3 className="logout">
+                                <h3 className="logout" id="logout">
                                     <a href="" className="link link-logout" id="logout" onClick={logout}>
                                         <svg className="logout" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
                                             <path d="M16 13v-2H7V8l-5 4 5 4v-3z" /><path d="M20 3h-9c-1.103 0-2 .897-2 2v4h2V5h9v14h-9v-4H9v4c0 1.103.897 2 2 2h9c1.103 0 2-.897 2-2V5c0-1.103-.897-2-2-2z" />

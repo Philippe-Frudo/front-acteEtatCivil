@@ -28,9 +28,9 @@ export default class RegionService {
         return new Promise(resolve => {resolve(this.regions.find(f => id === f.code_region))})
     }
 
-    static addObjectRegion(Fileregions): Object {
+    static addAllRegion(Fileregions): Object {
         if (this.isDev) {
-            return fetch(`${this.url}/regions/AllRegions`, {
+            return fetch(`${this.url}/addAllRegion`, {
                 method:"POST",
                 body: JSON.stringify(Fileregions),
                 headers: {"Content-Type":"application/json"}
@@ -65,7 +65,7 @@ export default class RegionService {
 
     static updateRegion(region):Object {
         if (this.isDev) {
-            return fetch(`${this.url}/${region.code_region}`, {
+            return fetch(`${this.url}/regions/${region.id_region}`, {
                 method:"PUT",
                 body: JSON.stringify(region),
                 headers: {"Content-Type":"application/json"}
@@ -81,18 +81,22 @@ export default class RegionService {
         });
     }
 
-    static deleteRegion(region):Object {
+    /**
+     * 
+     * @param id number
+     * @returns 
+     */
+    static deleteRegion(id):Object {
         if (this.isDev) {
-            return fetch(`${this.url}/regions/${region}`, {
+            return fetch(`${this.url}/regions/${id}`, {
                 method:"DELETE",
-                body: JSON.stringify(region),
                 headers: {"Content-Type":"application/json"}
             })
             .then(response => response.json())
             .catch(error => this.handleError(error)); 
         }
         return new Promise(resolve => {
-            const {code_region } = region;
+            const {code_region } = id;
             this.regions = this.regions.filter(f => f.code_region !== code_region );
             resolve({});
         })

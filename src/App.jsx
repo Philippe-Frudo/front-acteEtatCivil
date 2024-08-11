@@ -2,7 +2,7 @@ import React from 'react';
 import "./App.css";
 import Header from './components/header/Header.jsx';
 
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, useNavigate, useNavigation } from 'react-router-dom';
 // import Utilisateur from './pages/utilisateur/Utilisateur';
 import Login from './pages/login/Login';
 import Dashboard from './pages/dashboard/Dashboard';
@@ -34,7 +34,12 @@ import FormAddTravail from './pages/travail/FormAddTravail.jsx';
 import FormEditTravail from './pages/travail/FormEditTravail.jsx';
 import MainTop from './components/main_top/MainTop.jsx';
 
+
 function App() {
+
+//     import Auth from './services/Auth.js';
+//  new Auth();
+
     return (
         <>
             

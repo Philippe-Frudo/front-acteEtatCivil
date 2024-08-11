@@ -116,12 +116,12 @@ const FormDistrict = ({district, isEditForm}) => {
     
     const updateDistrict = () => {
         console.log("Data District:", district);
-        const response = DistrictService.updateDistrict(district);
+        DistrictService.updateDistrict(district);
     }
 
     const addDistrict = () => {
         console.log("Data District:", district);
-        const response = DistrictService.addDistrict(district);
+        DistrictService.addDistrict(district);
     }
 
   return (

@@ -51,7 +51,7 @@ export default class FonkotanyService {
 
     static addAllFonkotany(fonk): Object {
         if (this.isDev) {
-            return fetch(`${this.url}/Allfonkotany`, {
+            return fetch(`${this.url}/addAllfonkotany`, {
                 method:"POST",
                 body: JSON.stringify(fonk),
                 headers: {"Content-Type":"application/json"}
@@ -72,7 +72,7 @@ export default class FonkotanyService {
 
     static updateFonkotany(fonk):Object {
         if (this.isDev) {
-            return fetch(`${this.url}/${fonk.id_fonkotany}`, {
+            return fetch(`${this.url}/fonkotany/${fonk.id_fonkotany}`, {
                 method:"PUT",
                 body: JSON.stringify(fonk),
                 headers: {"Content-Type":"application/json"}
@@ -91,11 +91,15 @@ export default class FonkotanyService {
     }
     
 
-    static deleteFonkotany(fonk):Object {
+    /**
+     * 
+     * @param {number} id 
+     * @returns 
+     */
+    static deleteFonkotany(id):Object {
         if (this.isDev) {
-            return fetch(`${this.url}/fonkotany/${fonk}`, {
+            return fetch(`${this.url}/fonkotany/${id}`, {
                 method:"DELETE",
-                body: JSON.stringify(fonk),
                 headers: {"Content-Type":"application/json"}
             })
             .then(response => response.json())
@@ -103,7 +107,7 @@ export default class FonkotanyService {
         }
 
         return new Promise(resolve => {
-            const {id_fonkotany } = fonk;
+            const {id_fonkotany } = id;
             this.fonkotany = this.fonkotany.filter(f => f.id_fonkotany !== id_fonkotany );
             resolve({});
         })

@@ -25,11 +25,11 @@ const FormCommune = ({commune, isEditForm}) => {
             setFormCommune({
                 code_commune: { value: commune.code_commune || "", isValid: true, error: "" },
                 nom_commune: { value: commune.nom_commune || "", isValid: true, error: "" },
-                code_district: { value: commune.code_district || "", isValid: true, error: "" },
+                id_district: { value: commune.id_district || "", isValid: true, error: "" },
             });
 
             districts?.forEach(f => {
-                if (f.code_district == commune.code_district) {
+                if (f.id_district == commune.id_district) {
                     setNomDistrict(f.nom_district); return;  
                 }
             });
@@ -39,7 +39,7 @@ const FormCommune = ({commune, isEditForm}) => {
     
     //CHANGE VALUE DISTRICT
     const handleSetNomDIstrict = (district) => {
-        const newField = { code_district: { value: district.code_district, isValid: true } };
+        const newField = { id_district: { value: district.id_district, isValid: true } };
         setFormCommune({ ...formCommune, ...newField });
         setNomDistrict(district.nom_district)
         setShowList(false);
@@ -84,8 +84,7 @@ const FormCommune = ({commune, isEditForm}) => {
     const handleInputChangeDistrict = (e) => {
         setNomDistrict(e.target.value);
         if (!e.target.value) {
-            const validation = validateField(e.target.name, e.target.value);
-            const newField = { code_district: { value: "", isValid: validation.isValid , error: validation.error } };
+            const newField = { id_district: { value: "", isValid: false , error: "Ce champ est obligatoire, selectionner une commune" } };
             setFormCommune({ ...formCommune, ...newField });
         }
     }
@@ -195,11 +194,9 @@ const FormCommune = ({commune, isEditForm}) => {
           
                         <ul id="list_district" className={ showList ? "showList list":"list"}>
                             {districts?.map(c => (
-                            <li key={c.code_district}>
-                                <p className='list-p' onClick={() => handleSetNomDIstrict(c.code_district)}>
-                                    {c.code_commune}
-                                    ({c.nom_district}) &nbsp; code region:
-                                    {c.code_region} &nbsp;
+                            <li key={c.id_district}>
+                                <p className='list-p' onClick={() => handleSetNomDIstrict(c.id_district)}>
+                                    {c.nom_district}({c.code_district})
                                 </p>
                             </li>
                             ))}

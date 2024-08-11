@@ -1,6 +1,7 @@
 export default class Acte {
-    id_acte: number;
+   id_acte: number;
     id_type: number;
+    num_acte: string;
     date_acte: string;
     heure_acte: string;
     lieu_acte: string;
@@ -17,23 +18,24 @@ export default class Acte {
     profession_temoin: string;
 
     id_person: number;
-    code_commune: String;
+    id_commune: number;
     id_fonkotany: number;
     id_off: number;
 
 
     constructor(
-        id_acte: number,
-        id_type: number = 0,
-        date_acte: string = new Date().toLocaleDateString(),
+        // id_acte: number,
+        id_type: number,
+        num_acte: string = '',
+        date_acte: string = '',
         heure_acte: string = "",
         lieu_acte: string = "",
-        date_enreg: string = new Date().toLocaleDateString(),
+        date_enreg: string = '',
         heure_enreg: string = '',
         
-        id_person: number = 0,
+        id_person: number = 1,
         id_fonkotany: number,
-        code_commune: String = "",
+        id_commune: number,
 
         nom_temoin: String = "",
         prenom_temoin: String = "",
@@ -44,13 +46,14 @@ export default class Acte {
         adrs_temoin: string = "",
         profession_temoin: string = "",
 
-        id_off: number = 0,
+        id_off: number = 1,
 
 
 
     ) {
-        this.id_acte = id_acte;
+        // this.id_acte = id_acte;
         this.id_type = id_type;
+        this.num_acte = num_acte;
         this.date_acte = date_acte;
         this.heure_acte = heure_acte;
         this.lieu_acte = lieu_acte;
@@ -68,7 +71,7 @@ export default class Acte {
 
         this.id_person = id_person;
         this.id_fonkotany = id_fonkotany;
-        this.code_commune = code_commune;
+        this.id_commune = id_commune;
         this.id_off = id_off;
 
     }

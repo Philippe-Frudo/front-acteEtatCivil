@@ -3,14 +3,16 @@ import { useNavigate } from 'react-router-dom';
 import { errorBorder, messageValidator, searchAddress, successBorder } from '../../helpers/borderField';
 import FonkotanyService from '../../services/serviceFonkotany';
 import CommuneService from '../../services/serviceCommune';
+import { regex } from './../../helpers/regex';
 // import ADDRESS from '../../models/mock-address';
 
 const FormFonkotany = ({ fonkotany, isEditForm }) => {
 
-    const [communes, setCommunes] = useState("");
+    const [communes, setCommunes] = useState([]);
     const [showList, setShowList] = useState(false);
     const [nomCommune, setNomCommune] = useState("");
-
+    // console.log(communes);
+    
     document.querySelectorAll("input").forEach(input => {
         input.addEventListener("focus", () => {
             if (input.className !== "nom_commune") {
@@ -21,18 +23,18 @@ const FormFonkotany = ({ fonkotany, isEditForm }) => {
 
 
     const [formFonkotany, setFormFonkotany] = useState({
-        code_commune: { value: "", isValid: true, error: "" },
-        nom_fonkotany: { value: "", isValid: true, error: "" },
         code_fonkotany: { value: "", isValid: true, error: "" },
+        nom_fonkotany: { value: "", isValid: true, error: "" },
+        code_commune: { value: "", isValid: true, error: "" },
     });
 
     useEffect(() => {
         CommuneService.getCommune().then(communes => setCommunes(communes));
         if (fonkotany) {
             setFormFonkotany({
-                code_commune: { value: fonkotany.code_commune || "", isValid: true, error: "" },
-                nom_fonkotany: { value: fonkotany.nom_fonkotany || "", isValid: true , error: "" },
                 code_fonkotany: { value: fonkotany.code_fonkotany || "", isValid: true, error: "" },
+                nom_fonkotany: { value: fonkotany.nom_fonkotany || "", isValid: true , error: "" },
+                code_commune: { value: fonkotany.code_commune || "", isValid: true, error: "" },
             });
                         
             communes?.forEach(f => {
@@ -237,7 +239,7 @@ const FormFonkotany = ({ fonkotany, isEditForm }) => {
                   
                                 <ul id="list_commune" className={ showList ? "showList list":"list"}>
                                     {communes?.map(c => (
-                                    <li key={c.id_c}>
+                                    <li key={c.id_commune}>
                                         <p className='list-p' onClick={() => handleSetNomCommune(c)}>
                                         {c.code_commune} &nbsp;
                                         {c.nom_commune} &nbsp;

@@ -20,7 +20,7 @@ export default class CommuneService {
         return new Promise(resolve => {resolve(this.communes)})
     }
 
-    static getCommuneById(id: string): Object {
+    static getCommuneById(id: number): Object {
         if (this.isDev) {
             return fetch(`${this.url}/communes/${id}`)
             .then(response => response.json())
@@ -50,7 +50,7 @@ export default class CommuneService {
 
     static addAllCommune(dataComm): Object {
         if (this.isDev) {
-            return fetch(`${this.url}/Allcommunes`, {
+            return fetch(`${this.url}/addAllcommune`, {
                 method:"POST",
                 body: JSON.stringify(dataComm),
                 headers: {"Content-Type":"application/json"}
@@ -73,7 +73,7 @@ export default class CommuneService {
 
     static updateCommune(dataComm):Object {
         if (this.isDev) {
-            return fetch(`${this.url}/${dataComm.code_commune}`, {
+            return fetch(`${this.url}/communes/${dataComm.id_commune}`, {
                 method:"PUT",
                 body: JSON.stringify(dataComm),
                 headers: {"Content-Type":"application/json"}
@@ -90,11 +90,15 @@ export default class CommuneService {
         });
     }
 
-    static deleteCommune(dataComm):Object {
+    /**
+     * 
+     * @param {number} id 
+     * @returns 
+     */
+    static deleteCommune(id):Object {
         if (this.isDev) {
-            return fetch(`${this.url}/communes/${dataComm}`, {
+            return fetch(`${this.url}/communes/${id}`, {
                 method:"DELETE",
-                body: JSON.stringify(dataComm),
                 headers: {"Content-Type":"application/json"}
             })
             .then(response => response.json())
@@ -102,7 +106,7 @@ export default class CommuneService {
         }
 
         return new Promise(resolve => {
-            const {code_commune } = dataComm;
+            const {code_commune } = id;
             this.communes = this.communes.filter(f => f.code_commune !== code_commune );
             resolve({});
         })

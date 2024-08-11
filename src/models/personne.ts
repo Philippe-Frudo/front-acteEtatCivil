@@ -25,7 +25,7 @@ export default class Personne {
 
     // 2. Definition des valeurs par defaut des proprietes d'une Personne
     constructor(
-        id_person: number,
+        // id_person: number,
         nom_person: String = "",
         prenom_person: String = "",
         sexe_person: String = "F",
@@ -49,7 +49,7 @@ export default class Personne {
         adrs_p: string = ""
     ) {
         // 3. Initialisation des proprietes d'une personne
-        this.id_person = id_person;
+        // this.id_person = id_person;
         this.nom_person = nom_person;
         this.prenom_person = prenom_person;
         this.sexe_person = sexe_person;

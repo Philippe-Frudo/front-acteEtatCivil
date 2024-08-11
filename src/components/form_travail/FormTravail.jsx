@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { regex } from '../../helpers/regex';
+import TravailService from './../../services/serviceTravail'
 
 const formTravail = ({travail, isEditForm}) => {
+    const navigate = useNavigate();
         
     const [formTravail, setFormTravail] = useState({
         nom_travail: { value: "", isValid: false, error: "" },
@@ -11,7 +13,7 @@ const formTravail = ({travail, isEditForm}) => {
     useEffect(() => {
         if (travail) {
             setFormTravail({
-                nom_travail: { value: travail.nom_travail || "", isValid: isEditForm ? true:false, error: "" },
+                nom_travail: { value: travail.nom_travail || "", isValid: true, error: "" },
             });
         }
     }, [travail]);
@@ -40,34 +42,57 @@ const formTravail = ({travail, isEditForm}) => {
         const validation = validateField(fieldName, fieldValue);
 
         const newField = { [fieldName]: { value: fieldValue, isValid: validation.isValid , error: validation.error  } };
-        setFormDistrict({ ...formDistrict, ...newField });
+        setFormTravail({ ...formTravail, ...newField });
     }
-         
-    const [message, setMessage] = useState("");
+
+    const [valid, setValid] = useState(false);
+    const [message, setMessage] = useState([]);
     const handleSubmit = (e) => {
         e.preventDefault();
         const isValid = Object.values(formTravail).every(field => field.isValid);
 
-        if (isValid) {
+        if (isValid && formTravail.nom_travail.value) {
+            setValid(true)
             setMessage("En cours de connexion ...");
             travail.nom_travail = formTravail.nom_travail.value;
-
+            console.log(travail);
+            
             isEditForm ? updatTtravail(): addTravail();
         } else {
             setMessage("Vérifier les champs non valides");
         }
     }
 
-    const updateTravail = () => {
+    const updatTtravail = () => {
         console.log("Data travail:", travail);
-        /*APIService.updateFonkontany(fonkotany)
-        .then(response => console.log(response));*/
+        TravailService.updateTravail(travail)
+        .then(resp => {
+            console.log(resp);
+            
+            setValid(resp.status)
+            setMessage(resp.message);
+            if (resp.status) {
+                setFormTravail({
+                    nom_travail: { value: "", isValid: false, error: "" },
+                });
+            }
+        })
+        .then(() => {
+            setTimeout(() => { navigate('/travail'), 2000 });   
+        });
     }
 
     const addTravail = () => {
         console.log("Data travail:", travail);
-        /*APIService.addFonkontany(fonkotany)
-        .then(response => console.log(response));*/
+        TravailService.addTravail(travail).then(resp =>{
+            setValid(resp.status)
+            setMessage(resp.message);
+            if (resp.status) {
+                setFormTravail({
+                    nom_travail: { value: "", isValid: false, error: "" },
+                });
+            }
+        });
     }
 
 
@@ -94,7 +119,10 @@ const formTravail = ({travail, isEditForm}) => {
 
                 <form className="form" id="add-travail" onSubmit={handleSubmit}>
                     <div className="alert-message">
-                        {message && <span className='message'>{message}</span>}
+                        {message && valid ? 
+                            (<span className='message success'>{message}</span>):
+                            (<span className='message error'>{message}</span>)
+                        }
                     </div>
                     <div className="content-user">
 

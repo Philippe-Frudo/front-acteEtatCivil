@@ -1,8 +1,15 @@
 import React, { useState } from 'react'
 import RegionService from '../../services/serviceRegion';
+import DistrictService from '../../services/serviceDistrict';
+import CommuneService from '../../services/serviceCommune';
+import FonkotanyService from '../../services/serviceFonkotany';
+import ActeService from '../../services/serviceActe';
+import TravailService from '../../services/serviceTravail';
+// import PersonneService from '../../services/servicePersonne';
 
-
-const TableFileRegion = ({useData, useAccept}) => {
+const TableFileRegion = ({useData, useAccept, nameFile}) => {
+    console.log(nameFile);
+    
     const [dataFile, setDataFile] = useData;
     const[acceptFile, setAcceptFile] = useAccept;
     
@@ -10,34 +17,110 @@ const TableFileRegion = ({useData, useAccept}) => {
     const handaleClickBack = ()=> {
         setAcceptFile(false)
         setDataFile(null);
+        setDataFile([])
     }
 
-    const [message, setMessage] = useState("");
+
+    const [status, setStatus] = useState(false);
+    const [message, setMessage] = useState(null);
     
-    const addRegion = () => {
-        console.log("Data File region:", dataFile);
-        RegionService.addObjectRegion(dataFile).then(response => setMessage(response));
+    const handleAddFile = (name) => {
+        console.log(name);
+        
+        switch(name){
+            case "travail" :
+
+                    console.log("Data File travail:", dataFile);
+                    TravailService.addAllTravail(dataFile)
+                    .then(response => {console.log(response); setMessage(response);} )
+                    // .then(() =>{ setAcceptFile(false); setDataFile(null); })
+                
+                break;
+
+            case "région" :
+
+                    console.log("Data File region:", dataFile);
+                    RegionService.addAllRegion(dataFile)
+                    .then(response => {
+                        console.log(response); 
+                        setStatus(response.status);
+                        setMessage(response.rejeter);
+                    } )
+                    //  .then(() =>{ setAcceptFile(false); setDataFile(null); })
+                
+                break;
+
+            case "district" :
+
+                    console.log("Data File disrict:", dataFile);
+                    DistrictService.addAllDistrict(dataFile)
+                    .then(response => {
+                        console.log(response); 
+                        ssetStatus(response.status);
+                        setMessage(response.rejeter);
+                        
+                    } )
+                    //  .then(() =>{ setAcceptFile(false); setDataFile(null); });
+                
+                break;
+
+            case "commune" :
+                    console.log("Data File commune:", dataFile);
+                    CommuneService.addAllCommune(dataFile)
+                    .then(response =>{
+                        console.log(response); 
+                        setStatus(response.status);
+                        setMessage(response.rejeter);
+                    })
+                    // .then( () =>{setAcceptFile(false); setDataFile(null); });
+                break;
+
+            case "fonkotany":
+                    console.log("Data File fonkotany:", dataFile);
+                    FonkotanyService.addAllFonkotany(dataFile)
+                    .then(response => {
+                        console.log(response); 
+                        setStatus(response.status);
+                        setMessage(response.rejeter);
+                    })
+                    //  .then(() =>{ setAcceptFile(false); setDataFile(null); });
+                break;
+            
+            default: 
+            setMessage('Fichier non identifier');
+        }
     }
 
+    const lenghtColumn = dataFile.length
+    // console.log(Object.keys(dataFile[0]).map((v, i, n)=>  console.log(n)) )
+    // console.log( Object.keys(dataFile[0]));
+   
   return (
     <>
         <div className="modal add-modal active-modal" style={{ width:"100%" }}>
     {dataFile ? (
-            <div className="modal-container" style={{ maxHeight: '90vh' }}>
+            <div className="modal-container" style={{ maxHeight: '90vh', overflowY:"auto", overflowX:"none" }}>
                 <div className="modal-header">
                     <div>
-                        <h3 className="modal-title">Le contenu du fichier</h3>
+                        <h3 className="modal-title">Le contenu du fichier {nameFile}</h3>
                         <span className="modal-subtitle"></span>
                     </div>
                     <div>
                         <button className="btn btn-close" id="close-modale-add" onClick={handaleClickBack} >X</button>
                     </div>
                 </div>
-
                     <div className="">
-                        {message ? 
-                            (<span className='message success'>{message}</span>):
-                            (<span className='message error'>{message}</span>)
+                        {status ? (
+                            !message ? 
+                                (<span className='message success'>{message}</span>):
+                                (<span className='message error'>
+                                    {message.length >1 ? 
+                                    'Ces fichiers existent deja dans la base de donnee: ':'Ce fichier existe deja dans la base de donnee:  '
+                                    }
+                                     {message}
+                                </span>)
+                        ):(null)
+
                         }
                     </div>
 
@@ -45,27 +128,57 @@ const TableFileRegion = ({useData, useAccept}) => {
                 <main className="main-main-content" id="main-main-content-1">
                 <div className="table-content">
                     <table className="table" id="nom-table">
-                        <thead>
-                            <tr>
-                            <th>Code</th>
-                            <th>Nom</th>
-                            </tr>
-                        </thead>
-                        <tbody id="table-region" className='table-scroll'>
-                            {Array.isArray(dataFile) && dataFile.length > 0 ? (
-                                dataFile.map((rows, index) => (
-                                <tr key={index}>
-                                   { Object.values(rows).map((value, index) => (
-                                        <td key={index}>{value}</td>
-                                   )) }
-                                </tr>
-                            ))
-                            ) : (
+                        {lenghtColumn > 2 ? 
+                        (
+                        <>
+                            <thead>
                                 <tr>
-                                    <td colSpan="2">Aucune donnée disponible</td>
+                                    <th>Code</th>
+                                    <th>Nom</th>
+                                    <th>code {nameFile}</th>
                                 </tr>
-                            )}
-                        </tbody>
+                            </thead>
+                            <tbody id="table-region" className='table-scroll'>
+                                {Array.isArray(dataFile) && dataFile.length > 0 ? (
+                                    dataFile.map((rows, index) => (
+                                    <tr key={index}>
+                                    { Object.values(rows).map((value, index) => (
+                                            <td key={index}>{value}</td>
+                                    )) }
+                                    </tr>
+                                ))
+                                ) : (
+                                    <tr>
+                                        <td colSpan="2">Aucune donnée disponible</td>
+                                    </tr>
+                                )}
+                            </tbody>
+                        </>
+                        ):(
+                        <>
+                            <thead>
+                                <tr>
+                                    <th>Code</th>
+                                    <th>Nom</th>
+                                </tr>
+                            </thead>
+                            <tbody id="table-region" className='table-scroll'>
+                                {Array.isArray(dataFile) && dataFile.length > 0 ? (
+                                    dataFile.map((rows, index) => (
+                                    <tr key={index}>
+                                    { Object.values(rows).map((value, index) => (
+                                            <td key={index}>{value}</td>
+                                    )) }
+                                    </tr>
+                                ))
+                                ) : (
+                                    <tr>
+                                        <td colSpan="2">Aucune donnée disponible</td>
+                                    </tr>
+                                )}
+                            </tbody>
+                        </>
+                         )}
                     </table>
 
                     
@@ -73,7 +186,7 @@ const TableFileRegion = ({useData, useAccept}) => {
                     <button 
                     className="btn add-now" id="add-now" 
                     style={{ padding:"0.5rem 0.8rem", marginTop:"0.5rem" }}
-                    onClick={addRegion}
+                    onClick={() => handleAddFile(nameFile)}
                     >
                       <span className="content-add-now" style={{ display:"flex", alignItems:"center"}}>
                         <svg className="add-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
