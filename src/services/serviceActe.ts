@@ -27,6 +27,24 @@ export default class ActeService {
         return new Promise(resolve => {resolve(this.actes)})
     }
 
+    /**
+     * 
+     * @param {object} dataSearch 
+     * @returns {object}
+     */
+    static getAll(dataSearch): Object {
+        if (this.isDev) {
+            return fetch(`${this.url}/getAll`,{
+                method:"POST",
+                body: JSON.stringify(dataSearch),
+                headers: {"Content-Type":"application/json"}
+            })
+            .then(response => response.json())
+            .catch(error => this.handleError(error)); 
+        }
+        return new Promise(resolve => {resolve(this.actes)})
+    }
+
     static getActeById(id: number): Object {
         if (this.isDev) {
             return fetch(`${this.url}/actes/${id}`)

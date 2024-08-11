@@ -3,9 +3,13 @@ import { Bar } from "react-chartjs-2";
 import "./chart.css";
 import { useEffect, useState } from "react";
 
-const CroissantPerYear = () => {
+const CroissantPerYear = ({dataParAns}) => {
+
+    console.log(dataParAns);
+    
 
     const [screenWidth, setScreenWidth] = useState(window.innerWidth);
+
     useEffect(() => {
         const handleResize = () => {
             setScreenWidth(window.innerWidth);
@@ -15,6 +19,7 @@ const CroissantPerYear = () => {
             window.removeEventListener('resize', handleResize);
         };
     }, []);
+    
 
     const data = {
         labels: ['2018', '2019', '2020', '2021', '2022', '2023', '2024', '2025', '2026', '2027', '2028'],
@@ -36,7 +41,10 @@ const CroissantPerYear = () => {
     };
 
     return (
-        <div style={{ margin: "2.5rem 1rem" }} className={(screenWidth < "992") ? "rotate" : "normal-width"}>
+        <div 
+        style={{ margin: "2.5rem 1rem" }} 
+        // className={(screenWidth < "992") ? "rotate" : "normal-width"}
+        >
             <Bar data={data} options={options} />
         </div>
     );

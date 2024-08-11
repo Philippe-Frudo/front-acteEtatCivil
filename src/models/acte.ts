@@ -1,5 +1,5 @@
 export default class Acte {
-    // id_acte: number;
+   id_acte: number;
     id_type: number;
     num_acte: string;
     date_acte: string;
@@ -33,7 +33,7 @@ export default class Acte {
         date_enreg: string = '',
         heure_enreg: string = '',
         
-        id_person: number,
+        id_person: number = 1,
         id_fonkotany: number,
         id_commune: number,
 
@@ -46,7 +46,7 @@ export default class Acte {
         adrs_temoin: string = "",
         profession_temoin: string = "",
 
-        id_off: number,
+        id_off: number = 1,
 
 
 

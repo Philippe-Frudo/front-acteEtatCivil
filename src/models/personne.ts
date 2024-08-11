@@ -1,6 +1,6 @@
 export default class Personne {
     // 1.Typage des proprietes d'une Personne
-    // id_person: number;
+    id_person: number;
     nom_person: String;
     prenom_person: String;
     sexe_person: String;

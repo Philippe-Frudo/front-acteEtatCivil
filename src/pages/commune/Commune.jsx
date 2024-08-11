@@ -72,8 +72,8 @@ const Commune = () => {
               <h3 className="main-header-content-title">Commune</h3>
               <span className="main-header-content-subtitle">Soutitre page</span>
               <div className="main-local-nav">
+               
                 <div className="action-local-nav">
-
                   <Link to='/commune/add'>
                     <button className="btn add-now" id="add-now" >
                       <span className="content-add-now" >

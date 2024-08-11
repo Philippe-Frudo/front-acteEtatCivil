@@ -5,15 +5,31 @@ import "./dashboard.css";
 import 'boxicons';
 import ChartWork from "../../components/chart/ChartWork";
 import ChartActMaiage from "../../components/chart/ChartActMaiage";
-
+import { useEffect, useState } from "react";
+import { makeRequest } from '../../services/axios';
 
 Chart.register(CategoryScale);
 
 const Dashboard = () => {
 
-  /**const [chartData, setChartData] = useState({
-    // ...chart data
-  });*/
+
+  const [dataParAns, setDataParAns] = useState([]);
+  useEffect(() => {
+      const fetchData = async () => {
+          try {
+              const response = await makeRequest.get(`/yearBirthday`);
+              if (!response.data) {
+                  console.log("Aucune donnée trouvée");
+                  return;
+              }
+              console.log(response.data);
+              setDataParAns(response.data);
+          } catch (error) {
+              console.log(error);
+          }
+      };
+      fetchData();
+  }, []);
 
 
   return (
@@ -84,7 +100,10 @@ const Dashboard = () => {
               <div className="card-content">
                 <div className="dash-card dash-card-4">
                   <h4 className="title-card">Taux de croissance par an au niveau de la naissance</h4>
-                  <CroissantPerYear />
+
+                  {/* Chart diagrame en batton */}
+                  <CroissantPerYear dataParAns={dataParAns}/>
+                  
                 </div>
               </div>
               <div className="card-content chartWork">

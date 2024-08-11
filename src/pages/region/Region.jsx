@@ -75,17 +75,14 @@ const Region = () => {
               <div className="main-local-nav">
                 <div className="action-local-nav">
 
-                  <Link to='/region/add'>
-                    <button className="btn add-now" id="add-now">
-                      <span className="content-add-now" >
-                        <svg className="add-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                          <path d="M19 11h-6V5h-2v6H5v2h6v6h2v-6h6z" />
-                        </svg>
-                        <span className="add-now-name" id='add-adresse'>Ajouter</span>
-                      </span>
-                    </button>
+                  <Link to='/region/add' >
+                      <button className="btn add-now" id="add-now">
+                        <span className="content-add-now" >
+                          <box-icon className="add-now" name='plus-medical' color="#fff" ></box-icon>
+                          <span className="add-now-name" id='add-adresse'>Ajouter</span>
+                        </span>
+                      </button>
                   </Link>
-
                  
                     <p className="content-add-now" >
                       <input 
@@ -108,10 +105,11 @@ const Region = () => {
 
                   <div className="search search-local-nav">
                     <label className="content-search">
-                    <box-icon name='search-alt' flip='horizontal' animation='tada' color='rgba(0,0,0,0.73)' ></box-icon>
+                      <box-icon name='search-alt' flip='horizontal' animation='tada' color='rgba(0,0,0,0.73)' ></box-icon>
                       <input className="main-search " type="text" placeholder="chercher..."  onInput={(e) =>filterTable3Columns(e.target.value , "table-region")}/>
                     </label>
                   </div>
+
                 </div>
               </div>
             </header>

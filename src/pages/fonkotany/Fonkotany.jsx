@@ -102,7 +102,6 @@ const Fonkotany = () => {
                                         )
                                     }
 
-
                                     <div className="search search-local-nav">
                                         <label className="content-search">
                                             <box-icon name='search-alt' flip='horizontal' animation='tada' color='rgba(0,0,0,0.73)' ></box-icon>

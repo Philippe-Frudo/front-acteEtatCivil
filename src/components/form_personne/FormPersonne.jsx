@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import handleSex from "../../constants/sexe";
-import { hiddenList, messageValidator, searchAddress, showList, successBorder} from '../../helpers/borderField';
+import { hiddenList, messageValidator, searchAddress, showList, successBorder } from '../../helpers/borderField';
 import TRAVAILS from '../../models/mock-travail';
 import TravailService from '../../services/serviceTravail';
 
@@ -15,7 +15,6 @@ const FormPersonne = ({ useFormPersonne }) => {
 
     const [formPersonne, setFormPersonne] = useFormPersonne;
     /**
-     * 
      * @param {HTMLInputElement} e 
      */
     const handleInputChange = (e) => {
@@ -29,10 +28,11 @@ const FormPersonne = ({ useFormPersonne }) => {
             messageValidator(`.${fieldName}`, "");
         }
     }
-
     
-/* ===============CHANGE TRAVAIL personne=============== */
+    
+    /* ===============CHANGE TRAVAIL personne=============== */
     const [fieldTravailPersonne, setFieldTravailPersonne] = useState("");
+    
     const handleInputChangeTravailPerson = (e) => {
         const fieldName = e.target.name;
         setFieldTravailPersonne(e.target.value);
@@ -42,6 +42,15 @@ const FormPersonne = ({ useFormPersonne }) => {
             messageValidator(`.${fieldName}`, "");  
         }
     }
+
+    useEffect(() => {
+        let comm = travails.find(trav => trav.id_travail === formPersonne.id_travail.value);
+        if (comm) {
+          setFieldTravailPersonne(comm.nom_travail);
+        } else {
+        //   console.log('Travail non trouvé.');
+        }
+      }, [formPersonne, travails]);
     
 
     //====== CHANGE (id_person ) PAR CLICK TRAVAIL PERSON========
@@ -86,6 +95,7 @@ const FormPersonne = ({ useFormPersonne }) => {
                         <div>
                         </div>
                     </div>
+                    
                     <div className="form-group form-group-2">
                         <div>
                             <label htmlFor="nom_person" className="form-group-label">Nom:</label>
@@ -144,7 +154,7 @@ const FormPersonne = ({ useFormPersonne }) => {
 
                     <div className="form-group">
                         <div style={{position:"relative"}}>
-                            <label htmlFor="nom_travail_person" className="form-group-label">Profession personne:</label>
+                            <label htmlFor="nom_travail_person" className="form-group-label">Profession:</label>
                             <input 
                                 type="text" 
                                 className="form-group-input nom_travail_person" 
@@ -218,7 +228,22 @@ const FormPersonne = ({ useFormPersonne }) => {
                             />
                             <span className="msg-error"></span>
                         </div>
+                        <div>
+                            <label htmlFor="age_m" className="form-group-label">Age:</label>
+                            <input 
+                                type="text" 
+                                className="form-group-input age_m" 
+                                name="age_m" id="age_m" 
+                                placeholder="Age" 
+                                value={formPersonne.age_m.value ? formPersonne.age_m.value :""} 
+                                onChange={handleInputChange} 
+                                disabled
+                            />
+                            <span className="msg-error"></span>
+                        </div>        
+                    </div>
 
+                    <div className="form-group">
                         <div>
                             <label htmlFor="lieu_nais_m" className="form-group-label">Lieu de naissance:</label>
                             <input 
@@ -232,22 +257,7 @@ const FormPersonne = ({ useFormPersonne }) => {
                             />
                             <span className="msg-error"></span>
                         </div>
-                    </div>
-
-                    <div className="form-group">
-                        <div>
-                            <label htmlFor="age_m" className="form-group-label">Age:</label>
-                            <input 
-                                type="text" 
-                                className="form-group-input age_m" 
-                                name="age_m" id="age_m" 
-                                placeholder="Age" 
-                                value={formPersonne.age_m.value ? formPersonne.age_m.value :""} 
-                                onChange={handleInputChange} 
-                                disabled
-                            />
-                            <span className="msg-error"></span>
-                        </div>
+                       
                     </div>
 
                     <div className="form-group">

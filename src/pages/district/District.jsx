@@ -74,18 +74,17 @@ const District = () => {
                             <span className="main-header-content-subtitle">Soutitre page</span>
                             <div className="main-local-nav">
                                 <div className="action-local-nav">
-                                    
-                                    <Link to='/district/add'>
+
+                                    <Link to="/district/add" >
                                         <button className="btn add-now" id="add-now">
                                             <span className="content-add-now" >
-                                            <box-icon className="add-now" name='plus-medical' color="#fff" ></box-icon>
+                                                <box-icon className="add-now" name='plus-medical' color="#fff" ></box-icon>
                                                 <span className="add-now-name" id='add-adresse'>Ajouter</span>
                                             </span>
                                         </button>
                                     </Link>
 
-                                    <div>
-                                        <p className="content-add-now" >
+                                    <p className="content-add-now" >
                                         <input 
                                             id="add-file"
                                             type='file' 
@@ -94,24 +93,20 @@ const District = () => {
                                             ref={fileInputRef}
                                             onChange={handleImportFile}
                                         />
-                                        </p>
-                                        {errorFile && acceptFile ? 
-                                            (
-                                            <span>{errorFile}</span>
-                                            ):(
+                                    </p>
+                                    {errorFile && acceptFile ? 
+                                        (<span>{errorFile}</span>
+                                        ):(
                                             <span className='textRed'>{errorFile}</span>
-                                            )
-                                        }
-
-                                    </div>
+                                        )
+                                    }
 
                                     <div className="search search-local-nav">
                                         <label className="content-search">
-                                        <box-icon name='search-alt' flip='horizontal' animation='tada' color='rgba(0,0,0,0.73)' ></box-icon>
+                                            <box-icon name='search-alt' flip='horizontal' animation='tada' color='rgba(0,0,0,0.73)' ></box-icon>
                                             <input className="main-search " type="text" placeholder="chercher..." onInput={(e) =>filterTable3Columns(e.target.value , "table-district")}/>
                                         </label>
                                     </div>
-
                                 </div>
                             </div>
                         </header>

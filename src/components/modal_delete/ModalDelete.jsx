@@ -6,6 +6,7 @@ import DistrictService from '../../services/serviceDistrict';
 import CommuneService from '../../services/serviceCommune';
 import FonkotanyService from '../../services/serviceFonkotany';
 import ActeService from '../../services/serviceActe';
+import { makeRequest } from '../../services/axios';
 // import PersonneService from '../../services/servicePersonne';
 
 
@@ -65,10 +66,29 @@ const ModalDelete = ({id, nomPage, useDelete}) => {
 
             case "acte" :
                 if (isDelete) {
-                    ActeService.deleteActe(id)
-                    .then(resp => {
-                        console.log(resp.mersage)
-                    }).then( () =>{setIsDelete(false); hiddenDeleteModal() });
+                    // API DELETE PERSONNE
+                    makeRequest.delete(`/actes/${id}`).then(response => {
+                        if (!response.data) {
+                            console.log("Aucun donnée trouvé"); return
+                        }
+                        console.log(response.data);
+                        deletePerson(response.data)
+                    })
+                    .catch(error => console.log(error) ) 
+
+
+                    const deletePerson = (idP) => {
+                        // API DELETE PERSONNE
+                        if (idP) {
+                            makeRequest.delete(`/personnes/${idP}`).then(response => {
+                                if (!response.data) {
+                                    console.log("Aucun donnée trouvé"); return
+                                }
+                                console.log(response.data);
+                            })
+                            .catch(error => console.log(error) )      
+                        }
+                    }
                 }
                 break;
             

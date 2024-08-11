@@ -8,7 +8,7 @@ export default class Officier {
     prenom_off: string;
     sexe_off: string;
     email_off: string; //Unique
-    id_commune: string; //Unique
+    id_commune: number; //Unique
     motPass_off: string;
     
     constructor(
@@ -19,7 +19,7 @@ export default class Officier {
         prenom_off: string = '',
         sexe_off: string = 'M',
         email_off: string = '',
-        id_commune: string = '',
+        id_commune: number,
         motPass_off: string = ''
     ){
         // this.id_off = id_off;

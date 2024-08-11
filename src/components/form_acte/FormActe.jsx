@@ -8,6 +8,7 @@ import FonkotanyService from '../../services/serviceFonkotany';
 import TravailService from '../../services/serviceTravail';
 import CommuneService from '../../services/serviceCommune';
 import ActeService from '../../services/serviceActe';
+import handleSex from '../../constants/sexe';
 
 const FormActe = ({ useFormActe }) => {
       
@@ -29,16 +30,17 @@ const FormActe = ({ useFormActe }) => {
     const [formActe, setFormActe] = useFormActe;
     const handleInputChange = (e) => {
       const fieldName = e.target.name.trim();
-      const fieldValue = e.target.value.trim();
+      const fieldValue = e.target?.value.trim();
       const newField = { [fieldName]: { value: fieldValue } };
-      
       setFormActe(prevState => ({ ...prevState, ...newField }));
-      if (fieldName) {
+      if (fieldName !== "sexe_temoin") {
         successBorder(`.${fieldName}`);
-        messageValidator(`.${fieldName}`, "");
-      }
+        messageValidator(`.${fieldName}`);
+      } 
+      // console.log(formActe[fieldName]?.value);
       
-  }
+    }
+    
 
 //========== CHANGE ON CLICK TRAVAIL PROFESSION ==========
 const handleClickTravailTemoin = (trav) => {
@@ -50,10 +52,10 @@ const handleClickTravailTemoin = (trav) => {
 
   //==========INPUT  CHANGE value FIELD nom COMMUNE ==========
   const inputChangeCommune = (e) => {
-    setNomCommune(e.target.value);
+    setNomCommune(e.target?.value);
     
     //Si le champ est null id_commune est null
-    if (!e.target.value) {
+    if (!e.target?.value) {
       const newField = { id_commune: { value: '' } };  
       setFormActe(prevState => ({ ...prevState, ...newField }));
     }
@@ -74,7 +76,7 @@ const handleClickTravailTemoin = (trav) => {
 //========== CHANCGE INPUT FIELD nom_fonkontany ==========
   const [fieldFonkotany, setFieldFonkotany] = useState("");
   const handleInputChangeFonkotany = (e) => {
-    setFieldFonkotany(e.target.value);
+    setFieldFonkotany(e.target?.value);
 
     if (!fieldFonkotany) {
       formActe.id_fonkotany.value = "";
@@ -94,6 +96,28 @@ const handleClickTravailTemoin = (trav) => {
     hiddenList(".nom_fonkotany_acte")
   }
 
+  //  AFFECTER LE NOM FONKOTANY TROUVE
+  useEffect(() => {
+    let res = fonkotany.find(fonk => fonk.id_fonkotany === formActe.id_fonkotany?.value);
+    if (res) {
+      setFieldFonkotany(res.nom_fonkotany);
+    } else {
+      // console.log('Fonkotany non trouvé.');
+    }
+  }, [formActe, fonkotany]);
+  
+
+  //  AFFECTER LE NOM COMMUNE TROUVE
+  useEffect(() => {
+    let res = communes.find(com => com.id_commune === formActe.id_commune?.value);
+    if (res) {
+      setNomCommune(res.nom_commune);
+    } else {
+      // console.log('Commune non trouvé.');
+    }
+  }, [formActe, communes]);
+  
+
   return (
     <>
       <div className="content-mere">
@@ -101,7 +125,13 @@ const handleClickTravailTemoin = (trav) => {
         <fieldset>
           <div >
             <label htmlFor="id_type" className="form-group-label">Type d'acte:</label>
-            <select className="form-group-input select id_type" name="id_type" id="id_type" onChange={handleInputChange}>
+            <select 
+              className="form-group-input select id_type" 
+              name="id_type" 
+              id="id_type" 
+              value={formActe.id_type?.value}
+              onChange={handleInputChange}
+            >
               <option value=''>Selectionner le type d'acte</option>
               {typesActe.map(type => ( 
                   <option key={type.id_type} value={type.id_type}>{type.nom_type}</option>
@@ -117,8 +147,8 @@ const handleClickTravailTemoin = (trav) => {
                 type="text" 
                 className="form-group-input num_acte" 
                 name="num_acte" id="num_acte" 
-                placeholder="Numéro dàacte" 
-                value={formActe.num_acte.value} 
+                placeholder="Numéro d'acte," 
+                value={formActe.num_acte?.value}
                 onChange={handleInputChange} 
               />
               <span className="msg-error"></span>
@@ -132,7 +162,7 @@ const handleClickTravailTemoin = (trav) => {
                 className="form-group-input date_acte" 
                 name="date_acte" id="date_acte" 
                 placeholder="Date de l'acte" 
-                value={formActe.date_acte.value} 
+                value={formActe.date_acte?.value} 
                 onChange={handleInputChange} 
               />
               <span className="msg-error"></span>
@@ -145,7 +175,7 @@ const handleClickTravailTemoin = (trav) => {
                 className="form-group-input heure_acte" 
                 name="heure_acte" id="heure_acte" 
                 placeholder="Heure de l'acte" 
-                value={formActe.heure_acte.value} 
+                value={formActe.heure_acte?.value} 
                 onChange={handleInputChange} 
               />
               <span className="msg-error"></span>
@@ -160,7 +190,7 @@ const handleClickTravailTemoin = (trav) => {
                 className="form-group-input lieu_acte" 
                 name="lieu_acte" id="lieu_acte" 
                 placeholder="Lieu de l'acte" 
-                value={formActe.lieu_acte.value} 
+                value={formActe.lieu_acte?.value} 
                 onChange={handleInputChange} 
               />
               <span className="msg-error"></span>
@@ -176,7 +206,7 @@ const handleClickTravailTemoin = (trav) => {
                 name="date_enreg" 
                 id="date_enreg" 
                 placeholder="Date d'enregistrement d'acte" 
-                value={formActe.date_enreg.value} 
+                value={formActe.date_enreg?.value} 
                 onChange={handleInputChange} 
                />
               <span className="msg-error"></span>
@@ -189,7 +219,7 @@ const handleClickTravailTemoin = (trav) => {
                 name="heure_enreg" 
                 id="heure_enreg" 
                 placeholder="Heure d'enregistrement d'acte" 
-                value={formActe.heure_enreg.value} 
+                value={formActe.heure_enreg?.value} 
                 onChange={handleInputChange} 
               />
               <span className="msg-error"></span>
@@ -197,7 +227,7 @@ const handleClickTravailTemoin = (trav) => {
           </div>
 
           <div className="form-group">
-            <div style={{position:"relative"}}>
+            <div className='input-relative'>
                 <label htmlFor="nom_fonkotany" className="form-group-label">Fonkotany:</label>
                 <input 
                   type="text" 
@@ -273,7 +303,7 @@ const handleClickTravailTemoin = (trav) => {
                       name="nom_temoin" 
                       id="nom_temoin" 
                       placeholder="Nom" 
-                      value={formActe.nom_temoin.value} 
+                      value={formActe.nom_temoin?.value} 
                       onChange={handleInputChange}
                     />
                     <span className="msg-error"></span>
@@ -285,7 +315,7 @@ const handleClickTravailTemoin = (trav) => {
                       className="form-group-input prenom_temoin" 
                       name="prenom_temoin" id="prenom_temoin" 
                       placeholder="Prénom" 
-                      value={formActe.prenom_temoin.value} 
+                      value={formActe.prenom_temoin?.value} 
                       onChange={handleInputChange}
                     />
                     <span className="msg-error"></span>
@@ -301,7 +331,7 @@ const handleClickTravailTemoin = (trav) => {
                       name="date_nais_temoin" 
                       id="date_nais_temoin" 
                       placeholder="Date de naissance" 
-                      value={formActe.date_nais_temoin.value} 
+                      value={formActe.date_nais_temoin?.value} 
                       onChange={handleInputChange}
                     />
                     <span className="msg-error"></span>
@@ -314,7 +344,7 @@ const handleClickTravailTemoin = (trav) => {
                       name="age_temoin" 
                       id="age_temoin" 
                       placeholder="Age" 
-                      value={formActe.age_temoin.value ? formActe.age_temoin.value:""} 
+                      value={formActe.age_temoin?.value ? formActe.age_temoin?.value:""} 
                       onChange={handleInputChange} 
                       disabled
                     />
@@ -331,7 +361,7 @@ const handleClickTravailTemoin = (trav) => {
                       name="lieu_nais_temoin" 
                       id="lieu_nais_temoin" 
                       placeholder="Lieu de naissance" 
-                      value={formActe.lieu_nais_temoin.value} 
+                      value={formActe.lieu_nais_temoin?.value} 
                       onChange={handleInputChange}
                     />
                     <span className="msg-error"></span>
@@ -359,7 +389,7 @@ const handleClickTravailTemoin = (trav) => {
                       name="adrs_temoin" 
                       id="adrs_temoin" 
                       placeholder="Adresse" 
-                      value={formActe.adrs_temoin.value} 
+                      value={formActe.adrs_temoin?.value} 
                       onChange={handleInputChange}
                     />
                     <span className="msg-error"></span>
@@ -375,7 +405,7 @@ const handleClickTravailTemoin = (trav) => {
                     name="profession_temoin" 
                     id="profession_temoin" 
                     placeholder="profession" 
-                    value={formActe.profession_temoin.value} 
+                    value={formActe.profession_temoin?.value} 
                     onChange={handleInputChange}
                     onKeyUp={(e) => searchAddress(e.target.id, "list_profession_temion") }
                     onFocus={() => showList(".list_profession_temion") } 
