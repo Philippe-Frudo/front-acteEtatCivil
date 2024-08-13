@@ -394,17 +394,14 @@
 
 .table thead tr th{
   text-align: start;
-  padding: var(--mb-1-5) 1rem;
+  padding: var(--mb-0-5) 0.5rem;
 }
 
 .table td{
   width: auto;
-  padding: 1rem 0.5rem; 
+  padding: 0.5rem 0.5rem; 
 }
 
-.table td{
-  padding: 0.5rem 1rem;
-}
 
 .td-action {
   text-align: center;
@@ -908,9 +905,9 @@ fieldset {
     /* height: 10vh; */
   }
   
-  .header .header-content-2 {
-    /* height: calc(100vh - (10vh + 10vh + 20vh)); */
-  }
+  /* .header .header-content-2 {
+    height: calc(100vh - (10vh + 10vh + 20vh)); 
+  } */
   
   .header .header-content-3 {
       padding-right: initial;
@@ -1213,9 +1210,6 @@ fieldset {
       flex-direction: column;
   }
 
-  .user-image {
-      margin-bottom: 1rem;
-  }
 
   /* .logout {
       display: block;

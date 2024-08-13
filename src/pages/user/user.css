@@ -1,14 +1,13 @@
-.user-image {
-    margin-bottom: 1rem;
+.isConnect {
     position: relative;
 }
 
-.connect {
+.isConnect .connect {
   position: absolute;
-  top: 0;
-  left: 1rem;
+  top: -1rem;
+  left: initial;
+  right: 0;
   padding: 0.3rem;
-  color: #f00;
   background-color: #36aa00;
   border-radius: 50%;
   -webkit-border-radius: 50%;

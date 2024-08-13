@@ -12,6 +12,9 @@ import { showDeleteModal } from '../../constants/modal';
 const Fonkotany = () => {
 
     const [fonkotany, setFonkotany] = useState([]);
+
+    const count = fonkotany.length;
+
     useEffect(() => {
         FonkotanyService.getFonkotany().then(fonkotany => setFonkotany(fonkotany))
     }, []);
@@ -61,7 +64,6 @@ const Fonkotany = () => {
         }
       };
       
-      console.log(dataImport);
 
     
     return (
@@ -156,7 +158,7 @@ const Fonkotany = () => {
                         
                         <div className="status-table">
                             <div>
-                                <h3> Nombre total : <span className="nbr">10</span></h3>
+                                <h3> Nombre total : <span className="nbr">{count}</span></h3>
                             </div>
                             <div className="next-prev">
                                 <span className="previous">
@@ -182,7 +184,7 @@ const Fonkotany = () => {
                     </div>
 
             {acceptFile ? (<TableFileRegion useData={[dataImport, setDataImport]} useAccept={ [acceptFile, setAcceptFile]} nameFile={'fonkotany'}/>):(null)}
-            <ModalDelete id={id} nomPage={"fonkotany"} useDelete={[isDelete, setIsDelete]}/>
+            <ModalDelete id={id} nomPage={"fonkotany"} useDelete={[isDelete, setIsDelete]} setData={setFonkotany}/>
         </>
     )
 }

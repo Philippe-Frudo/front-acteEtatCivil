@@ -12,10 +12,12 @@ import { showDeleteModal } from '../../constants/modal';
 const Commune = () => {
 
   const [communes, setCommunes] = useState([]);
+
+  const count = communes.length;
+
   useEffect(() => {
     CommuneService.getCommune().then(communes => setCommunes(communes));
   },[]);
-  console.log(communes);
 
   const [isDelete, setIsDelete] = useState(false)
   const [id, setId] = useState(null);
@@ -157,7 +159,7 @@ const Commune = () => {
 
             <div className="status-table">
               <div>
-                <h3> Nombre total : <span className="nbr">10</span></h3>
+                <h3> Nombre total : <span className="nbr">{count}</span></h3>
               </div>
               <div className="next-prev">
                 <span className="previous">
@@ -188,7 +190,7 @@ const Commune = () => {
           </div>
 
           {acceptFile ? (<TableFileRegion useData={[dataImport, setDataImport]} useAccept={ [acceptFile, setAcceptFile]} nameFile={'commune'}/>):(null)}
-          <ModalDelete id={id} nomPage={"commune"} useDelete={[isDelete, setIsDelete]}/>
+          <ModalDelete id={id} nomPage={"commune"} useDelete={[isDelete, setIsDelete]} setData={setCommunes}/>
 
     </>
   )

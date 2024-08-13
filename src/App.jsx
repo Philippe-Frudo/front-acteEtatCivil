@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import "./App.css";
 import Header from './components/header/Header.jsx';
 
@@ -33,12 +33,31 @@ import FormEditRegion from './pages/region/FormEditRegion.jsx';
 import FormAddTravail from './pages/travail/FormAddTravail.jsx';
 import FormEditTravail from './pages/travail/FormEditTravail.jsx';
 import MainTop from './components/main_top/MainTop.jsx';
+import Auth from './services/Auth.js';
+
+import User from './pages/user/User.jsx'
+
+
 
 
 function App() {
 
-//     import Auth from './services/Auth.js';
-//  new Auth();
+
+    const [user, setUser] = useState([])
+
+    //=== API DET FORMATION UTILISATEUR (Officier) ===
+    useEffect(() => {
+        Auth.getFormation()
+            .then(resp => {
+                if (!resp || !resp.data) {  // Assurez-vous que resp n'est pas null ou undefined
+                    console.log('Utilisateur non identifié');
+                    return;
+                }
+                setUser(resp.data);
+            });
+    }, []);
+
+    
 
     return (
         <>
@@ -55,37 +74,46 @@ function App() {
                     <div className="main-container main-container-2" id='main-scroll'>
 
                     <Routes>
+
                         <Route exact path="/" element={<Login />} />
                         <Route path="/register" element={<FormCreateUser />} />
+
+                        {user.isAdmin ? (<Route path="/user" element={<User />} />):('') }
+
                         <Route path="/dashboard" element={<Dashboard />} />
 
-                        <Route path="/acte-etat-civil" element={<Acte />} />
-                        <Route path="/acte-etat-civil/add" element={<FormAddActe />} />
+
+                        <Route path="/acte-etat-civil" element={<Acte user={user}/>} />
                         <Route path="/acte-etat-civil/detail/:id" element={<ActeDetail />} />
+                        <Route path="/acte-etat-civil/add" element={<FormAddActe />} />
                         <Route path="/acte-etat-civil/edit/:id" element={<FormEditActe />} />
-
-                        {/* <Route path="/adresse" element={<Adresse />} /> */}
-                        <Route path="/fonkotany" element={<Fonkotany />} />
-                        <Route path="/fonkotany/edit/:id" element={<FormEditFonkotany />} />
-                        <Route path="/fonkotany/add" element={<FormAddFonkotany />} />
-
-                        <Route path="/commune" element={<Commune />} />
-                        <Route path="/commune/add" element={<FormAddCommune />} />
-                        <Route path="/commune/edit/:id" element={<FormEditCommune />} />
-
-                        <Route path="/district" element={<District />} />
-                        <Route path="/district/add" element={<FormAddDistrict />} />
-                        <Route path="/district/edit/:id" element={<FormEditDistrict />} />
-
-                        <Route path="/region" element={<Region />} />
-                        <Route path="/region/add" element={<FormAddRegion />} />
-                        <Route path="/region/edit/:id" element={<FormEditRegion />} />
+                        
 
                         <Route path="/travail" element={<Travail />} />
                         <Route path="/travail/add" element={<FormAddTravail />} />
                         <Route path="/travail/edit/:id" element={<FormEditTravail />} />
 
-                        <Route path="/utilisateur" element={<Utilisateur />} />
+
+                        <Route path="/fonkotany" element={<Fonkotany />} />
+                        <Route path="/fonkotany/edit/:id" element={<FormEditFonkotany />} />
+                        <Route path="/fonkotany/add" element={<FormAddFonkotany />} />
+
+                        {user.isAdmin ? (<Route path="/commune" element={<Commune />} />):('') }
+                        {user.isAdmin ? (<Route path="/commune/add" element={<FormAddCommune />} />):('') }
+                        {user.isAdmin ? (<Route path="/commune/edit/:id" element={<FormEditCommune />} />):('') }
+
+
+                        {user.isAdmin ? (<Route path="/district" element={<District />} />):('') }
+                        {user.isAdmin ? (<Route path="/district/add" element={<FormAddDistrict />} />):('') }
+                        {user.isAdmin ? (<Route path="/district/edit/:id" element={<FormEditDistrict />} />):('') }
+                        
+
+                        {user.isAdmin ? (<Route path="/region" element={<Region />} />):('') }
+                        {user.isAdmin ? (<Route path="/region/add" element={<FormAddRegion />} />):('') }
+                        {user.isAdmin ? (<Route path="/region/edit/:id" element={<FormEditRegion />} />):('') }
+
+
+                        {/* {user.isAdmin ? (<Route path="/utilisateur" element={<Utilisateur />} />):(null) } */}
                     </Routes>
 
                     </div>

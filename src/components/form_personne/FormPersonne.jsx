@@ -128,10 +128,24 @@ const FormPersonne = ({ useFormPersonne }) => {
                         <div>
                             <label htmlFor="" className="form-group-label sexe_person ">Sexe:</label>
                             <label className="sex-group">
-                                <input type="radio" name="sexe_person" id="sexe_person" className="form-group-input sexe_perso" value="F" defaultChecked onChange={handleInputChange} onClick={(e) => { handleSex(e) }} /> Féminin
+                                <input type="radio" 
+                                name="sexe_person" 
+                                id="sexe_person" 
+                                className="form-group-input sexe_perso" 
+                                value="F" 
+                                defaultChecked 
+                                onChange={handleInputChange} 
+                                onClick={(e) => { handleSex(e) }} 
+                                /> Féminin
                             </label>
                             <label className="sex-group">
-                                <input type="radio" name="sexe_person" id="sexe_person" className="form-group-input sexe_perso" value="M" onChange={handleInputChange} onClick={(e) => { handleSex(e) }} />Masculin
+                                <input type="radio" 
+                                name="sexe_person" 
+                                id="sexe_person" 
+                                className="form-group-input sexe_perso" 
+                                value="M" onChange={handleInputChange} 
+                                onClick={(e) => { handleSex(e) }} 
+                                />Masculin
                             </label>
                         </div>
                     </div>

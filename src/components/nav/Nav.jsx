@@ -4,10 +4,12 @@ import { Link } from "react-router-dom";
 
 const Nav = ({ isOn }) => {
 
+    const nav = ["/dashboard", "/acte-etat-civil", "/fonkotany", "/commune", "/district", "/region", "/travail", "/user", ]
+
     return (
         <nav className="card-link">
             <ul className="ul">
-                {DataNav.map((data) => {
+                {DataNav.map((data) => {    
                     return (
                         <li className="ul-li" key={data.id}>
                             <Link to={data.root} className="link">

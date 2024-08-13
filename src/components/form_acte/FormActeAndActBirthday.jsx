@@ -8,8 +8,21 @@ import PersonneService from '../../services/servicePersonne';
 import ActeService from '../../services/serviceActe';
 import TravailService from '../../services/serviceTravail';
 import { makeRequest } from '../../services/axios';
+import Auth from '../../services/Auth';
 
 const FormActeAndBirthday = ({personne, acte, isEditForm}) => {
+
+    
+    // API GET OFFICIER ( UTILISATEUR )
+    const [user, setUser] = useState([])
+
+    useEffect(() => {
+        Auth.getFormation().then(resp => {
+            setUser(resp.data)  
+        })
+    }, [])
+    
+
     const navigate = useNavigate();
 
     let newDate = new Date().toUTCString();
@@ -361,7 +374,7 @@ const FormActeAndBirthday = ({personne, acte, isEditForm}) => {
 
 
     const [formActe, setFormActe] = useState({
-        id_type : { value: '', isValid: false },
+        id_type : { value: 1, isValid: false },
         num_acte : { value: '', isValid: false },
         date_acte : { value: '', isValid: false },
         heure_acte : { value: '', isValid: false },
@@ -381,7 +394,7 @@ const FormActeAndBirthday = ({personne, acte, isEditForm}) => {
         id_person : { value: '', isValid: true },
         id_fonkotany : { value: '', isValid: false },
         id_commune : { value: '', isValid: false },
-        id_off : { value: '', isValid: true }
+        id_off : { value: user.id , isValid: true }
     });
 
     //AFFECTER ACTE
@@ -417,7 +430,7 @@ const FormActeAndBirthday = ({personne, acte, isEditForm}) => {
 
     // ===== API POUR TROUVER LE NUMERO D'ACTE =====
     const [numero, setNumero] = useState(null);
-    const findNum = () => {
+    function findNum() {
         return makeRequest.post(`/findNum`, 
             { 
                 numero:formActe.num_acte.value, 
@@ -442,7 +455,6 @@ const FormActeAndBirthday = ({personne, acte, isEditForm}) => {
     }, [formActe.num_acte?.value, formActe.id_type?.value]);
 
     
-
     //===================== VALID FORM ACTE=================
     const validFormActe = () => {
         const newForm = { ...formActe };
@@ -860,7 +872,7 @@ const FormActeAndBirthday = ({personne, acte, isEditForm}) => {
 
             acte.id_fonkotany =  formActe.id_fonkotany?.value;
             acte.id_commune =  formActe.id_commune?.value;
-            acte.id_off =  1;
+            acte.id_off =  user.id;
 
             isEditForm ? updatePersone() : addPersonne();
         }else {
@@ -921,6 +933,8 @@ const FormActeAndBirthday = ({personne, acte, isEditForm}) => {
         };
     }
 
+
+
     // API MODIFIER ACTE ET PERSONNE
     const updatePersone = () => {
         
@@ -946,8 +960,6 @@ const FormActeAndBirthday = ({personne, acte, isEditForm}) => {
             
         
         //API MODIFIER ACTE
-        console.log(acte?.id_acte);
-        
         makeRequest.put(`/actes/${acte?.id_acte}`, acte, { 
             headers: {'Content-Type': 'application/json'}
         })
@@ -964,12 +976,10 @@ const FormActeAndBirthday = ({personne, acte, isEditForm}) => {
                
         })
         .catch(error => console.log(error));
-        
     }
 
 
-
-    const clearData = () => {
+    function clearData() {
         setFormPersonne({ 
             ...formPersonne,
 
@@ -994,13 +1004,13 @@ const FormActeAndBirthday = ({personne, acte, isEditForm}) => {
                 age_m: { value: "", error: "", isValid: true },
                 age_p: { value: "", error: "", isValid: true }
         }
-    });
+        });
 
         setFormActe(
             { 
             ...formActe,
 
-            ...{id_type : { value: '', isValid: false },
+            ...{id_type : { value: 1, isValid: false },
             num_acte : { value: '', isValid: false },
             date_acte : { value: '', isValid: false },
             heure_acte : { value: '', isValid: false },
@@ -1020,7 +1030,7 @@ const FormActeAndBirthday = ({personne, acte, isEditForm}) => {
             id_person : { value: '', isValid: true },
             id_fonkotany : { value: '', isValid: false },
             id_commune : { value: '', isValid: false },
-            id_off : { value: '', isValid: true }
+            id_off : { value: user.id, isValid: true }
         }
     });
 
@@ -1029,12 +1039,13 @@ const FormActeAndBirthday = ({personne, acte, isEditForm}) => {
 
     }
     
-
         // INITIALISATION DE DONNE
     if (stateActe && statePerson) {
         clearData(); // Appeler la fontion clearData
         navigate(`/acte-etat-civil/detail/${acte?.id_acte}`)
     }
+    
+        console.log(acte);
         
     return (
         <>
@@ -1079,7 +1090,7 @@ const FormActeAndBirthday = ({personne, acte, isEditForm}) => {
 
                                 <div className="content-user">
 
-                                    <FormActe useFormActe={[formActe, setFormActe]} />
+                                    <FormActe useFormActe={[formActe, setFormActe]} user={user}/>
                                     <FormPersonne useFormPersonne={[formPersonne, setFormPersonne]} />
 
                                     <div className="action-group">

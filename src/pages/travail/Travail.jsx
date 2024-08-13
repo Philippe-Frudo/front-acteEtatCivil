@@ -12,6 +12,8 @@ import { convertFile } from '../../helpers/convertFile'
 const Travail = () => {
 
     const [travails, setTravails] = useState([]);
+
+    const count = travails.length;
     
     const [isDelete, setIsDelete] = useState(false)
     const [id, setId] = useState(null);
@@ -57,14 +59,9 @@ const Travail = () => {
         }
       };
       
-      console.log(dataImport);
     
     useEffect(() => {
-        TravailService.getTravail().then(travails => setTravails(travails));
-        // if (isDelete) {
-        //     setId(null)
-        //     TravailService.getTravail().then(travails => setTravails(travails)); 
-        // }    
+        TravailService.getTravail().then(travails => setTravails(travails));  
     }, []);
     return (
         <>
@@ -153,7 +150,7 @@ const Travail = () => {
 
                         <div className="status-table">
                             <div>
-                                <h3> Nombre total : <span className="nbr">10</span></h3>
+                                <h3> Nombre total : <span className="nbr">{count}</span></h3>
                             </div>
                             <div className="next-prev">
                                 <span className="previous">
@@ -184,7 +181,7 @@ const Travail = () => {
                     </div>
 
             {acceptFile ? (<TableFileRegion useData={[dataImport, setDataImport]} useAccept={[acceptFile, setAcceptFile]} nameFile={'travail'}/>):(null)}
-            <ModalDelete id={id} nomPage={"travail"} useDelete={[isDelete, setIsDelete]}/>
+            <ModalDelete id={id} nomPage={"travail"} useDelete={[isDelete, setIsDelete]} setData={setTravails} />
         </>
     )
 }

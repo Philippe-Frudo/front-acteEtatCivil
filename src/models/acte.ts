@@ -24,8 +24,9 @@ export default class Acte {
 
 
     constructor(
+        id_off: number,
         // id_acte: number,
-        id_type: number,
+        id_type: number = 1,
         num_acte: string = '',
         date_acte: string = '',
         heure_acte: string = "",
@@ -46,12 +47,11 @@ export default class Acte {
         adrs_temoin: string = "",
         profession_temoin: string = "",
 
-        id_off: number = 1,
-
 
 
     ) {
         // this.id_acte = id_acte;
+        this.id_off = id_off;
         this.id_type = id_type;
         this.num_acte = num_acte;
         this.date_acte = date_acte;
@@ -72,7 +72,6 @@ export default class Acte {
         this.id_person = id_person;
         this.id_fonkotany = id_fonkotany;
         this.id_commune = id_commune;
-        this.id_off = id_off;
 
     }
 }

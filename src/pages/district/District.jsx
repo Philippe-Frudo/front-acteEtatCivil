@@ -12,6 +12,9 @@ import { convertFile } from '../../helpers/convertFile';
 const District = () => {
 
     const [districts, setDistricts] = useState([]);
+
+    const count = districts.length;
+
     useEffect(() => {
         DistrictService.getDistrict().then(districts => setDistricts(districts));
     }, []);
@@ -155,7 +158,7 @@ const District = () => {
 
                         <div className="status-table">
                             <div>
-                                <h3> Nombre total : <span className="nbr">10</span></h3>
+                                <h3> Nombre total : <span className="nbr">{count}</span></h3>
                             </div>
                             <div className="next-prev">
                                 <span className="previous">
@@ -186,7 +189,7 @@ const District = () => {
                     </div>
 
             {acceptFile ? (<TableFileRegion useData={[dataImport, setDataImport]} useAccept={[acceptFile, setAcceptFile]} nameFile={'district'}/>):(null)}
-            <ModalDelete id={id} nomPage={"district"} useDelete={[isDelete, setIsDelete]}/>
+            <ModalDelete id={id} nomPage={"district"} useDelete={[isDelete, setIsDelete]} setData={setDistricts}/>
         </>
     )
 }

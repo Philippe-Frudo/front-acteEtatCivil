@@ -1,23 +1,29 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {errorBorder, successBorder} from "./../../helpers/borderField";
-import AuthentificationService from "../../services/AuthentificationService";
+import { makeRequest } from '../../services/axios';
+// import AuthentificationService from "../../services/AuthentificationService";
 // import "./../register/register.css";
 // import "./login.css";
 
 
+
 const Login = () => {
+
     let navigate = useNavigate()
 
     const [form, setForm] = useState({
-            userName: { value: "" },
+            userEmail: { value: "" },
             password: { value: "" }
-        });
+    });
 
-    const [message, setMessage] = useState(""); //Vous étes deconnecte. {philippe / philippe}
+    const [message, setMessage] = useState(""); 
+
     const [valid, setValid] = useState(false);
+
+
+
     /**
-     * 
      * @param {HTMLInputElement} e 
      */
     const handleInputChange = (e) => {
@@ -29,25 +35,25 @@ const Login = () => {
         if (fieldName === "password") {
             successBorder(".password");
         }
-        if (fieldName === "userName") {
-            successBorder(".userName");
+        if (fieldName === "userEmail") {
+            successBorder(".userEmail");
         }
     }
 
     const validateForm = () => {
         let newForm = { ...form };
 
-        // Validator Username
-        if (form.userName.value.length < 1) {
-            errorBorder(".userName");
-            newForm.userName = { value: form.userName.value, error: "", isValid: false };
+        // Validator userEmail
+        if (form.userEmail.value.length < 3) {
+            errorBorder(".userEmail");
+            newForm.userEmail = { value: form.userEmail.value, error: "", isValid: false };
         } else {
-            successBorder(".userName");
-            newForm.userName = { value: form.userName.value, error: "", isValid: true };
+            successBorder(".userEmail");
+            newForm.userEmail = { value: form.userEmail.value, error: "", isValid: true };
         }
 
         // Validator Password
-        if (form.password.value.length < 1) {
+        if (form.password.value.length < 5) {
             // Votre mot de passe doit faire au moins 6 caractères de long.
             newForm.password = { value: form.password.value, error: "", isValid: false };
             errorBorder(".password");
@@ -56,30 +62,51 @@ const Login = () => {
             newForm.password = { value: form.password.value, error: "", isValid: true };
         }
         setForm(newForm);
-        return newForm.userName.isValid && newForm.password.isValid;
+        return newForm.userEmail.isValid && newForm.password.isValid;
     }
 
     const handleSubmit = (e) => {
         e.preventDefault();
         const isFormValid = validateForm();
         console.log(isFormValid);
-        if (isFormValid) {
-            setMessage("Connexion en cours ...");
-            setValid(isFormValid);
+        console.log(form);
 
-            AuthentificationService.login(form)
-            .then(data => {
-                console.log(data);
-                if (data.status) {
-                    console.log(data.message);
-                    setMessage(data.message);
+        // return
+        if (isFormValid) {
+            setValid(isFormValid);
+            setMessage("Connexion en cours ...");
+
+            // Appel API Authentification
+            makeRequest.post(`/officiers/auth`, 
+                {
+                    userEmail: form.userEmail.value,
+                    password: form.password.value
+                }, 
+                {
+                    headers: {"Content-Type":"application/json" }
+                }
+            )
+            .then(response => {
+                console.log(response);
+                if ( !response.data.status) {
+                    setValid(false)
+                    console.log("Aucun donnée à trouver")
+                    console.log(response);
+                    setMessage(response.data.message);
                     return;
-                }else {
-                    localStorage.setItem("user", JSON.stringify(data));
+                }else{
+                    setValid(true)
+                    // console.log("data:", response.data.data);
+                    localStorage.setItem("user", JSON.stringify(response.data.data));
                     localStorage.setItem("auth", 1);
-                    navigate("/dashboard");
+                    // return
+                    navigate("/dashboard")     
                 }
             })
+            .catch(error => {
+                console.error("Erreur lors de la récupération des données :", error);
+            });
+
         }
     }
 
@@ -105,18 +132,19 @@ const Login = () => {
                                 <div>
                                     <div className="form-group-login">
                                         <div>
-                                            <label htmlFor="userName" className="form-group-label">Username</label>
+                                            <label htmlFor="userEmail" className="form-group-label">Email</label>
                                             <input 
-                                                type="text" 
-                                                className="form-group-input userName" 
-                                                name="userName" id="userName" 
-                                                placeholder="Nom d'utilisateur" 
+                                                type="email" 
+                                                className="form-group-input userEmail" 
+                                                name="userEmail" id="userEmail" 
+                                                placeholder="votre e-mail" 
                                                 autoComplete="off" 
-                                                value={form.userName.value} 
+                                                required
+                                                value={form.userEmail.value} 
                                                 onChange={e => handleInputChange(e)} 
                                             />
                                             {/* Error  */}
-                                            {form.userName.error && <span className="msg-error">{form.userName.error}</span>}
+                                            {form.userEmail.error && <span className="msg-error">{form.userEmail.error}</span>}
                                         </div>
                                     </div>
 
@@ -128,13 +156,14 @@ const Login = () => {
                                                 className="form-group-input password" 
                                                 name="password" 
                                                 id="password" 
+                                                required
                                                 placeholder="Mot de passe" 
                                                 autoComplete="off" 
                                                 value={form.password.value} 
                                                 onChange={e => handleInputChange(e)} 
                                             />
                                             {/* Error  */}
-                                            {form.userName.error && <span className="msg-error">{form.password.error}</span>}
+                                            {form.userEmail.error && <span className="msg-error">{form.password.error}</span>}
                                         </div>
                                     </div>
 
