@@ -4,27 +4,27 @@ import "./acte.css";
 import { showDeleteModal } from '../../constants/modal';
 import ModalDelete from '../../components/modal_delete/ModalDelete';
 import { filterTable3Columns } from '../../helpers/searchTable';
-import ActeService from '../../services/serviceActe';
-import TravailService from '../../services/serviceTravail';
-import FonkotanyService from '../../services/serviceFonkotany';
-import CommuneService from '../../services/serviceCommune';
-import DistrictService from '../../services/serviceDistrict';
-import RegionService from '../../services/serviceRegion';
 import { searchAddress } from '../../helpers/borderField';
-import axios from 'axios';
 import { makeRequest } from '../../services/axios';
 import _ from 'lodash';
 import * as XLSX from 'xlsx';
 
+// import ActeService from '../../services/serviceActe';
+// import TravailService from '../../services/serviceTravail';
+// import FonkotanyService from '../../services/serviceFonkotany';
+// import CommuneService from '../../services/serviceCommune';
+// import DistrictService from '../../services/serviceDistrict';
+// import RegionService from '../../services/serviceRegion';
+// import axios from 'axios';
 // import ACTES from '../../models/mock-acte';
 
 
 
-const Acte = () => {
+const Acte = ({user}) => {
 
     const [actes, setActes] = useState([]);
-
-    // console.log(actes);
+    
+    const count = actes.length;
     
 
     const [nomTravail, setNomTravail] = useState('');
@@ -98,19 +98,29 @@ const Acte = () => {
 
     // API GET ACTES
     // Fonction debounced pour limiter la fréquence des appels API
-        useEffect(() => {
-        makeRequest.get(`/actes?id=${listSearch.id_type.value}&fonkotany=${listSearch.id_fonkotany.value}&commune=${listSearch.id_commune.value}&district=${listSearch.id_district.value}&region=${listSearch.id_region.value}`)
+    useEffect(() => {
+        makeRequest.get(`/actes?id=${listSearch.id_type.value}
+            &fonkotany=${listSearch.id_fonkotany.value}&
+            commune=${listSearch.id_commune.value}
+            &district=${listSearch.id_district.value}
+            &region=${listSearch.id_region.value}`)
         .then((res) => { 
             if (!res.data) {
                 console.log("Aucun donnée trouvé");
                 setError(false); return
+            }else {
+                setError(true);  
+                if (user.isAdmin) {
+                    setActes(res.data)
+                }else{
+                    const filteredData = res.data.filter(item => item.id_officier === user.id);
+                    setActes(filteredData ); 
+                }
             }
-            setActes(res.data); 
-            setError(true);
+            
         })
         .catch((error) => { console.log(error); });
     }, [listSearch,]);
-    
     
     //  INPUT CHANGE TYPE
     const handleInputChange = (e) => {
@@ -244,7 +254,7 @@ const Acte = () => {
         <>
                 { /* <!-- ===== HEADER CARD 1 ===== --> */}
                 <header className="main-header-content">
-                    <h3 className="main-header-content-title">Acte d'Etat Civil</h3>
+                    <h3 className="main-header-content-title">Acte de naissance</h3>
                     <span className="main-header-content-subtitle">Soutitre page</span>
                     
                     {/* <div className="main-local-nav">
@@ -272,21 +282,6 @@ const Acte = () => {
                                     ))}
                                 </select>
                             </div> */}
-                            
-                            <div>
-                                <select 
-                                    className="form-group-input select id_type" 
-                                    name="id_type" 
-                                    id="id_type" 
-                                    placeholder='Choisir le fonkoany'
-                                    onChange={handleInputChange}
-                                >
-                                    <option value=''>Selectionner le type d'acte</option>
-                                    {typesActe.map(type => ( 
-                                        <option key={type.id_type} value={type.id_type}>{type.nom_type}</option>
-                                    ))}
-                                </select>
-                            </div>
 
                             <div className="form-group input-relative">
                                 <div className='input-relative'>
@@ -391,7 +386,6 @@ const Acte = () => {
                             </div>
                     </div>
 
-
                    <div className='right'>
                         <div className="action-local-nav">
                             <Link to='/acte-etat-civil/add'>
@@ -428,9 +422,8 @@ const Acte = () => {
                             <span className="add-now-name">Exporter</span>
                         </span>
                     </button>
+
                 </header>
-
-
 
                 { /* <!-- ===== CARD 1 ===== --> */}
                 <div className="card active-main" id="card-1">
@@ -446,7 +439,7 @@ const Acte = () => {
                                             <th>Nom</th>
                                             <th>Prénom</th>
                                             <th>Sexe</th>
-                                            <th>Type Acte</th>
+                                            {/* <th>Type Acte</th> */}
                                             <th>Date d'acte</th>
                                             <th>Date d'enregistrement</th>
                                             <th>Fonkotany</th>
@@ -461,12 +454,12 @@ const Acte = () => {
                                     </thead>
                                     {/* <div className="table-scroll"> */}
                                     <tbody id="table-acte">
-                                        {error && actes?.map((acte) => (
+                                        {error && count > 0 && actes?.map((acte) => (
                                             <tr key={acte.id_acte}>
                                                 <td>{acte.nom_personne}</td>
                                                 <td>{acte.prenom_personne}</td>
                                                 <td>{acte.sexe_personne}</td>
-                                                <td>{acte.type_acte}</td>
+                                                {/* <td>{acte.type_acte}</td> */}
                                                 <td>{acte.date_acte}</td>
                                                 <td>{acte.date_enreg}</td>
                                                 <td>{acte.fonkotany}</td>
@@ -501,7 +494,7 @@ const Acte = () => {
 
                         <div className="status-table">
                             <div>
-                                <h3> Nombre total : <span className="nbr">10</span></h3>
+                                <h3> Nombre total : <span className="nbr">{count}</span></h3>
                             </div>
                             <div className="next-prev">
                                 <span className="previous">
@@ -533,7 +526,7 @@ const Acte = () => {
 
                 { /* <!-- ===== CARD 4 (Dece)===== --> */}
 
-        <ModalDelete id={id} nomPage={"acte"} useDelete={[isDelete, setIsDelete]}/>
+        <ModalDelete id={id} nomPage={"acte"} useDelete={[isDelete, setIsDelete]} setData={setActes}/>
         </>
     )
 }

@@ -9,9 +9,11 @@ import TravailService from '../../services/serviceTravail';
 import CommuneService from '../../services/serviceCommune';
 import ActeService from '../../services/serviceActe';
 import handleSex from '../../constants/sexe';
+import Auth from '../../services/Auth';
 
-const FormActe = ({ useFormActe }) => {
-      
+const FormActe = ({ useFormActe, user }) => {
+
+
   const [typesActe, setTypesActes] = useState([]);
   const [travails, setTravails] = useState([]);
   const [fonkotany, setFonkotany] = useState([]);
@@ -19,20 +21,26 @@ const FormActe = ({ useFormActe }) => {
   const [nomCommune, setNomCommune] = useState("");
 
 
+  
   useEffect(() => {
       ActeService.getTypes().then(types => setTypesActes(types));
       TravailService.getTravail().then(travails => setTravails(travails));
-      FonkotanyService.getFonkotany().then(fonkotany => setFonkotany(fonkotany));
-      CommuneService.getCommune().then(communes => setCommunes(communes));
-  },[]);
+      FonkotanyService.getFonkotany().then(fonkotany => {
+          const newFonkotany  = fonkotany.filter(item => item.id_commune == user.commune)
+          setFonkotany(newFonkotany)
+      });
 
-  
+      CommuneService.getCommune().then(communes => {setCommunes(communes)
+        
+      });
+    },[]);
+    
+    
     const [formActe, setFormActe] = useFormActe;
     const handleInputChange = (e) => {
       const fieldName = e.target.name.trim();
       const fieldValue = e.target?.value.trim();
       const newField = { [fieldName]: { value: fieldValue } };
-      setFormActe(prevState => ({ ...prevState, ...newField }));
       if (fieldName !== "sexe_temoin") {
         successBorder(`.${fieldName}`);
         messageValidator(`.${fieldName}`);
@@ -41,6 +49,9 @@ const FormActe = ({ useFormActe }) => {
       
     }
     
+    useEffect(() => {
+      setFormActe(prevState => ({ ...prevState, ...{id_off: {value: user.id}} }));
+    },[]);
 
 //========== CHANGE ON CLICK TRAVAIL PROFESSION ==========
 const handleClickTravailTemoin = (trav) => {
@@ -129,10 +140,11 @@ const handleClickTravailTemoin = (trav) => {
               className="form-group-input select id_type" 
               name="id_type" 
               id="id_type" 
+              disabled
               value={formActe.id_type?.value}
               onChange={handleInputChange}
             >
-              <option value=''>Selectionner le type d'acte</option>
+              {/* <option value=''>Selectionner le type d'acte</option> */}
               {typesActe.map(type => ( 
                   <option key={type.id_type} value={type.id_type}>{type.nom_type}</option>
               ))}
@@ -372,10 +384,24 @@ const handleClickTravailTemoin = (trav) => {
                 <div >
                     <label htmlFor="" className="form-group-label sexe_temoin">Sexe:</label>
                     <label className="sex-group">
-                        <input type="radio" name="sexe_temoin" id="sexe_temoin" className="form-group-input sex_F" value="F" defaultChecked onChange={handleInputChange} onClick={(e) => { handleSex(e) }} />Feminin
+                        <input type="radio" 
+                        name="sexe_temoin" 
+                        id="sexe_temoin" 
+                        className="form-group-input sex_F" 
+                        value="F" 
+                        defaultChecked 
+                        onChange={handleInputChange} 
+                        onClick={(e) => { handleSex(e) }} 
+                        />Feminin
                     </label>
                     <label className="sex-group">
-                        <input type="radio" name="sexe_temoin" id="sexe_temoin" className="form-group-input sex_temoin" value="M" onChange={handleInputChange} onClick={(e) => { handleSex(e) }} />Masculin
+                        <input type="radio" 
+                        name="sexe_temoin" 
+                        id="sexe_temoin" 
+                        className="form-group-input sex_temoin" 
+                        value="M" onChange={handleInputChange} 
+                        onClick={(e) => { handleSex(e) }} 
+                        />Masculin
                     </label>
                 </div>
             </div>

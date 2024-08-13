@@ -13,8 +13,8 @@ const MainTop = () => {
             <div className="main-header">
                 <div className="main-header-left title">
                     <span>
-                        <h2 className="main-title">TITRE</h2>
-                        <span className="main-subtitle">Sous Titre</span>
+                        <h2 className="main-title">REGISTREMENT D'ACTE D'ETAT CIVIL</h2>
+                        <span className="main-subtitle">sous titre</span>
                     </span>
                     <span className="btn-show-menu-icon" onClick={showNav}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">

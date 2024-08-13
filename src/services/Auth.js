@@ -1,24 +1,75 @@
+import { makeRequest } from "./axios";
+
 export default class Auth {
 
+    static user = JSON.parse(localStorage.getItem("user"));
+
+    static formation = {};
+
+    
     constructor() {
         document.querySelector("body").style.display = "none";
         const auth = localStorage.getItem("auth"); 
-        const user = JSON.parse(localStorage.getItem("user"));
-        this.validateAuth(auth, user);
+        this.validateAuth(auth);
     }
 
-    validateAuth(auth, user) {
+    validateAuth(auth) {
         if (auth != 1) {
             window.location.replace("/");
         }else {
-            document.querySelector("body").style.display = "none";
-            document.querySelector("#fullname").innerHTML = user.name + " " + user.fname;
+            document.querySelector("body").style.display = "block";
         }
     }
+
     
-    logOut() {
-        localStorage.removeItem("user");
-        localStorage.removeItem("auth");
-        window.location.replace("/");
+    static logOut() {
+
+        return makeRequest.post(`/officiers/logOut`, this.user, {
+            headers: {"Content-Type":"application/json" }
+            }
+        )
+        .then(response => {
+            if (!response.data) {
+                console.log('Status en ligne non deconnecter');
+                return null;
+            }
+            document.querySelector("body").style.display = "none";
+            localStorage.removeItem("user");
+            localStorage.removeItem("auth");
+            window.location.replace("/");
+            console.log(response.data);
+            return response.data;
+        })
+        .catch(error => {
+            console.log(error);
+            return null;
+        });
     }
+    
+
+
+
+
+    //=== API DET FORMATION UTILISATEUR (Officier) ===
+    static getFormation() {
+        return makeRequest.post(`/officiers/verifyConnect`, this.user, {
+            headers: { "Content-Type": "application/json" }
+        })
+        .then(response => {
+            if (!response || !response.data) {
+                console.log('Aucune donnée reçue');
+                return null;  // ou undefined
+            }
+
+            // console.log(response);
+            this.formation = response.data;
+            return response;
+        })
+        .catch(error => {
+            console.error('Erreur lors de la récupération de la formation', error);
+            return null;  // ou undefined
+        });
+    }
+
+
 }

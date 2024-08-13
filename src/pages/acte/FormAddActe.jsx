@@ -7,7 +7,8 @@ import FormActeAndBirthday from './../../components/form_acte/FormActeAndActBirt
 const FormAddActe = () => {
 
     const [personne] = useState(new Personne());
-    const [acte] = useState(new Acte());
+    const [acte] = useState(new Acte() );
+
 
     return (
         <>

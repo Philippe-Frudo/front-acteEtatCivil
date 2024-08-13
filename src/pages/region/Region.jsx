@@ -62,7 +62,6 @@ const Region = () => {
       }
     };
     
-    console.log(dataImport);
 
   return (
     <>
@@ -187,7 +186,7 @@ const Region = () => {
           </div>
 
         {acceptFile ? (<TableFileRegion useData={[dataImport, setDataImport]} useAccept={ [acceptFile, setAcceptFile]} nameFile={'région'}/>):(null)}
-        <ModalDelete id={id} nomPage={"région"} useDelete={[isDelete, setIsDelete]}/>
+        <ModalDelete id={id} nomPage={"région"} useDelete={[isDelete, setIsDelete]} setData={setRegions}/>
     </>
   )
 }

@@ -3,27 +3,66 @@ import Chart from "chart.js/auto";
 import { CategoryScale } from "chart.js";
 import "./dashboard.css";
 import 'boxicons';
-import ChartWork from "../../components/chart/ChartWork";
 import ChartActMaiage from "../../components/chart/ChartActMaiage";
 import { useEffect, useState } from "react";
 import { makeRequest } from '../../services/axios';
+import ChartRegistreParMois from "../../components/chart/ChartRegistreParMois";
 
 Chart.register(CategoryScale);
 
 const Dashboard = () => {
 
+  const [totalOfficier, setTotalOfficier] = useState(); // L'officier est comme l'utilisateur
+  const [totalNaissance, setTotalNaissance] = useState();
+  const [registerToday, setRegisterToday] = useState();
 
-  const [dataParAns, setDataParAns] = useState([]);
+  
+  // API COMPTE NOMBRE OFFICIER (UTILISATEUR)
   useEffect(() => {
       const fetchData = async () => {
           try {
-              const response = await makeRequest.get(`/yearBirthday`);
+              const response = await makeRequest.get(`/nombreOfficier`);
               if (!response.data) {
-                  console.log("Aucune donnée trouvée");
+                setTotalOfficier(response.data)
+                return;
+              }
+              setTotalOfficier(response.data);
+          } catch (error) {
+              console.log(error);
+          }
+      };
+      fetchData();
+  }, []);
+  
+
+  // API TOTAL NOMBRE DE NAISSANCE
+  useEffect(() => {
+      const fetchData = async () => {
+          try {
+              const response = await makeRequest.get(`/countNaissance`);
+              if (!response.data) {
+                setTotalNaissance(response.data)
+                return;
+              }
+              setTotalNaissance(response.data);
+          } catch (error) {
+              console.log(error);
+          }
+      };
+      fetchData();
+  }, []);
+  
+  // API COMPTE NOMBRE D'ANREGISTREMENT AUJOURD'HUI
+  useEffect(() => {
+      const fetchData = async () => {
+          try {
+              const response = await makeRequest.get(`/registerToday`);
+              if (!response.data) {
+                setRegisterToday(response.data)
+                  // console.log("Aucune enregistrement trouvée");
                   return;
               }
-              console.log(response.data);
-              setDataParAns(response.data);
+              setRegisterToday(response.data);
           } catch (error) {
               console.log(error);
           }
@@ -43,77 +82,51 @@ const Dashboard = () => {
                 <div className="dash-card dash-card-1">
                   <h4 className="title-card">Utilisateur</h4>
                   <div className="dash-card-content">
-                    <span className="dash-card-left">2 &nbsp; </span>
+                    <span className="dash-card-left">{totalOfficier}</span>
                     <span className="dash-card-right">
                       <box-icon name='group' type='solid' color='#4547bf' fill='48px'></box-icon>
                     </span>
                   </div>
                 </div>
-                <div className="dash-card dash-card-2">
-                  <h4 className="title-card">Acte</h4>
-                  <div className="dash-card-content">
-                    <span className="dash-card-left">100 &nbsp; </span>
-                    <span className="dash-card-right">
-                      <box-icon name='calendar-alt' type='solid' color='#4547bf' ></box-icon>
-                    </span>
-                  </div>
-                </div>
+
+
                 <div className="dash-card dash-card-3">
-                  <h4 className="title-card">Acte de naissance</h4>
+                  <h4 className="title-card">Total d'acte de naissance</h4>
                   <div className="dash-card-content">
-                    <span className="dash-card-left">50 &nbsp; </span>
+                    <span className="dash-card-left">{totalNaissance}</span>
                     <span className="dash-card-right">
                       <box-icon name='calendar-alt' type='solid' color='#4547bf' ></box-icon>
                     </span>
                   </div>
                 </div>
+
                 <div className="dash-card dash-card-3">
-                  <h4 className="title-card">Acte de Mariage</h4>
+                  <h4 className="title-card">Nombre de registrement aujourd'hui</h4>
                   <div className="dash-card-content">
-                    <span className="dash-card-left">50 &nbsp; </span>
+                    <span className="dash-card-left">{registerToday}</span>
                     <span className="dash-card-right">
                       <box-icon name='calendar-alt' type='solid' color='#4547bf' ></box-icon>
                     </span>
                   </div>
                 </div>
-                <div className="dash-card dash-card-3">
-                  <h4 className="title-card">Acte de Divorce</h4>
-                  <div className="dash-card-content">
-                    <span className="dash-card-left">50 &nbsp; </span>
-                    <span className="dash-card-right">
-                      <box-icon name='calendar-alt' type='solid' color='#4547bf' ></box-icon>
-                    </span>
-                  </div>
-                </div>
-                <div className="dash-card dash-card-3">
-                  <h4 className="title-card">Acte de Décé</h4>
-                  <div className="dash-card-content">
-                    <span className="dash-card-left">50 &nbsp; </span>
-                    <span className="dash-card-right">
-                      <box-icon name='calendar-alt' type='solid' color='#4547bf' ></box-icon>
-                    </span>
-                  </div>
-                </div>
+
+     
               </div>
 
               {/* Croissance par an */}
               <div className="card-content">
                 <div className="dash-card dash-card-4">
-                  <h4 className="title-card">Taux de croissance par an au niveau de la naissance</h4>
-
-                  {/* Chart diagrame en batton */}
-                  <CroissantPerYear dataParAns={dataParAns}/>
+                  <h4 className="title-card">Nombre d'enregistrement par mois à l'année actuelle </h4>
+                  {/* Chart diagramme en batton */}
+                  <ChartRegistreParMois />
                   
                 </div>
               </div>
-              <div className="card-content chartWork">
+              <div className="card-content chartRegister">
                 <div className="dash-card dash-card-5" >
-                  <h4 className="title-card">Taux de croissance par an au niveau du décé </h4>
-                  <ChartWork />
-                </div>
-                <div className="dash-card dash-card-6">
-                  <h4 className="title-card">Taux de croissance par an au niveau du divorce  </h4>
-                  <ChartActMaiage />
+                  <h4 className="title-card">Taux de croissance par an au niveau de la naissance</h4>
+                  {/* Chart diagramme par ligne*/}
+                  <CroissantPerYear/>
                 </div>
               </div>
             </div>

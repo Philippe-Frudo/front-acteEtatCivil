@@ -8,6 +8,7 @@ import './register.css';
 import { regex } from '../../helpers/regex';
 import OfficierService from '../../services/serviceOfficier';
 import CommuneService from '../../services/serviceCommune';
+import { makeRequest } from '../../services/axios';
 
 
 const FormCreateUser = () => {
@@ -35,7 +36,7 @@ const FormCreateUser = () => {
     const [formOfficier, setFormOfficier] = useState({
         photo_off: { value: officier?.photo_off , isValid: true, error: "" },
         nom_off: { value: officier?.nom_off, isValid: false, error: "" },
-        prenom_off: { value: officier?.prenom_off, isValid: false, error: "" },
+        prenom_off: { value: officier?.prenom_off, isValid: true, error: "" },
         sexe_off: { value: officier?.sexe_off, isValid: false, error: "" },
         email_off: { value: officier?.email_off, isValid: false, error: "" },
         id_commune: { value: officier?.id_commune, isValid: false, error: "" },
@@ -48,14 +49,14 @@ const FormCreateUser = () => {
     
     //Si le champ est null id_commune est null
     if (!e.target.value) {
-      const newField = { id_commune: { value: '' } };  
+      const newField = { id_commune: { value: '', isValid: false } };  
       setFormOfficier({ ...formOfficier, ...newField });
     }
   }
 
   // ======CHANGE ID CIMMUNE PAR UN CLICK DE NOM COMMUNE=====
   const handleSetCodeCommune = (commune) => {
-    const newField = { id_commune: { value: commune.id_commune } };
+    const newField = { id_commune: { value: commune.id_commune,  isValid: true } };
     setFormOfficier({ ...formOfficier, ...newField });
 
     setNomCommune(commune.nom_commune);
@@ -122,6 +123,8 @@ const FormCreateUser = () => {
     const handleSubmit = (e) => {
         e.preventDefault()
         let isValid = Object.values(formOfficier).every(field => field.isValid);
+        console.log(formOfficier);
+        
         console.log("valid:", isValid);
         if (isValid) {
             setValid(isValid);
@@ -131,7 +134,7 @@ const FormCreateUser = () => {
             officier.prenom_off = formOfficier.prenom_off.value;
             officier.sexe_off = formOfficier.sexe_off.value;
             officier.email_off = formOfficier.email_off.value;
-            officier.code_commune = formOfficier.code_commune.value;
+            officier.id_commune = formOfficier.id_commune.value;
             officier.motPass_off = formOfficier.motPass_off.value;
             
             console.log(officier);
@@ -143,26 +146,48 @@ const FormCreateUser = () => {
             setMessage("Vérifie les champs obligatoire ou non valide");
         }
 
-
-        const register = () => {
-            OfficierService.addOfficier(officier).then(resp => {
-                setMessage(resp.message)
-                setValid(resp.status)
-                if (resp.status) {
-                    setFormOfficier({
-                        photo_off: { value: '' , isValid: true, error: "" },
-                        nom_off: { value:'', isValid: false, error: "" },
-                        prenom_off: { value: '', isValid: false, error: "" },
-                        sexe_off: { value: '', isValid: false, error: "" },
-                        email_off: { value: '', isValid: false, error: "" },
-                        code_commune: { value: '', isValid: false, error: "" },
-                        motPass_off: { value: '' , isValid: false, error: "" }
-                    });
-                }
-            })
-            // .then( () => useNavigate('/login') );
-        }
     }
+
+
+    function register() {
+        // API CREER OFFICIER (UTILISATEUR)
+        makeRequest.post('/officiers', officier, {
+           headers: {"Content-Type":"application/json"}
+        }
+        ).then(response => {
+
+            if ( !response.data.status) {
+                setValid(false)
+                setMessage(response.data.message)
+                return
+            }
+            setValid(true)
+            setMessage(response.data.message)
+                    
+            clearData();
+        })
+        // .then( () => useNavigate('/login') )
+        .catch(error => { console.error( error) });
+    }
+    
+
+    //  CLEAR DATA
+    function clearData() {
+        setFormOfficier(
+            { ...formOfficier, 
+                ...{
+                    photo_off: { value: '' , isValid: true, error: "" },
+                    nom_off: { value:'', isValid: true, error: "" },
+                    prenom_off: { value: '', isValid: true, error: "" },
+                    sexe_off: { value: 'M', isValid: true, error: "" },
+                    email_off: { value: '', isValid: false, error: "" },
+                    id_commune: { value: '', isValid: false, error: "" },
+                    motPass_off: { value: '' , isValid: false, error: "" }
+                }
+        });
+        setCMotPass("");
+    }
+
 
     return (
         <section className="section container">
@@ -253,10 +278,11 @@ const FormCreateUser = () => {
                             <div>
                                 <label htmlFor="email_off" className="form-group-label">Email:</label>
                                 <input 
-                                type="text" 
+                                type="email" 
                                 className="form-group-input email_off" 
                                 name="email_off" 
                                 id="email_off" 
+                                required
                                 placeholder="E-mail" 
                                 value={formOfficier.email_off.value}
                                 onChange={handleInputChange}
@@ -329,7 +355,7 @@ const FormCreateUser = () => {
 
                         <div className="action-group">
                             <button type="submit" className="btn btn-save" id="save">S'inscrire</button>
-                            <button type="reset" className="btn btn-clear" id="clear">Annuler</button>
+                            <button type="reset" className="btn btn-clear" id="clear" onClick={clearData}>Annuler</button>
                         </div>
 
                     </div>

@@ -4,22 +4,39 @@ import { Link, useNavigate } from "react-router-dom";
 import Logo from "../Logo";
 // import {logo_instat} from './../../assets/logo_instat';
 // import Nav from "./../nav/Nav";
-// import "./header.css";
+import "./header.css";
 import Auth from "../../services/Auth";
 
 const Header = () => {
 
-    // ======= AUTHENTIFICATION ========
-    /*const auth = new Auth();
+    // ====== AUTHENTIFICATION ======
+    const auth = new Auth();
 
-    document.querySelector("#logout").addEventListener("click", (e) => {
-        e.preventDefault()
-        auth.logOut();
-        navagate('/login');
-        console.log("Logout");
-    })*/
+    const [user, setUser] = useState([])
 
+    //=== API DET FORMATION UTILISATEUR (Officier) ===
+    useEffect(() => {
+        Auth.getFormation()
+            .then(resp => {
+                if (!resp || !resp.data) {  
+                    console.log('Utilisateur non identifié');
+                    return;
+                }
+                setUser(resp.data);
+            });
+    }, []);
+
+;
     const navigate = useNavigate();
+    
+    function logout(e) {
+        e.preventDefault()
+        if ( Auth.logOut()) {
+            navigate('/');
+            console.log("Logout");  
+        }
+    }
+  
 
     let [isOn, setIsOn] = useState(false);
     function handleToggle() {
@@ -52,10 +69,13 @@ const Header = () => {
         document.querySelector(".header").classList.remove("header-top");
     }
 
-    function logout() {
-        navigate("/");
-    }
 
+    const navs = ["/dashboard", "/acte-etat-civil", "/fonkotany", "/travail" ]
+
+    const filterData = DataNav.filter(data => navs.includes(data.root) )
+
+    
+    
     return (
         <>
             <header className={isOn ? "header max-header" : "header"}>
@@ -84,16 +104,35 @@ const Header = () => {
                             {/* Nvigation */}
                             <nav className="card-link">
                                 <ul className="ul">
-                                    {DataNav.map((data) => {
-                                        return (
-                                            <li className="ul-li" key={data.id}>
-                                                <Link to={data.root} className="link" onClick={handleClick}>
-                                                    <span dangerouslySetInnerHTML={{ __html: data.svg }} />
-                                                    <span className={isOn ? "link-name show-details-menu" : "link-name"} id="link-name">{data.name}</span>
-                                                </Link>
-                                            </li>
-                                        )
-                                    })}
+                                    {user.isAdmin ? (
+                                        <>
+                                        {DataNav.map((data) => {
+                                            return (
+                                                <li className="ul-li" key={data.id}>
+                                                    <Link to={data.root} className="link" onClick={handleClick}>
+                                                        <span dangerouslySetInnerHTML={{ __html: data.svg }} />
+                                                        <span className={isOn ? "link-name show-details-menu" : "link-name"} id="link-name">{data.name}</span>
+                                                    </Link>
+                                                </li>
+                                            )
+                                        })}
+                                        </>
+                                        
+                                    ):(
+                                        <>
+                                        {filterData.map((data) => {
+                                            return (
+                                                <li className="ul-li" key={data.id}>
+                                                    <Link to={data.root} className="link" onClick={handleClick}>
+                                                        <span dangerouslySetInnerHTML={{ __html: data.svg }} />
+                                                        <span className={isOn ? "link-name show-details-menu" : "link-name"} id="link-name">{data.name}</span>
+                                                    </Link>
+                                                </li>
+                                            )
+                                        })}
+                                        </>
+
+                                    )}
                                 </ul>
                             </nav>
 
@@ -107,13 +146,14 @@ const Header = () => {
                                 </div>
                                 <div className="card-user-info">
                                     <a href="#" className="link user-image">
+                                        {user.connect && <span className="connect" id="connect"></span>}
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
                                             <path fill="#fff" d="M7.5 6.5C7.5 8.981 9.519 11 12 11s4.5-2.019 4.5-4.5S14.481 2 12 2 7.5 4.019 7.5 6.5zM20 21h1v-1c0-3.859-3.141-7-7-7h-4c-3.86 0-7 3.141-7 7v1h17z" />
                                         </svg>
                                     </a>
 
-                                    <p className={isOn ? "user-name show-details-menu" : "user-name"} id="fullname">L.P.N.F</p>
-                                    <p className={isOn ? "user-email show-details-menu" : "user-email"}>l.p.n.frudo@gmail.com</p>
+                                    <p className={isOn ? "user-name show-details-menu" : "user-name"} id="fullname">{user?.nom} <br /> {user?.prenom}</p>
+                                    <p className={isOn ? "user-email show-details-menu" : "user-email"}>{user?.email}</p>
                                 </div>
                                 <h3 className="logout" id="logout">
                                     <a href="" className="link link-logout" id="logout" onClick={logout}>

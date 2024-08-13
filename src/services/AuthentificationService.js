@@ -9,7 +9,6 @@ export default class AuthentificationService {
 
 
     // static login(userName, passowrd) {
-
     //     const isAuthenticated = (userName === "philippe" && passowrd === "philippe");
 
     //     return new Promise(resolve => {
@@ -33,12 +32,13 @@ export default class AuthentificationService {
             return fetch(`${this.url}/officiers/auth`, {
                 method:"POST",
                 body: JSON.stringify(data),
-                headers: {"Content-Type":"application/json"}
+                headers: {"Content-Type":"application/json" }
             })
             .then(response => response.json() )
             .catch(error => console.log(error) );
         }
     }
+
 
 
 
