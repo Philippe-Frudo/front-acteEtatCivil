@@ -7,6 +7,7 @@ import CommuneService from '../../services/serviceCommune';
 import FonkotanyService from '../../services/serviceFonkotany';
 import ActeService from '../../services/serviceActe';
 import { makeRequest } from '../../services/axios';
+import Auth from '../../services/Auth';
 // import PersonneService from '../../services/servicePersonne';
 
 
@@ -36,7 +37,7 @@ const ModalDelete = ({id, nomPage, useDelete, setData}) => {
             case "officier" :
 
                 if (isDelete) {
-                            // Appel API Authentification
+                    // Appel API Authentification
                     makeRequest.post(`/officiers/delete`, { id: id }, 
                         { 
                             headers: {"Content-Type":"application/json" } 
@@ -46,10 +47,13 @@ const ModalDelete = ({id, nomPage, useDelete, setData}) => {
                         if ( !response.data) {
                             console.log("Aucun donnée à trouver")
                             console.log(response);
-                            setMessage(response.data);
                             return;
                         }
-                        setMessage(response.data);
+
+                        setData((prev) => prev.filter((d)=> d.id_off !== id))
+                        setIsDelete(false); 
+                        hiddenDeleteModal()
+                        
                     })
                     .catch(error => {
                         console.error(error);
@@ -61,11 +65,10 @@ const ModalDelete = ({id, nomPage, useDelete, setData}) => {
                 if (isDelete) {
                     RegionService.deleteRegion(+id)
                     .then(resp => {
-                        console.log(resp.mersage)
-                        setData((prev) => prev.filter((d)=> d.id_travail !== id))
+                        console.log(resp.message)
+                        setData((prev) => prev.filter((d)=> d.id_region !== id))
                         setIsDelete(false); 
                         hiddenDeleteModal()
-
                     }) 
                     .catch( (error) =>{ 
                         console.log(error);
@@ -77,8 +80,8 @@ const ModalDelete = ({id, nomPage, useDelete, setData}) => {
                 if (isDelete) {
                     DistrictService.deleteDistrict(id)
                     .then(resp => {
-                        console.log(resp.mersage)
-                        setData((prev) => prev.filter((d)=> d.id_travail !== id))
+                        console.log(resp.message)
+                        setData((prev) => prev.filter((d)=> d.id_district !== id))
                         setIsDelete(false); 
                         hiddenDeleteModal()
                     })
@@ -90,16 +93,20 @@ const ModalDelete = ({id, nomPage, useDelete, setData}) => {
 
             case "commune" :
                 if (isDelete) {
-                    CommuneService.deleteCommune(id)
-                    .then(resp => {
-                        console.log(resp.mersage)
-                        setData((prev) => prev.filter((d)=> d.id_travail !== id))
-                        setIsDelete(false); 
-                        hiddenDeleteModal()
-                    })   
-                    .catch( (error) =>{ 
-                        console.log(error);
-                     })
+                    if (isDelete) {
+                        // API DELETE COMMUNE
+                        makeRequest.delete(`/communes/${id}`)
+                        .then(response => {
+                            if (!response.data) {
+                                console.log(response);
+                                console.log("Aucun donnée trouvé"); return
+                            }
+                            setData((prev) => prev.filter((d)=> d.id_commune !== id))
+                            setIsDelete(false); 
+                            hiddenDeleteModal()
+                        })
+                        .catch(error => console.log(error) ) 
+                    }
                 }
                 break;
 
@@ -107,8 +114,8 @@ const ModalDelete = ({id, nomPage, useDelete, setData}) => {
                 if (isDelete) {
                     FonkotanyService.deleteFonkotany(id)
                     .then(resp => {
-                        console.log(resp.mersage)
-                        setData((prev) => prev.filter((d)=> d.id_travail !== id))
+                        console.log(resp.message)
+                        setData((prev) => prev.filter((d)=> d.id_fonkotany !== id))
                         setIsDelete(false); 
                         hiddenDeleteModal()
                     })
@@ -129,7 +136,7 @@ const ModalDelete = ({id, nomPage, useDelete, setData}) => {
                         console.log(response.data);
                         deletePerson(response.data)
 
-                        setData((prev) => prev.filter((d)=> d.id_travail !== id))
+                        setData((prev) => prev.filter((d)=> d.id_acte !== id))
                         setIsDelete(false); 
                         hiddenDeleteModal()
                     })

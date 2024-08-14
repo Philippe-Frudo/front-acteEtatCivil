@@ -11,14 +11,18 @@ import { makeRequest } from '../../services/axios';
 
 const Officier = () => {
 
+    const [message, setMessage] = useState('');
+    const [accept, setAccept] = useState(false);
+
     const [officier, setOfficier] = useState([]);
     const count = officier.length
 
     useEffect(() => {
         OfficierService.getOfficier().then(Officier => setOfficier(Officier))
-    }, []);
+        setAccept(false)
+    }, [accept]);
 
-    console.log(officier);
+    // console.log(officier);
     
 
     const [isDelete, setIsDelete] = useState(false)
@@ -31,6 +35,7 @@ const Officier = () => {
     }
 
     // ===== API CONFIRM L'UTILISATEUR =====
+
     const handleConfirm = (id) => {
          // Appel API Authentification
         makeRequest.post(`/officiers/confirm`, { id: id }, 
@@ -39,22 +44,22 @@ const Officier = () => {
           }
       )
       .then(response => {
-          console.log(response);
           if ( !response.data) {
+                setError(true)
               console.log("Aucun donnée à trouver")
               console.log(response);
               setMessage(response.data);
               return;
             }
             console.log(response);
+            setAccept(true)
+            
             setMessage(response.data);
       })
       .catch(error => {
           console.error(error);
       });
     }
-
-    
 
     
     return (

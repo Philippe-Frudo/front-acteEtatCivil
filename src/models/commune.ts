@@ -8,7 +8,7 @@ export default class Commune {
     constructor(
         code_commune: String = "",
         nom_commune: String = "",
-        id_district: number,
+        id_district: number = 0,
     ) {
         // 3. Initialisation des proprietes du Fonkotany
         code_commune = code_commune;

@@ -25,9 +25,8 @@ const Acte = ({user}) => {
     const [actes, setActes] = useState([]);
     
     const count = actes.length;
-    
 
-    const [nomTravail, setNomTravail] = useState('');
+    // const [nomTravail, setNomTravail] = useState('');
     const [nomFonkotany, setNomFonkotany] = useState('');
     const [nomCommune, setNomCommune] = useState('');
     const [nomDistrict, setNomDistrict] = useState('');
@@ -310,8 +309,8 @@ const Acte = ({user}) => {
                                 </div>
                             </div>
                         
-                            <div className="form-group">
-                                <div className='input-relative'>
+                            <div className={ user?.isAdmin ? "form-group":"hidden form-group"}>
+                                <div className="input-relative" >
                                     {/* <label htmlFor="nom_commune" className="form-group-label">Commune:</label> */}
                                     <input
                                         type="text" 
@@ -336,7 +335,7 @@ const Acte = ({user}) => {
                                 </div>
                             </div>
 
-                            <div className="form-group input-relative">
+                            <div className={ user?.isAdmin ? "form-group input-relative":"hidden form-group input-relative"}>
                                 {/* <label htmlFor="nom_district" className="form-group-label">Code District:</label> */}
                                 <input
                                     type="text"
@@ -361,7 +360,7 @@ const Acte = ({user}) => {
                                 </ul>
                             </div>
 
-                            <div className="form-group input-relative">
+                            <div className={ user?.isAdmin ? "form-group input-relative":"hidden form-group input-relative"}>
                                 {/* <label htmlFor="nom_region" className="form-group-label">Region:</label> */}
                                 <input
                                     type="text"

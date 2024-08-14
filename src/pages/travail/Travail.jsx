@@ -6,6 +6,7 @@ import ModalDelete from '../../components/modal_delete/ModalDelete'
 import { showDeleteModal } from '../../constants/modal'
 import TableFileRegion from '../../components/tableFile/TableFileRegion'
 import { convertFile } from '../../helpers/convertFile'
+import { makeRequest } from '../../services/axios'
 // import TRAVAILS from '../../models/mock-travail'
 
 
@@ -43,9 +44,9 @@ const Travail = () => {
         return; // Arrête le traitement si l'extension n'est pas .xlsx
       }
   
-      setErrorFile(null); // Réinitialise l'erreur si le fichier est valide
-      setAcceptFile(true)
-      convertFile(e)
+        setErrorFile(null); // Réinitialise l'erreur si le fichier est valide
+        setAcceptFile(true)
+        convertFile(e)
         .then((parseData) => {
           setDataImport(parseData);
         })
@@ -61,8 +62,14 @@ const Travail = () => {
       
     
     useEffect(() => {
-        TravailService.getTravail().then(travails => setTravails(travails));  
+        makeRequest.get('/travails')
+        .then(resp => { 
+            setTravails(resp.data); })
+        .catch(error => {console.log(error);})  
     }, []);
+
+
+
     return (
         <>
                     { /* <!-- ===== CARD 1 ===== --> */}
