@@ -1,13 +1,13 @@
 import React from 'react'
 import { hiddenDeleteModal } from '../../constants/modal';
-import TravailService from '../../services/serviceTravail';
-import RegionService from '../../services/serviceRegion';
-import DistrictService from '../../services/serviceDistrict';
-import CommuneService from '../../services/serviceCommune';
-import FonkotanyService from '../../services/serviceFonkotany';
-import ActeService from '../../services/serviceActe';
 import { makeRequest } from '../../services/axios';
-import Auth from '../../services/Auth';
+// import FonkotanyService from '../../services/serviceFonkotany';
+// import TravailService from '../../services/serviceTravail';
+// import RegionService from '../../services/serviceRegion';
+// import DistrictService from '../../services/serviceDistrict';
+// import CommuneService from '../../services/serviceCommune';
+// import ActeService from '../../services/serviceActe';
+// import Auth from '../../services/Auth';
 // import PersonneService from '../../services/servicePersonne';
 
 
@@ -19,80 +19,74 @@ const ModalDelete = ({id, nomPage, useDelete, setData}) => {
         switch(nomPage){
             case "travail" :
                 if (isDelete) {
-                    TravailService.deleteTravail(id)
-                    .then(resp => {
-                        console.log(resp);
-                        console.log("Un travail a été suprimé")
-                      
+                    // API DELETE COMMUNE
+                    makeRequest.delete(`/travails/${id}`)
+                    .then(response => {
+                        if (!response.data) {
+                            console.log(response);
+                            console.log("Aucun donnée trouvé"); return
+                        }
                         setData((prev) => prev.filter((d)=> d.id_travail !== id))
                         setIsDelete(false); 
                         hiddenDeleteModal()
                     })
-                    .catch((error) =>{ 
-                        console.log(error)
-                    })
+                    .catch(error => console.log(error) ) 
                 }
                 break;
 
             case "officier" :
 
                 if (isDelete) {
-                    // Appel API Authentification
-                    makeRequest.post(`/officiers/delete`, { id: id }, 
-                        { 
-                            headers: {"Content-Type":"application/json" } 
-                        }
-                    )
+                    // API DELETE OFFICIER UTILISATER
+                    makeRequest.delete(`/officiers/${id}`)
                     .then(response => {
-                        if ( !response.data) {
-                            console.log("Aucun donnée à trouver")
+                        if (!response.data) {
                             console.log(response);
-                            return;
+                            console.log("Aucun donnée trouvé"); return
                         }
-
                         setData((prev) => prev.filter((d)=> d.id_off !== id))
                         setIsDelete(false); 
                         hiddenDeleteModal()
-                        
                     })
-                    .catch(error => {
-                        console.error(error);
-                    });
+                    .catch(error => console.log(error) ) 
                 }
                 break;
 
             case "région" :
                 if (isDelete) {
-                    RegionService.deleteRegion(+id)
-                    .then(resp => {
-                        console.log(resp.message)
-                        setData((prev) => prev.filter((d)=> d.id_region !== id))
-                        setIsDelete(false); 
-                        hiddenDeleteModal()
-                    }) 
-                    .catch( (error) =>{ 
-                        console.log(error);
+                     // API DELETE REGION
+                     makeRequest.delete(`/regions/${id}`)
+                     .then(response => {
+                         if (!response.data) {
+                             console.log(response);
+                             console.log("Aucun donnée trouvé"); return
+                         }
+                         setData((prev) => prev.filter((d)=> d.id_region !== id))
+                         setIsDelete(false); 
+                         hiddenDeleteModal()
                      })
+                     .catch(error => console.log(error) );
                 }
                 break;
 
             case "district" :
                 if (isDelete) {
-                    DistrictService.deleteDistrict(id)
-                    .then(resp => {
-                        console.log(resp.message)
-                        setData((prev) => prev.filter((d)=> d.id_district !== id))
-                        setIsDelete(false); 
-                        hiddenDeleteModal()
-                    })
-                    .catch( (error) =>{ 
-                        console.log(error);
+                     // API DELETE DISTRICT
+                     makeRequest.delete(`/districts/${id}`)
+                     .then(response => {
+                         if (!response.data) {
+                             console.log(response);
+                             console.log("Aucun donnée trouvé"); return
+                         }
+                         setData((prev) => prev.filter((d)=> d.id_district !== id))
+                         setIsDelete(false); 
+                         hiddenDeleteModal()
                      })
+                     .catch(error => console.log(error) ) 
                 }
                 break;
 
             case "commune" :
-                if (isDelete) {
                     if (isDelete) {
                         // API DELETE COMMUNE
                         makeRequest.delete(`/communes/${id}`)
@@ -107,21 +101,22 @@ const ModalDelete = ({id, nomPage, useDelete, setData}) => {
                         })
                         .catch(error => console.log(error) ) 
                     }
-                }
                 break;
 
             case "fonkotany" :
                 if (isDelete) {
-                    FonkotanyService.deleteFonkotany(id)
-                    .then(resp => {
-                        console.log(resp.message)
-                        setData((prev) => prev.filter((d)=> d.id_fonkotany !== id))
-                        setIsDelete(false); 
-                        hiddenDeleteModal()
-                    })
-                    .catch( (error) =>{ 
-                        console.log(error);
+                     // API DELETE FONKOTANY
+                     makeRequest.delete(`/fonkotany/${id}`)
+                     .then(response => {
+                         if (!response.data) {
+                             console.log(response);
+                             console.log("Aucun donnée trouvé"); return
+                         }
+                         setData((prev) => prev.filter((d)=> d.id_fonkotany !== id))
+                         setIsDelete(false); 
+                         hiddenDeleteModal()
                      })
+                     .catch(error => console.log(error) ) 
                 }
                 break;
 
@@ -189,7 +184,7 @@ const ModalDelete = ({id, nomPage, useDelete, setData}) => {
                             Confirmer
                         </button>
 
-                        <button type="reset" className="btn btn-clear" id="cancel" onClick={hiddenDeleteModal}>Annuler</button>
+                        <button type="reset" className="btn btn-clear" id="cancel" onClick={hiddenDeleteModal}> Annuler</button>
                     </div>
                 </div>
             </div>

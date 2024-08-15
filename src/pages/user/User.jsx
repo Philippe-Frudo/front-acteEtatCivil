@@ -2,11 +2,10 @@ import React, { useEffect, useState } from 'react';
 import "./user.css";
 
 import ModalDelete from '../../components/modal_delete/ModalDelete';
-import { Link } from 'react-router-dom';
 import { filterTable10Columns } from '../../helpers/searchTable';
-import OfficierService from '../../services/serviceOfficier';
 import { showDeleteModal } from '../../constants/modal';
 import { makeRequest } from '../../services/axios';
+// import OfficierService from '../../services/serviceOfficier';
 
 
 const Officier = () => {
@@ -16,11 +15,21 @@ const Officier = () => {
 
     const [officier, setOfficier] = useState([]);
     const count = officier.length
-
+    
+    //API GET COMMUNES
     useEffect(() => {
-        OfficierService.getOfficier().then(Officier => setOfficier(Officier))
-        setAccept(false)
+        makeRequest.get('/officiers')
+        .then(resp => { 
+            if (!resp.data) {
+                console.log(resp);
+                return
+            }
+            setOfficier(resp.data); 
+            setAccept(false)
+        })
+        .catch(error => {console.log(error);})
     }, [accept]);
+
 
     // console.log(officier);
     
@@ -62,6 +71,10 @@ const Officier = () => {
     }
 
     
+    
+    const subjectConfirm = encodeURIComponent("Confirmation d'officier(utilisateur)");
+    const subjectDelete = encodeURIComponent("Confirmation d'officier(utilisateur)");
+
     return (
         <>
                     { /* <!-- ===== CARD 1 ===== --> */}
@@ -103,11 +116,10 @@ const Officier = () => {
                                             <th>Nom</th>
                                             <th>Prenom</th>
                                             <th>Sexe</th>
+                                            <th>Email</th>
                                             <th>Commune</th>
                                             <th>District</th>
                                             <th>Région</th>
-                                            <th>Confirm</th>
-                                            <th>Admin</th>
                                             <th>Supprimer</th>
                                             <th>Confirmer</th>
                                         </tr>
@@ -130,32 +142,37 @@ const Officier = () => {
                                                 <td>{f.nom_off}</td>
                                                 <td>{f.prenom_off}</td>
                                                 <td>{f.sexe_off}</td>
+                                                <td>{f.email_off}</td>
                                                 <td>{f.nom_commune}</td>
                                                 <td>{f.nom_district}</td>
                                                 <td>{f.nom_region}</td>
 
-                                                <td>{f.isConfirm}</td>
-                                                <td>{f.isAdmin}</td>
                                   
                                               <td className="td-action">
                                                   <button className="btn btn-delete" id="remove"  onClick={() => handleDelete(f.id_off)}>
+                                                  <a href={`mailto:${f.email_off}?subject=${encodeURIComponent("Suppression de compte.")}&body=${encodeURIComponent("Votre compte est supprimé par l'administrateur.") }` }> 
                                                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" width="20px" height="20px">
                                                           <path d="M 14.984375 2.4863281 A 1.0001 1.0001 0 0 0 14 3.5 L 14 4 L 8.5 4 A 1.0001 1.0001 0 0 0 7.4863281 5 L 6 5 A 1.0001 1.0001 0 1 0 6 7 L 24 7 A 1.0001 1.0001 0 1 0 24 5 L 22.513672 5 A 1.0001 1.0001 0 0 0 21.5 4 L 16 4 L 16 3.5 A 1.0001 1.0001 0 0 0 14.984375 2.4863281 z M 6 9 L 7.7929688 24.234375 C 7.9109687 25.241375 8.7633438 26 9.7773438 26 L 20.222656 26 C 21.236656 26 22.088031 25.241375 22.207031 24.234375 L 24 9 L 6 9 z" />
                                                       </svg>
+                                                  </a>
                                                   </button>
                                               </td>
                                               <td className="td-action">
                                                   {f.isConfirm == 1 ? (
-                                                      <button className="btn btn-edit" id="remove" title='Déjà confirmé' style={{ cursor:"default" }} disabled>
-                                                        <box-icon name='check-double' color='#fff'></box-icon>
-                                                      </button>
+                                                    <>
+                                                        <button className="btn btn-edit" id="remove" title='Déjà confirmé' style={{ cursor:"default" }} disabled>
+                                                                <box-icon name='check-double' color='#fff'></box-icon>
+                                                        </button>
+                                                    </>
                                                     ):(
-                                                    <button 
+                                                        <button 
                                                         className="btn btn-edit" 
                                                         id="edit" title='confirmer' 
                                                         onClick={() => handleConfirm(f.id_off)}
-                                                    >
+                                                        >
+                                                        <a href={`mailto:${f.email_off}?subject=${subjectConfirm}&body=${encodeURIComponent("Bonjour! vous pouvez vous connecter à votre compte. vous avez été confirmé") }` }> 
                                                         <box-icon name='check' color='#fff' ></box-icon>
+                                                        </a>
                                                     </button>
                                                     )
                                                   }

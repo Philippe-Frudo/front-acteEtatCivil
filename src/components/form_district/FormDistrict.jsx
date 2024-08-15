@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { searchAddress } from '../../helpers/borderField';
 import RegionService from '../../services/serviceRegion';
 import { makeRequest } from '../../services/axios';
@@ -8,6 +8,8 @@ import { regex } from '../../helpers/regex';
 // import ADDRESSES from '../../models/mock-address';
 
 const FormDistrict = ({district, isEditForm}) => {
+    
+    const navigate = useNavigate()
 
     const [regions, setRegions] = useState(null);
     const [showList, setShowList] = useState(false);
@@ -92,7 +94,6 @@ const FormDistrict = ({district, isEditForm}) => {
             setFormDistrict({ ...formDistrict, ...newField });
         }
     }
-    // console.log("Valeur de Code REGION: ",formDistrict.id_region.value);  
     
 
     const [valid, setValid] = useState(false);
@@ -137,6 +138,7 @@ const FormDistrict = ({district, isEditForm}) => {
             setValid(resp.data.status)
             setMessage(resp.data.message)
             clearData();
+            navigate('/district')
         })
         .catch(error => console.log(error) )   
     }
@@ -152,7 +154,6 @@ const FormDistrict = ({district, isEditForm}) => {
                 setMessage(resp.data.message)
                 return;
             }
-            console.log(resp);
             setValid(resp.data.status)
             setMessage(resp.data.message)
             clearData()   
@@ -171,6 +172,10 @@ const FormDistrict = ({district, isEditForm}) => {
         }})
     }
 
+    function annuler() {
+        clearData()
+        setMessage('')
+    }
 
   return (
     <>
@@ -180,8 +185,8 @@ const FormDistrict = ({district, isEditForm}) => {
             <div className="modal-header">
                 <div>
                     {isEditForm ? 
-                    (<h3 className="modal-title">Modifier District</h3>):
-                    (<h3 className="modal-title">Ajout District</h3>)
+                    (<h3 className="modal-title">Modifier district</h3>):
+                    (<h3 className="modal-title">Ajouter district</h3>)
                     }
                     <span className="modal-subtitle"></span>
                 </div>
@@ -201,27 +206,28 @@ const FormDistrict = ({district, isEditForm}) => {
                 </div>
                 <div className="content-user">
                     <div className="form-group">
-                        <label htmlFor="code_district" className="form-group-label">Code District:</label>
+                        <label htmlFor="code_district" className="form-group-label">Code district:</label>
                         <input
                             type="text"
                             className="form-group-input code_district"
                             name="code_district"
                             id="code_district"
-                            placeholder="code de district"
+                            placeholder="code"
                             value={formDistrict.code_district?.value}
                             onChange={handleInputChange}
                         />
+                        <span className={isEditForm ? "":"hidden"}><i>Assurez-vous de ne pas confondre le code</i></span>
                         <span className="msg-error">{!formDistrict.code_district?.isValid && formDistrict.code_district?.error}</span>
                     </div>
 
                     <div className="form-group">
-                        <label htmlFor="nom_district" className="form-group-label">Nom District:</label>
+                        <label htmlFor="nom_district" className="form-group-label">Nom district:</label>
                         <input
                             type="text"
                             className="form-group-input nom_district"
                             name="nom_district"
                             id="nom_district"
-                            placeholder="Nom de Fonkotanay"
+                            placeholder="nom"
                             value={formDistrict.nom_district?.value}
                             onChange={handleInputChange}
                         />
@@ -229,13 +235,13 @@ const FormDistrict = ({district, isEditForm}) => {
                     </div>
 
                     <div className="form-group" style={{position:"relative"}}>
-                        <label htmlFor="nom_region" className="form-group-label">Code District:</label>
+                        <label htmlFor="nom_region" className="form-group-label">Région:</label>
                         <input
                             type="text"
                             className="form-group-input nom_region"
                             name="nom_region"
                             id="nom_region"
-                            placeholder="Nom region"
+                            placeholder="région"
                             value={nomRegion}
                             onChange={handleInputChangeRegion}
                             onKeyUp={(e) => searchAddress(e.target.id, "list_district") }
@@ -251,17 +257,18 @@ const FormDistrict = ({district, isEditForm}) => {
                             </li>
                             ))}
                         </ul>
-
+                        <span className=""><i>Assurez-vous de sélectionner la région</i></span>
                         <span className="msg-error">{!formDistrict.id_region?.isValid && formDistrict.id_region?.error}</span>
+
                     </div>
 
                     <div className="action-group">
                         {isEditForm ? 
                             (<button type="submit" className="btn btn-save" id="save">Modifier</button>):
-                            (<button type="submit" className="btn btn-save" id="save">Envoyer</button>)
+                            (<button type="submit" className="btn btn-save" id="save">Enregistrer</button>)
                         }
 
-                        <button type="reset" className="btn btn-clear" id="clear">Annuler</button>
+                        <button type="reset" className="btn btn-clear" id="clear" onClick={annuler}>Annuler</button>
                     </div>
                 </div>
             </form>

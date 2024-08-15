@@ -1,20 +1,20 @@
 import React, { useEffect, useState } from 'react'
 import { messageValidator, searchAddress, successBorder } from '../../helpers/borderField';
 import { showList, hiddenList } from './../../helpers/borderField';
+import handleSex from '../../constants/sexe';
+import { makeRequest } from '../../services/axios';
 // import ADDRESSES from '../../models/mock-address';
 // import TRAVAILS from './../../models/mock-travail'
 // import FONKOTANY from '../../models/mock-fonkotany';
-import FonkotanyService from '../../services/serviceFonkotany';
-import TravailService from '../../services/serviceTravail';
-import CommuneService from '../../services/serviceCommune';
-import ActeService from '../../services/serviceActe';
-import handleSex from '../../constants/sexe';
-import Auth from '../../services/Auth';
-import { makeRequest } from '../../services/axios';
+// import FonkotanyService from '../../services/serviceFonkotany';
+// import TravailService from '../../services/serviceTravail';
+// import CommuneService from '../../services/serviceCommune';
+// import ActeService from '../../services/serviceActe';
+// import Auth from '../../services/Auth';
 
 const FormActe = ({ useFormActe, user }) => {
 
-
+  const [formActe, setFormActe] = useFormActe;
   const [typesActe, setTypesActes] = useState([]);
   const [travails, setTravails] = useState([]);
   const [fonkotany, setFonkotany] = useState([]);
@@ -28,51 +28,56 @@ const FormActe = ({ useFormActe, user }) => {
         .then(resp => { setTypesActes(resp.data) })
         .catch(error => {console.log(error);})
     }, []);
+    
 
-
-
-    //API GET TYPES ACTES
+    //API GET TRAVAIL
     useEffect(() => {
       makeRequest.get('/travails')
       .then(resp => { setTravails(resp.data) })
       .catch(error => {console.log(error);})
     }, []);
     
+
+    console.log(user);
     
-    //API GET TYPES ACTES
-  useEffect(() => {
+    //API GET FONKOTANY
+    useEffect(() => {
         makeRequest.get(`/fonkotany`)
         .then(resp => { 
             if (!resp.data) {
-                setError(false)
-            }
-            if (!user.isAdmin) {
-              const newFonkotany  = fonkotany.filter(item => item.id_commune == user.commune)
-              setFonkotany(newFonkotany)
-
-            } else {
-              setFonkotany(resp.data); 
+              console.log(resp);
+              setError(false)
+              
+            }else {
+              console.log(resp);
+              if (!user.isAdmin) {
+                const newFonkotany  = resp.data.filter(item => item.id_commune == user.commune)
+                setFonkotany(newFonkotany)
+                return;
+              } else {
+                setFonkotany(resp.data); 
+                return
+              }
             }
         })
         .catch(error => {console.log(error);})  
     },[]);
 
 
-    //API GET  CCOMMUNES
-  useEffect(() => {
-    makeRequest.get('/communes')
-    .then(resp => { setCommunes(resp.data); })
-    .catch(error => {console.log(error);})
-  })
-    
-    
 
+    //API GET  COMMUNES
+    useEffect(() => {
+      makeRequest.get('/communes')
+      .then(resp => { setCommunes(resp.data); })
+      .catch(error => {console.log(error);})
+    }, [])
 
-    const [formActe, setFormActe] = useFormActe;
+      
     const handleInputChange = (e) => {
       const fieldName = e.target.name.trim();
       const fieldValue = e.target?.value.trim();
       const newField = { [fieldName]: { value: fieldValue } };
+      setFormActe(prevState => ({ ...prevState, ...newField })); 
       if (fieldName !== "sexe_temoin") {
         successBorder(`.${fieldName}`);
         messageValidator(`.${fieldName}`);
@@ -81,9 +86,8 @@ const FormActe = ({ useFormActe, user }) => {
       
     }
     
-    useEffect(() => {
-      setFormActe(prevState => ({ ...prevState, ...{id_off: {value: user.id}} }));
-    },[]);
+
+
 
 //========== CHANGE ON CLICK TRAVAIL PROFESSION ==========
 const handleClickTravailTemoin = (trav) => {
@@ -145,7 +149,7 @@ const handleClickTravailTemoin = (trav) => {
     if (res) {
       setFieldFonkotany(res.nom_fonkotany);
     } else {
-      // console.log('Fonkotany non trouvé.');
+      console.log('Fonkotany non trouvé.');
     }
   }, [formActe, fonkotany]);
   
@@ -156,7 +160,7 @@ const handleClickTravailTemoin = (trav) => {
     if (res) {
       setNomCommune(res.nom_commune);
     } else {
-      // console.log('Commune non trouvé.');
+      console.log('Commune non trouvé.');
     }
   }, [formActe, communes]);
   
@@ -191,7 +195,8 @@ const handleClickTravailTemoin = (trav) => {
                 type="text" 
                 className="form-group-input num_acte" 
                 name="num_acte" id="num_acte" 
-                placeholder="Numéro d'acte," 
+                placeholder="numéro" 
+                autoComplete='off'
                 value={formActe.num_acte?.value}
                 onChange={handleInputChange} 
               />
@@ -205,7 +210,7 @@ const handleClickTravailTemoin = (trav) => {
                 type="date" 
                 className="form-group-input date_acte" 
                 name="date_acte" id="date_acte" 
-                placeholder="Date de l'acte" 
+                placeholder="date" 
                 value={formActe.date_acte?.value} 
                 onChange={handleInputChange} 
               />
@@ -218,7 +223,7 @@ const handleClickTravailTemoin = (trav) => {
                 type="time" 
                 className="form-group-input heure_acte" 
                 name="heure_acte" id="heure_acte" 
-                placeholder="Heure de l'acte" 
+                placeholder="heure" 
                 value={formActe.heure_acte?.value} 
                 onChange={handleInputChange} 
               />
@@ -233,7 +238,7 @@ const handleClickTravailTemoin = (trav) => {
                 type="text" 
                 className="form-group-input lieu_acte" 
                 name="lieu_acte" id="lieu_acte" 
-                placeholder="Lieu de l'acte" 
+                placeholder="appartement, lieu, rue" 
                 value={formActe.lieu_acte?.value} 
                 onChange={handleInputChange} 
               />
@@ -241,6 +246,72 @@ const handleClickTravailTemoin = (trav) => {
             </div>
           </div>
           
+          <div className="form-group">
+            <div className='input-relative'>
+                <label htmlFor="nom_fonkotany" className="form-group-label">Fonkotany:</label>
+                <input 
+                  type="text" 
+                  className="form-group-input nom_fonkotany" 
+                  name="nom_fonkotany" 
+                  id="nom_fonkotany" 
+                  placeholder="fonkotany" 
+                  value={fieldFonkotany} 
+                  onChange={handleInputChangeFonkotany}
+                  onKeyUp={(e) => searchAddress(e.target.id, "list_fonkotany") }
+                  onFocus={() => showList(".nom_fonkotany_acte") } 
+                  // onBlur={() => hiddenList(".adrs_person")}
+                />
+                <ul id="list_fonkotany" className="list nom_fonkotany_acte">
+                    {fonkotany?.map(fonk => (
+                      <li key={fonk.id_fonkotany}>
+                        <p onClick={() => handleClickFonkotany(fonk)} className='list-p'>
+                        {fonk.nom_fonkotany}({fonk.code_fonkotany})
+                        </p>
+                      </li>
+                    ))}
+                </ul>
+
+                <span className=""><i>Assurez-vous de sélectionner le fonkotany</i></span>
+                <span className="msg-error"></span>
+            </div>
+
+          </div>
+
+          <br />
+          <div className="form-group">
+                <div style={{position:"relative"}}>
+                    <label htmlFor="nom_commune" className="form-group-label">Commune:</label>
+                    <input
+                      type="text" 
+                      className="form-group-input nom_commune" 
+                      name="nom_commune"
+                      id="nom_commune"
+                      placeholder="commune" 
+                      value={nomCommune} 
+                      onChange={inputChangeCommune}
+                      onKeyUp={(e) => searchAddress(e.target.id, "list_adrs_acte") }
+                      onFocus={() => showList(".list_adrs_acte") } 
+                      // onBlur={() => hiddenList(".adrs_person")}
+                    />
+
+                    <ul id="list_adrs_acte" className="list list_adrs_acte">
+                        {communes?.map(c => (
+                          <li key={c.id_commune}>
+                            <p className='list-p' onClick={() => handleSetCodeCommune(c)}>
+                              {c.code_commune} &nbsp;
+                              {c.nom_commune} &nbsp;
+                              {c.code_district} &nbsp;
+                            </p>
+                          </li>
+                        ))}
+                    </ul>
+
+                    <span className=""><i>Assurez-vous de sélectionner la commune.</i></span>
+                    <span className="msg-error"></span>
+                </div>
+                <br />
+          </div>
+
           <div className="form-group form-group-2">
             <div>
               <label htmlFor="date_enreg" className="form-group-label">Date d'enregistrement d'acte:</label>
@@ -270,74 +341,13 @@ const handleClickTravailTemoin = (trav) => {
             </div>
           </div>
 
-          <div className="form-group">
-            <div className='input-relative'>
-                <label htmlFor="nom_fonkotany" className="form-group-label">Fonkotany:</label>
-                <input 
-                  type="text" 
-                  className="form-group-input nom_fonkotany" 
-                  name="nom_fonkotany" 
-                  id="nom_fonkotany" 
-                  placeholder="Fonkotany" 
-                  value={fieldFonkotany} 
-                  onChange={handleInputChangeFonkotany}
-                  onKeyUp={(e) => searchAddress(e.target.id, "list_fonkotany") }
-                  onFocus={() => showList(".nom_fonkotany_acte") } 
-                  // onBlur={() => hiddenList(".adrs_person")}
-                />
-                <ul id="list_fonkotany" className="list nom_fonkotany_acte">
-                    {fonkotany?.map(fonk => (
-                      <li key={fonk.id_fonkotany}>
-                        <p onClick={() => handleClickFonkotany(fonk)} className='list-p'>
-                        {fonk.code_fonkotany} {fonk.nom_fonkotany} code commune({fonk.code_commune})
-                        </p>
-                      </li>
-                    ))}
-                </ul>
-
-                <span className="msg-error"></span>
-            </div>
-
-          </div>
-
-          <div className="form-group">
-                <div style={{position:"relative"}}>
-                    <label htmlFor="nom_commune" className="form-group-label">Commune:</label>
-                    <input
-                      type="text" 
-                      className="form-group-input nom_commune" 
-                      name="nom_commune"
-                      id="nom_commune"
-                      placeholder="Commune" 
-                      value={nomCommune} 
-                      onChange={inputChangeCommune}
-                      onKeyUp={(e) => searchAddress(e.target.id, "list_adrs_acte") }
-                      onFocus={() => showList(".list_adrs_acte") } 
-                      // onBlur={() => hiddenList(".adrs_person")}
-                    />
-
-                    <ul id="list_adrs_acte" className="list list_adrs_acte">
-                        {communes?.map(c => (
-                          <li key={c.id_commune}>
-                            <p className='list-p' onClick={() => handleSetCodeCommune(c)}>
-                              {c.code_commune} &nbsp;
-                              {c.nom_commune} &nbsp;
-                              {c.code_district} &nbsp;
-                            </p>
-                          </li>
-                        ))}
-                    </ul>
-
-                    <span className="msg-error"></span>
-                </div>
-          </div>
-
         </fieldset>
       </div>
 
       <div className="content-mere">
         <h3 className="card-acte">Témoin</h3>
         <fieldset>
+
             <div className="form-group form-group-2">
                 <div>
                     <label htmlFor="nom_temoin" className="form-group-label">Nom:</label>
@@ -346,19 +356,20 @@ const handleClickTravailTemoin = (trav) => {
                       className="form-group-input nom_temoin" 
                       name="nom_temoin" 
                       id="nom_temoin" 
-                      placeholder="Nom" 
+                      placeholder="nom" 
                       value={formActe.nom_temoin?.value} 
                       onChange={handleInputChange}
                     />
                     <span className="msg-error"></span>
                 </div>
+
                 <div>
                     <label htmlFor="prenom_temoin" className="form-group-label">Prénom:</label>
                     <input 
                       type="text" 
                       className="form-group-input prenom_temoin" 
                       name="prenom_temoin" id="prenom_temoin" 
-                      placeholder="Prénom" 
+                      placeholder="prénom" 
                       value={formActe.prenom_temoin?.value} 
                       onChange={handleInputChange}
                     />
@@ -368,18 +379,19 @@ const handleClickTravailTemoin = (trav) => {
 
             <div className="form-group form-group-2">
                 <div>
-                    <label htmlFor="date_nais_temoin" className="form-group-label">Date de Naissance:</label>
+                    <label htmlFor="date_nais_temoin" className="form-group-label">Date de naissance:</label>
                     <input 
                       type="date" 
                       className="form-group-input date_nais_temoin" 
                       name="date_nais_temoin" 
                       id="date_nais_temoin" 
-                      placeholder="Date de naissance" 
+                      placeholder="date de naissance" 
                       value={formActe.date_nais_temoin?.value} 
                       onChange={handleInputChange}
                     />
                     <span className="msg-error"></span>
                 </div>
+
                 <div>
                     <label htmlFor="age_temoin" className="form-group-label">Age:</label>
                     <input 
@@ -387,7 +399,7 @@ const handleClickTravailTemoin = (trav) => {
                       className="form-group-input age_temoin" 
                       name="age_temoin" 
                       id="age_temoin" 
-                      placeholder="Age" 
+                      placeholder="age" 
                       value={formActe.age_temoin?.value ? formActe.age_temoin?.value:""} 
                       onChange={handleInputChange} 
                       disabled
@@ -404,7 +416,7 @@ const handleClickTravailTemoin = (trav) => {
                       className="form-group-input lieu_nais_temoin" 
                       name="lieu_nais_temoin" 
                       id="lieu_nais_temoin" 
-                      placeholder="Lieu de naissance" 
+                      placeholder="appartement, nom du lieu, fonkotany, commune,..." 
                       value={formActe.lieu_nais_temoin?.value} 
                       onChange={handleInputChange}
                     />
@@ -446,7 +458,7 @@ const handleClickTravailTemoin = (trav) => {
                       className="form-group-input adrs_temoin" 
                       name="adrs_temoin" 
                       id="adrs_temoin" 
-                      placeholder="Adresse" 
+                      placeholder="adresse complète"
                       value={formActe.adrs_temoin?.value} 
                       onChange={handleInputChange}
                     />
@@ -456,13 +468,13 @@ const handleClickTravailTemoin = (trav) => {
 
             <div className="form-group">
               <div style={{position:"relative"}}>
-                  <label htmlFor="profession_temoin" className="form-group-label">Profession temoin:</label>
+                  <label htmlFor="profession_temoin" className="form-group-label">Profession:</label>
                   <input 
                     type="text" 
                     className="form-group-input profession_temoin" 
                     name="profession_temoin" 
                     id="profession_temoin" 
-                    placeholder="profession" 
+                    placeholder="seléctionner le travail" 
                     value={formActe.profession_temoin?.value} 
                     onChange={handleInputChange}
                     onKeyUp={(e) => searchAddress(e.target.id, "list_profession_temion") }
@@ -478,7 +490,7 @@ const handleClickTravailTemoin = (trav) => {
                         </li>
                       ))}
                   </ul>
-
+                  <span className=""><i>Assurez-vous de sélectionner le travail</i></span>
                   <span className="msg-error"></span>
               </div>
             </div>

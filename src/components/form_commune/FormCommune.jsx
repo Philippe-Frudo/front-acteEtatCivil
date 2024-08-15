@@ -171,6 +171,7 @@ const FormCommune = ({commune, isEditForm}) => {
 
 
     function clearData() {
+        setNomDistrict('')
         setFormCommune({ ...formCommune,
             ...{
             code_commune: { value: "", isValid: false, error: "" },
@@ -179,7 +180,10 @@ const FormCommune = ({commune, isEditForm}) => {
         }});
     }
 
-    
+    function annuler() {
+        clearData()
+        setMessage('')
+    }
 
 
   return (
@@ -190,8 +194,8 @@ const FormCommune = ({commune, isEditForm}) => {
             <div className="modal-header">
                 <div>
                     {isEditForm ? 
-                        (<h3 className="modal-title">Modifier Commune</h3>):
-                        (<h3 className="modal-title">Ajout Commune</h3>)
+                        (<h3 className="modal-title">Modifier commune</h3>):
+                        (<h3 className="modal-title">Ajouter commune</h3>)
                     }
                     <span className="modal-subtitle"></span>
                 </div>
@@ -211,13 +215,13 @@ const FormCommune = ({commune, isEditForm}) => {
                 </div>
                 <div className="content-user">
                     <div className="form-group">
-                        <label htmlFor="code_commune" className="form-group-label">Code commune:</label>
+                        <label htmlFor="code_commune" className="form-group-label">Code du commune:</label>
                         <input
                             type="text"
                             className="form-group-input code_commune"
                             name="code_commune"
                             id="code_commune"
-                            placeholder="code de Fonkotanay"
+                            placeholder="code"
                             value={formCommune.code_commune?.value}
                             onChange={handleInputChange}
                         />
@@ -225,13 +229,13 @@ const FormCommune = ({commune, isEditForm}) => {
                     </div>
 
                     <div className="form-group">
-                        <label htmlFor="nom_commune" className="form-group-label">Nom commune:</label>
+                        <label htmlFor="nom_commune" className="form-group-label">Nom du commune:</label>
                         <input
                             type="text"
                             className="form-group-input nom_commune"
                             name="nom_commune"
                             id="nom_commune"
-                            placeholder="Nom de Fonkotanay"
+                            placeholder="commune"
                             value={formCommune.nom_commune?.value}
                             onChange={handleInputChange}
                         />
@@ -239,13 +243,13 @@ const FormCommune = ({commune, isEditForm}) => {
                     </div>
 
                     <div className="form-group" style={{position:"relative"}}>
-                        <label htmlFor="nom_district" className="form-group-label">Code District:</label>
+                        <label htmlFor="nom_district" className="form-group-label">District:</label>
                         <input
                             type="text"
                             className="form-group-input nom_district"
                             name="nom_district"
                             id="nom_district"
-                            placeholder="Code Commune"
+                            placeholder="district"
                             value={nomDistrict}
                             onChange={handleInputChangeDistrict}
                             onKeyUp={(e) => searchAddress(e.target.id, "list_district") }
@@ -262,6 +266,7 @@ const FormCommune = ({commune, isEditForm}) => {
                             ))}
                         </ul>
 
+                        <span className=""><i>Assurez-vous de sélectionner le district</i></span>
                         <span className="msg-error">{!formCommune.id_district?.isValid && formCommune.id_district?.error}</span>
                     </div>
 
@@ -269,10 +274,10 @@ const FormCommune = ({commune, isEditForm}) => {
                     <div className="action-group">
                         {isEditForm ? 
                             (<button type="submit" className="btn btn-save" id="save">Modifier</button>):
-                            (<button type="submit" className="btn btn-save" id="save">Envoyer</button>)
+                            (<button type="submit" className="btn btn-save" id="save">Enregistrer</button>)
                         }
 
-                        <button type="reset" className="btn btn-clear" id="clear" onClick={clearData}>Annuler</button>
+                        <button type="reset" className="btn btn-clear" id="clear" onClick={annuler}>Annuler</button>
                     </div>
                 </div>
             </form>

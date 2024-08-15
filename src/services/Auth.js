@@ -45,6 +45,14 @@ export default class Auth {
             return null;
         });
     }
+
+
+    static logOutNotFound() { 
+        document.querySelector("body").style.display = "none";
+        localStorage.removeItem("user");
+        localStorage.removeItem("auth");
+        window.location.replace("/");
+    }
     
 
 

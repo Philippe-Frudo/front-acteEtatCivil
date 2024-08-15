@@ -4,11 +4,14 @@ import {errorBorder, successBorder, messageValidator, hiddenList } from "./../..
 import FormPersonne from '../../components/form_personne/FormPersonne';
 import FormActe from '../../components/form_acte/FormActe';
 import { regex } from '../../helpers/regex';
-import PersonneService from '../../services/servicePersonne';
-import ActeService from '../../services/serviceActe';
-import TravailService from '../../services/serviceTravail';
-import { makeRequest } from '../../services/axios';
 import Auth from '../../services/Auth';
+import { makeRequest } from '../../services/axios';
+
+
+// import PersonneService from '../../services/servicePersonne';
+// import ActeService from '../../services/serviceActe';
+// import TravailService from '../../services/serviceTravail';
+
 
 const FormActeAndBirthday = ({personne, acte, isEditForm}) => {
 
@@ -16,17 +19,31 @@ const FormActeAndBirthday = ({personne, acte, isEditForm}) => {
     // API GET OFFICIER ( UTILISATEUR )
     const [user, setUser] = useState([])
 
+
+    //API verifier le connection
     useEffect(() => {
-        Auth.getFormation().then(resp => {
-            setUser(resp.data)  
+        makeRequest.post(`/officiers/verifyConnect`, localStorage.getItem('user'), {
+            headers: { "Content-Type": "application/json" }
         })
+        .then(response => {
+            if (!response || !response.data) {
+                console.log('Aucune donnée reçue');
+                Auth.logOutNotFound();
+                return null;  // ou undefined
+            }
+            setUser(response.data)  
+        })
+        .catch(error => {
+            console.error('Erreur lors de la récupération de la formation', error);
+            return null;  // ou undefined
+        });
+
     }, [])
     
 
     const navigate = useNavigate();
 
     let newDate = new Date().toUTCString();
-    // travails.some(travail => travail.nom_travail === 'Ombiasa'); // Verification de valeur dans une tableau
 
     const [travails, setTravails] = useState([]);
 
@@ -75,12 +92,11 @@ const FormActeAndBirthday = ({personne, acte, isEditForm}) => {
         profession_p: { value: "", error: "", isValid: false },
         age_m: { value: "", error: "", isValid: true },
         age_p: { value: "", error: "", isValid: true }
-      });
+    });
 
 
     //AFFECTER PERSONNE
     useEffect(() => {
-        if (personne?.id_person) {
             setFormPersonne({
                 id_person: { value: personne?.id_person, isValid: true },
                 nom_person: { value: personne?.nom_person, isValid: true },
@@ -105,7 +121,6 @@ const FormActeAndBirthday = ({personne, acte, isEditForm}) => {
                 adrs_p : { value: personne?.adrs_p, isValid: true },
                 profession_p : { value: personne?.profession_p, isValid: true }
             });
-        }
     }, [personne])
 
     //==================== VALID FORM PERSONNE =================
@@ -403,7 +418,6 @@ const FormActeAndBirthday = ({personne, acte, isEditForm}) => {
 
     //AFFECTER ACTE
     useEffect(() => {
-        if (acte?.id_acte) {
             setFormActe({    
                 id_acte : {value: acte?.id_acte, isValid: true },
                 id_type : {value: acte?.id_type, isValid: true },
@@ -428,7 +442,7 @@ const FormActeAndBirthday = ({personne, acte, isEditForm}) => {
                 id_commune : {value: acte?.id_commune, isValid: true },
                 id_off : {value: acte?.id_off, isValid: true }
             });
-        }
+    
     }, [acte])
 
 
@@ -1059,9 +1073,9 @@ const FormActeAndBirthday = ({personne, acte, isEditForm}) => {
                         <header className="main-header-content">
                             {isEditForm ? 
                             (<h3 className="main-header-content-title">Modifier acte</h3>):
-                            (<h3 className="main-header-content-title">Ajout d'une nouvelle acte</h3>)
+                            (<h3 className="main-header-content-title">Ajouter acte</h3>)
                             }
-                            <span className="main-header-content-subtitle">Soutitre page</span>
+                            <span className="main-header-content-subtitle">soutitre page</span>
 
                             <div className="main-local-nav">
                                 <div className="action-local-nav">

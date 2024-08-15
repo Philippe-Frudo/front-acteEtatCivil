@@ -118,7 +118,7 @@ const FormFonkotany = ({ fonkotany, isEditForm }) => {
 
             isEditForm ? updateFonkotany(): addFonkotany();
         } else {
-            setMessage("Vérifier les champs non valides");
+            setMessage("Vérifier les champs non valide");
         }
     }
 
@@ -200,6 +200,7 @@ const FormFonkotany = ({ fonkotany, isEditForm }) => {
         })
         .then(resp => {
 
+            console.log(resp);
             if (!resp.data.status) {
                 setValid(resp.data.status)
                 setMessage(resp.data.message)
@@ -218,13 +219,18 @@ const FormFonkotany = ({ fonkotany, isEditForm }) => {
         setFormFonkotany({
             ...formFonkotany, 
             ...{
-                code_fonkotany: { value: fonkotany.code_fonkotany || "", isValid: true, error: "" },
-                nom_fonkotany: { value: fonkotany.nom_fonkotany || "", isValid: true , error: "" },
-                code_commune: { value: fonkotany.code_commune || "", isValid: true, error: "" },
+                code_fonkotany: { value: "", isValid: false, error: "" },
+                nom_fonkotany: { value:  "", isValid: false , error: "" },
+                code_commune: { value: "", isValid: false, error: "" },
             }
         });
     }
 
+    
+    function annuler() {
+        clearData()
+        setMessage('')
+    }
 
     return (
         <>
@@ -234,8 +240,8 @@ const FormFonkotany = ({ fonkotany, isEditForm }) => {
                     <div className="modal-header">
                         <div>
                             {isEditForm ? 
-                                (<h3 className="modal-title">Modifier Fonkontany</h3>):
-                                (<h3 className="modal-title">Ajout Fonkontany</h3>)
+                                (<h3 className="modal-title">Modifier Fonkotany</h3>):
+                                (<h3 className="modal-title">Ajout Fonkotany</h3>)
                             }
                             <span className="modal-subtitle"></span>
                         </div>
@@ -245,7 +251,7 @@ const FormFonkotany = ({ fonkotany, isEditForm }) => {
                     </div>
 
                         <div className="alert-message">
-                            {message && valid? 
+                            {message && valid ? 
                                 (<span className='message success'>{message}</span>):
                                 (<span className='message error'>{message}</span>)
                             }
@@ -303,9 +309,7 @@ const FormFonkotany = ({ fonkotany, isEditForm }) => {
                                     {communes?.map(c => (
                                     <li key={c.id_commune}>
                                         <p className='list-p' onClick={() => handleSetNomCommune(c)}>
-                                        {c.code_commune} &nbsp;
-                                        {c.nom_commune} &nbsp;
-                                        {c.code_district} &nbsp;
+                                        {c.nom_commune}({c.code_commune})
                                         </p>
                                     </li>
                                     ))}
@@ -317,10 +321,10 @@ const FormFonkotany = ({ fonkotany, isEditForm }) => {
                             <div className="action-group">
                                 {isEditForm ? 
                                     (<button type="submit" className="btn btn-save" id="save">Modifier</button>):
-                                    (<button type="submit" className="btn btn-save" id="save">Envoyer</button>)
+                                    (<button type="submit" className="btn btn-save" id="save">Enregistrer</button>)
                                 }
 
-                                <button type="reset" className="btn btn-clear" id="clear">Annuler</button>
+                                <button type="reset" className="btn btn-clear" id="clear" onClick={annuler}>Annuler</button>
                             </div>
                         </div>
                     </form>

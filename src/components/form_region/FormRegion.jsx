@@ -43,7 +43,7 @@ const FormRegion = ({region, isEditForm}) => {
 
         const validation = validateField(fieldName, fieldValue);
 
-        const newField = { [fieldName]: { value: fieldValue, isValid: validation.isValid , error: validation.error  } };
+        const newField = { [fieldName]: { value: fieldValue, isValid: validation?.isValid , error: validation?.error  } };
         setFormRegion({ ...formRegion, ...newField });
     }
          
@@ -56,8 +56,8 @@ const FormRegion = ({region, isEditForm}) => {
         if (isValid) {
             setValid(isValid);
             setMessage("En cours de connexion ...");
-            region.code_region = formRegion.code_region.value;
-            region.nom_region = formRegion.nom_region.value;
+            region.code_region = formRegion.code_region?.value;
+            region.nom_region = formRegion.nom_region?.value;
 
             isEditForm ? updateRegion(): addRegion();
         } else {
@@ -66,12 +66,11 @@ const FormRegion = ({region, isEditForm}) => {
     }
 
     function updateRegion () {
-        console.log("Data region:", region);
         makeRequest.put(`/regions/${region.id_region}`, region, {
             headers: {"Content-Type": "application/json"}
         })
         .then(resp => {
-            if (!resp.data) {
+            if (!resp.data.status) {
                 console.log(resp); 
                 setValid(resp.data.status)
                 setMessage(resp.data.message)
@@ -86,20 +85,20 @@ const FormRegion = ({region, isEditForm}) => {
     }
 
     function addRegion () {
-        console.log("Data region:", region);
         makeRequest.post(`/regions`, region, {
             headers: {"Content-Type": "application/json"}
         })
         .then(resp => {
             if (!resp.data.status) {
+                console.log(resp);
                 setValid(resp.data.status)
                 setMessage(resp.data.message)
                 return;
             }
-            console.log(resp);
             setValid(resp.data.status)
             setMessage(resp.data.message)
-            clearData()   
+            clearData()  
+
         })
         .catch(error => console.log(error) ) 
     }
@@ -108,12 +107,11 @@ const FormRegion = ({region, isEditForm}) => {
     function clearData() {
         setFormRegion({ ...formRegion,
             ...{
-            code_region: { value: "", isValid: isEditForm ? true:false, error: "" },
-            nom_region: { value: "", isValid: isEditForm ? true:false, error: "" },
+            code_region: { value: "", isValid: false, error: "" },
+            nom_region: { value: "", isValid: false, error: "" },
         }});
     }
 
-    
     
   return (
     <>
@@ -123,8 +121,8 @@ const FormRegion = ({region, isEditForm}) => {
                 <div className="modal-header">
                     <div>
                         {isEditForm ? 
-                        (<h3 className="modal-title">Modifier region</h3>):
-                        (<h3 className="modal-title">Ajout region</h3>)
+                        (<h3 className="modal-title">Modifier région</h3>):
+                        (<h3 className="modal-title">Ajouter région</h3>)
                         }
 
                         <span className="modal-subtitle"></span>
@@ -146,40 +144,41 @@ const FormRegion = ({region, isEditForm}) => {
                     <div className="content-user">
 
                         <div className="form-group">
-                            <label htmlFor="code_region" className="form-group-label">Code Region:</label>
+                            <label htmlFor="code_region" className="form-group-label">Code région:</label>
                             <input
                                 type="text"
                                 className="form-group-input code_region"
                                 name="code_region"
                                 id="code_region"
                                 placeholder="Code region"
-                                value={formRegion.code_region.value}
+                                value={formRegion.code_region?.value}
                                 onChange={handleInputChange}
                             />
-                            <span className="msg-error">{!formRegion.code_region.isValid && formRegion.code_region.error}</span>
+                            <span className={isEditForm ? "":"hidden"}><i>Assurez-vous de ne pas confondre le code si vous le modifier</i></span>
+                            <span className="msg-error">{!formRegion.code_region?.isValid && formRegion.code_region?.error}</span>
                         </div>
 
                         <div className="form-group">
-                            <label htmlFor="nom_region" className="form-group-label">Nom region:</label>
+                            <label htmlFor="nom_region" className="form-group-label">Nom région:</label>
                             <input
                                 type="text"
                                 className="form-group-input nom_region"
                                 name="nom_region"
                                 id="nom_region"
-                                placeholder="Nom de Fonkotanay"
-                                value={formRegion.nom_region.value}
+                                placeholder="nom"
+                                value={formRegion.nom_region?.value}
                                 onChange={handleInputChange}
                             />
-                            <span className="msg-error">{!formRegion.nom_region.isValid && formRegion.nom_region.error}</span>
+                            <span className="msg-error">{!formRegion.nom_region?.isValid && formRegion.nom_region?.error}</span>
                         </div>
 
                         <div className="action-group">
                             {isEditForm ? 
                             (<button type="submit" className="btn btn-save" id="save">Modifier</button>):
-                            (<button type="submit" className="btn btn-save" id="save">Envoyer</button>)
+                            (<button type="submit" className="btn btn-save" id="save">Enregistrer</button>)
                             }
 
-                            <button type="reset" className="btn btn-clear" id="clear">Annuler</button>
+                            <button type="reset" className="btn btn-clear" id="clear" onClick={clearData}>Annuler</button>
                         </div>
                     </div>
                 </form>

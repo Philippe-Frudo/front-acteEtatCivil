@@ -15,7 +15,7 @@ export default class Fonkotany {
     ) {
         // 3. Initialisation des proprietes du Fonkotany
         this.id_fonkotany = id_fonkotany;
-        this.code_fonkotany = nom_fonkotany;
+        this.code_fonkotany = code_fonkotany;
         this.nom_fonkotany = nom_fonkotany;
         this.id_commune = id_commune;
     }
