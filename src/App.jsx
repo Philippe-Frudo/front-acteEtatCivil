@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import "./App.css";
 import Header from './components/header/Header.jsx';
 
-import { BrowserRouter as Router, Route, Routes, useNavigate, useNavigation } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, useNavigate, useNavigation, Navigate } from 'react-router-dom';
 // import Utilisateur from './pages/utilisateur/Utilisateur';
 import Login from './pages/login/Login';
 import Dashboard from './pages/dashboard/Dashboard';
@@ -36,6 +36,7 @@ import MainTop from './components/main_top/MainTop.jsx';
 import Auth from './services/Auth.js';
 
 import User from './pages/user/User.jsx'
+import PageNotFound from './pages/PageNotFound.jsx';
 
 
 
@@ -57,7 +58,7 @@ function App() {
             });
     }, []);
 
-    const path = location.pathname == "/" || location.pathname == "/register"
+    const path = location.pathname == "/" || location.pathname == "/register" || location.pathname == "/404"
 
     return (
         <>
@@ -74,10 +75,13 @@ function App() {
                     { /* <!-- ====== CONTAINER MAIN ===== --> */}
                     <div className="main-container main-container-2" id={ path ? "": "main-scroll" }>
 
+
                     <Routes>
+
 
                         <Route exact path="/" element={<Login />} />
                         <Route path="/register" element={<FormCreateUser />} />
+
 
                         {user.isAdmin ? (<Route path="/user" element={<User />} />):('') }
 
@@ -112,6 +116,12 @@ function App() {
                         {user.isAdmin ? (<Route path="/region" element={<Region />} />):('') }
                         {user.isAdmin ? (<Route path="/region/add" element={<FormAddRegion />} />):('') }
                         {user.isAdmin ? (<Route path="/region/edit/:id" element={<FormEditRegion />} />):('') }
+
+
+
+                        {/* Paage non trouver */}
+                        <Route path="/404" element={<PageNotFound />} />
+                        <Route path="*" element={<Navigate replace to="/404" />} />
 
 
                     </Routes>
