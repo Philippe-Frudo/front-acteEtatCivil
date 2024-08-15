@@ -5,12 +5,9 @@ import TRAVAILS from '../../models/mock-travail';
 import TravailService from '../../services/serviceTravail';
 
 
-const FormPersonne = ({ useFormPersonne }) => {
+const FormPersonne = ({ useFormPersonne, useTravails }) => {
 
-    const [travails, setTravails] = useState([]);
-    useEffect(() => {
-        TravailService.getTravail().then(travails => setTravails(travails));   
-    }, []);
+    const [travails, setTravails] = useTravails;
 
 
     const [formPersonne, setFormPersonne] = useFormPersonne;

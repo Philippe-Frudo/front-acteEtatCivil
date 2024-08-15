@@ -10,6 +10,7 @@ import CommuneService from '../../services/serviceCommune';
 import ActeService from '../../services/serviceActe';
 import handleSex from '../../constants/sexe';
 import Auth from '../../services/Auth';
+import { makeRequest } from '../../services/axios';
 
 const FormActe = ({ useFormActe, user }) => {
 
@@ -21,21 +22,52 @@ const FormActe = ({ useFormActe, user }) => {
   const [nomCommune, setNomCommune] = useState("");
 
 
-  
-  useEffect(() => {
-      ActeService.getTypes().then(types => setTypesActes(types));
-      TravailService.getTravail().then(travails => setTravails(travails));
-      FonkotanyService.getFonkotany().then(fonkotany => {
-          const newFonkotany  = fonkotany.filter(item => item.id_commune == user.commune)
-          setFonkotany(newFonkotany)
-      });
+      //API GET TYPES ACTES
+    useEffect(() => {
+        makeRequest.get('/typesActe')
+        .then(resp => { setTypesActes(resp.data) })
+        .catch(error => {console.log(error);})
+    }, []);
 
-      CommuneService.getCommune().then(communes => {setCommunes(communes)
-        
-      });
+
+
+    //API GET TYPES ACTES
+    useEffect(() => {
+      makeRequest.get('/travails')
+      .then(resp => { setTravails(resp.data) })
+      .catch(error => {console.log(error);})
+    }, []);
+    
+    
+    //API GET TYPES ACTES
+  useEffect(() => {
+        makeRequest.get(`/fonkotany`)
+        .then(resp => { 
+            if (!resp.data) {
+                setError(false)
+            }
+            if (!user.isAdmin) {
+              const newFonkotany  = fonkotany.filter(item => item.id_commune == user.commune)
+              setFonkotany(newFonkotany)
+
+            } else {
+              setFonkotany(resp.data); 
+            }
+        })
+        .catch(error => {console.log(error);})  
     },[]);
+
+
+    //API GET  CCOMMUNES
+  useEffect(() => {
+    makeRequest.get('/communes')
+    .then(resp => { setCommunes(resp.data); })
+    .catch(error => {console.log(error);})
+  })
     
     
+
+
     const [formActe, setFormActe] = useFormActe;
     const handleInputChange = (e) => {
       const fieldName = e.target.name.trim();

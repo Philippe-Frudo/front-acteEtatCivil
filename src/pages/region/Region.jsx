@@ -9,13 +9,17 @@ import { convertFile } from './../../helpers/convertFile';
 import TableFileRegion from '../../components/tableFile/TableFileRegion';
 import ModalDelete from '../../components/modal_delete/ModalDelete';
 import { showDeleteModal } from '../../constants/modal';
+import { makeRequest } from '../../services/axios';
 
 
 const Region = () => {
   const fileInputRef = useRef(null);
   const [regions, setRegions] = useState([]);
+  
   useEffect(() => {
-    Regionservice.getRegion().then(regions => setRegions(regions));
+    makeRequest.get('/regions')
+    .then(resp => { setRegions(resp.data); })
+    .catch(error => {console.log(error);})
   }, []);
 
 

@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom';
+import { Link, replace, useNavigate } from 'react-router-dom';
 // import ADDRESSES from '../../models/mock-address';
 import { searchAddress } from '../../helpers/borderField';
 import { regex } from '../../helpers/regex';
 import CommuneService from '../../services/serviceCommune';
 import DistrictService from '../../services/serviceDistrict';
+import { makeRequest } from '../../services/axios';
 
 const FormCommune = ({commune, isEditForm}) => {
+
+    const navigate = useNavigate();
 
     const [districts, setDistricts] = useState(null);
     const [showList, setShowList] = useState(false);
@@ -15,9 +18,22 @@ const FormCommune = ({commune, isEditForm}) => {
     const [formCommune, setFormCommune] = useState({
         code_commune: { value: "", isValid: true, error: "" },
         nom_commune: { value: "", isValid: true, error: "" },
-        code_district: { value: "", isValid: true, error: "" },
+        id_district: { value: "", isValid: true, error: "" },
     });
 
+    console.log(formCommune);
+    
+
+    
+    // // Reiniti   aliser le champs
+    // const clearData = () => {
+    //     setFormCommune({
+    //         ...formCommune, ...{
+    //             code_commune: { value: "", isValid: true, error: "" },
+    //             nom_commune: { value: "", isValid: true, error: "" },
+    //             code_district: { value: "", isValid: true, error: "" },
+    //     }});
+    // }
     useEffect(() => {
         DistrictService.getDistrict().then(districts => setDistricts(districts));
 
@@ -96,13 +112,14 @@ const FormCommune = ({commune, isEditForm}) => {
         e.preventDefault();
         const isValid = Object.values(formCommune).every(field => field.isValid);
 
-        if (isValid && formCommune.code_commune.value) {
+        if (isValid && formCommune.code_commune?.value) {
             setValid(isValid);
             setMessage("En cours de connexion ...");
-            commune.code_commune = formCommune.code_commune.value;
-            commune.nom_commune = formCommune.nom_commune.value;
-            commune.code_district = formCommune.code_district.value;
+            commune.code_commune = formCommune.code_commune?.value;
+            commune.nom_commune = formCommune.nom_commune?.value;
+            commune.id_district = formCommune.id_district?.value;
 
+            console.log(commune);
             isEditForm ? updateCommune(): addCommune();
         } else {
             setValid(false)
@@ -111,16 +128,59 @@ const FormCommune = ({commune, isEditForm}) => {
     }
 
     
-    const updateCommune = () => {
-        console.log("Data commune:", commune);
-        CommuneService.updateCommune(commune);
+    function updateCommune () {
+        if (commune.id_commune) {
+            console.log("Data commune:", commune);
+            makeRequest.put(`/communes/${commune.id_commune}`, commune, {
+                headers: {"Content-Type": "application/json"}
+            })
+            .then(resp => {
+                if (!resp.data.status) {
+                    console.log(resp); 
+                    setValid(resp.data.status)
+                    setMessage(resp.data.message)
+                    return;
+                }
+                setValid(resp.data.status)
+                setMessage(resp.data.message)
+                clearData();
+                navigate('/commune', true);
+            })
+            .catch(error => console.log(error) )    
+        }
     }
 
-    const addCommune = () => {
+    function addCommune () {
         console.log("Data commune:", commune);
-        const response = CommuneService.addCommune(commune);
-        console.log(response);
+        makeRequest.post(`/communes`, commune, {
+            headers: {"Content-Type": "application/json"}
+        })
+        .then(resp => {
+            if (!resp.data.status) {
+                setValid(resp.data.status)
+                setMessage(resp.data.message)
+                return;
+            }
+            console.log(resp);
+            setValid(resp.data.status)
+            setMessage(resp.data.message)
+            clearData()   
+        })
+        .catch(error => console.log(error) ) 
     }
+
+
+    function clearData() {
+        setFormCommune({ ...formCommune,
+            ...{
+            code_commune: { value: "", isValid: false, error: "" },
+            nom_commune: { value: "", isValid: false, error: "" },
+            id_district: { value: "", isValid: false, error: "" },
+        }});
+    }
+
+    
+
 
   return (
     <>
@@ -158,10 +218,10 @@ const FormCommune = ({commune, isEditForm}) => {
                             name="code_commune"
                             id="code_commune"
                             placeholder="code de Fonkotanay"
-                            value={formCommune.code_commune.value}
+                            value={formCommune.code_commune?.value}
                             onChange={handleInputChange}
                         />
-                        <span className="msg-error">{!formCommune.code_commune.isValid && formCommune.code_commune.error}</span>
+                        <span className="msg-error">{!formCommune.code_commune?.isValid && formCommune.code_commune?.error}</span>
                     </div>
 
                     <div className="form-group">
@@ -172,10 +232,10 @@ const FormCommune = ({commune, isEditForm}) => {
                             name="nom_commune"
                             id="nom_commune"
                             placeholder="Nom de Fonkotanay"
-                            value={formCommune.nom_commune.value}
+                            value={formCommune.nom_commune?.value}
                             onChange={handleInputChange}
                         />
-                        <span className="msg-error">{!formCommune.nom_commune.isValid && formCommune.nom_commune.error}</span>
+                        <span className="msg-error">{!formCommune.nom_commune?.isValid && formCommune.nom_commune?.error}</span>
                     </div>
 
                     <div className="form-group" style={{position:"relative"}}>
@@ -195,14 +255,14 @@ const FormCommune = ({commune, isEditForm}) => {
                         <ul id="list_district" className={ showList ? "showList list":"list"}>
                             {districts?.map(c => (
                             <li key={c.id_district}>
-                                <p className='list-p' onClick={() => handleSetNomDIstrict(c.id_district)}>
+                                <p className='list-p' onClick={() => handleSetNomDIstrict(c)}>
                                     {c.nom_district}({c.code_district})
                                 </p>
                             </li>
                             ))}
                         </ul>
 
-                        <span className="msg-error">{!formCommune.code_district.isValid && formCommune.code_district.error}</span>
+                        <span className="msg-error">{!formCommune.id_district?.isValid && formCommune.id_district?.error}</span>
                     </div>
 
 
@@ -212,7 +272,7 @@ const FormCommune = ({commune, isEditForm}) => {
                             (<button type="submit" className="btn btn-save" id="save">Envoyer</button>)
                         }
 
-                        <button type="reset" className="btn btn-clear" id="clear">Annuler</button>
+                        <button type="reset" className="btn btn-clear" id="clear" onClick={clearData}>Annuler</button>
                     </div>
                 </div>
             </form>

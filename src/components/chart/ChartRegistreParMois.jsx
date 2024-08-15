@@ -66,7 +66,7 @@ const ChartRegistreParMois = () => {
     
 
     return (
-        <div  style={{ margin: "2.5rem 1rem", minWidth: "765px", minHeight:"300px"}} >
+        <div  style={{ margin: "2.5rem 1rem", minWidth: "768px", minHeight:"300px"}} >
             {monthlyData.length > 0 ? (
                 <Bar data={data} options={options} />
             ) : (

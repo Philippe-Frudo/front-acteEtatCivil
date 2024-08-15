@@ -7,6 +7,7 @@ import { showAddModal, showDeleteModal, showUpdateModal } from '../../constants/
 import ModalDelete from '../../components/modal_delete/ModalDelete';
 import TableFileRegion from '../../components/tableFile/TableFileRegion';
 import { convertFile } from '../../helpers/convertFile';
+import { makeRequest } from '../../services/axios';
 // import DISTRICT from '../../models/mock-district';
 
 const District = () => {
@@ -16,7 +17,9 @@ const District = () => {
     const count = districts.length;
 
     useEffect(() => {
-        DistrictService.getDistrict().then(districts => setDistricts(districts));
+        makeRequest.get('/districts')
+        .then(resp => { setDistricts(resp.data); })
+        .catch(error => {console.log(error);})
     }, []);
 
     

@@ -14,9 +14,9 @@ export default class Fonkotany {
         id_commune: number
     ) {
         // 3. Initialisation des proprietes du Fonkotany
-        id_fonkotany = id_fonkotany;
-        code_fonkotany = nom_fonkotany;
-        nom_fonkotany = nom_fonkotany;
-        id_commune = id_commune;
+        this.id_fonkotany = id_fonkotany;
+        this.code_fonkotany = nom_fonkotany;
+        this.nom_fonkotany = nom_fonkotany;
+        this.id_commune = id_commune;
     }
 }

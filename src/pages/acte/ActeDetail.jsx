@@ -4,6 +4,8 @@ import ModalDelete from '../../components/modal_delete/ModalDelete';
 import DETAILS from '../../models/mock-dataActe';
 import { makeRequest } from '../../services/axios';
 import * as XLSX from 'xlsx';
+import MainTop from '../../components/main_top/MainTop';
+import Header from '../../components/header/Header';
 
 const ActeDetail = () => {
     const { id } = useParams();
@@ -43,6 +45,18 @@ const ActeDetail = () => {
 
     return (
         <>
+        
+    <div className="big-container">
+          <Header />
+          <main className="main">
+              { /* <!-- =====HEADER MAIN ==== --> */}
+              <MainTop />
+              { /* <!-- ====== CONTAINER MAIN ===== --> */}
+              <div className="main-container main-container-2" id='main-scroll'>
+
+
+
+
                 { /* <!-- ===== CARD 1 ===== --> */}
                 <div className="card active-main" id="card-1">
                     { /* <!-- ===== HEADER CARD 1 ===== --> */}
@@ -362,7 +376,14 @@ const ActeDetail = () => {
                     )}
                 </div>
 
-            <ModalDelete id={id} nomPage={"commune"} useDelete={[isDelete, setIsDelete]}/>
+                <ModalDelete id={id} nomPage={"commune"} useDelete={[isDelete, setIsDelete]}/>
+
+
+
+                    
+            </div>
+          </main>
+        </div>
         </>
     )
 }

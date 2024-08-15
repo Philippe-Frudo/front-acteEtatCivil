@@ -5,6 +5,7 @@ import CommuneService from '../../services/serviceCommune';
 import FonkotanyService from '../../services/serviceFonkotany';
 import ActeService from '../../services/serviceActe';
 import TravailService from '../../services/serviceTravail';
+import { makeRequest } from '../../services/axios';
 // import PersonneService from '../../services/servicePersonne';
 
 const TableFileRegion = ({useData, useAccept, nameFile}) => {
@@ -25,65 +26,100 @@ const TableFileRegion = ({useData, useAccept, nameFile}) => {
     const [message, setMessage] = useState(null);
     
     const handleAddFile = (name) => {
-        console.log(name);
-        
+
         switch(name){
             case "travail" :
-
                     console.log("Data File travail:", dataFile);
-                    TravailService.addAllTravail(dataFile)
-                    .then(response => {console.log(response); setMessage(response);} )
-                    // .then(() =>{ setAcceptFile(false); setDataFile(null); })
+                   
+                    makeRequest.post(`/addAlltravail`, dataFile, {
+                        headers: {"Content-Type": "application/json"}
+                    })
+                    .then(resp => { 
+                        if (resp.data.status) {
+                            console.log(resp); 
+                            setStatus(resp.data.status);
+                            setMessage(resp.data.rejeter)
+                            return;
+                        }
+                        setMessage("L'ajout des donneés du fichier est tous succés")
+                    })
+                    .catch(error => console.log(error) )  
                 
                 break;
 
             case "région" :
-
                     console.log("Data File region:", dataFile);
-                    RegionService.addAllRegion(dataFile)
-                    .then(response => {
-                        console.log(response); 
-                        setStatus(response.status);
-                        setMessage(response.rejeter);
-                    } )
-                    //  .then(() =>{ setAcceptFile(false); setDataFile(null); })
+                   
+                    makeRequest.post(`/addAllRegion`, dataFile, {
+                        headers: {"Content-Type": "application/json"}
+                    })
+                    .then(resp => { 
+                        if (resp.data.status) {
+                            console.log(resp); 
+                            setStatus(resp.data.status);
+                            setMessage(resp.data.rejeter)
+                            return;
+                        }
+                        setMessage("L'ajout des donneés du fichier est tous succés")
+                    })
+                    .catch(error => console.log(error) )  
                 
                 break;
 
             case "district" :
 
                     console.log("Data File disrict:", dataFile);
-                    DistrictService.addAllDistrict(dataFile)
-                    .then(response => {
-                        console.log(response); 
-                        ssetStatus(response.status);
-                        setMessage(response.rejeter);
-                        
-                    } )
-                    //  .then(() =>{ setAcceptFile(false); setDataFile(null); });
+                    makeRequest.post(`/addAllDistrict`, dataFile, {
+                        headers: {"Content-Type": "application/json"}
+                    })
+                    .then(resp => { 
+                        if (resp.data.status) {
+                            console.log(resp); 
+                            setStatus(resp.data.status);
+                            setMessage(resp.data.rejeter)
+                            return;
+                        }
+                        setMessage("L'ajout des donneés du fichier est tous succés")
+                    })
+                    .catch(error => console.log(error) );
                 
                 break;
 
             case "commune" :
                     console.log("Data File commune:", dataFile);
-                    CommuneService.addAllCommune(dataFile)
-                    .then(response =>{
-                        console.log(response); 
-                        setStatus(response.status);
-                        setMessage(response.rejeter);
+                    makeRequest.post(`/addAllCommune`, dataFile, {
+                        headers: {"Content-Type": "application/json"}
                     })
-                    // .then( () =>{setAcceptFile(false); setDataFile(null); });
+                    .then(resp => { 
+                        if (resp.data.status) {
+                            console.log(resp); 
+                            setStatus(resp.data.status);
+                            setMessage(resp.data.rejeter)
+                            return;
+                        }
+                        setMessage("L'ajout des donneés du fichier est tous succés")
+                    })
+                    .catch(error => console.log(error) )  
+
                 break;
 
             case "fonkotany":
                     console.log("Data File fonkotany:", dataFile);
-                    FonkotanyService.addAllFonkotany(dataFile)
-                    .then(response => {
-                        console.log(response); 
-                        setStatus(response.status);
-                        setMessage(response.rejeter);
+
+                    makeRequest.post(`/addAllfonkotany`, dataFile, {
+                        headers: {"Content-Type": "application/json"}
                     })
-                    //  .then(() =>{ setAcceptFile(false); setDataFile(null); });
+                    .then(resp => { 
+                        if (resp.data.status) {
+                            console.log(resp); 
+                            setStatus(resp.data.status);
+                            setMessage(resp.data.rejeter)
+                            return;
+                        }
+                        setMessage("L'ajout des donneés du fichier est tous succés")
+                    })
+                    .catch(error => console.log(error) )  
+
                 break;
             
             default: 
@@ -115,7 +151,7 @@ const TableFileRegion = ({useData, useAccept, nameFile}) => {
                                 (<span className='message success'>{message}</span>):
                                 (<span className='message error'>
                                     {message.length >1 ? 
-                                    'Ces fichiers existent deja dans la base de donnee: ':'Ce fichier existe deja dans la base de donnee:  '
+                                    'Ces fichiers existent deja dans la base de donnee: ':'Ce fichier existe deja dans la base de donnee: '
                                     }
                                      {message}
                                 </span>)

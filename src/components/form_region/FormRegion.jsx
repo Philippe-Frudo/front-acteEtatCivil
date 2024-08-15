@@ -1,9 +1,12 @@
 import React from 'react'
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import RegionService from '../../services/serviceRegion';
+import { makeRequest } from '../../services/axios';
 
 const FormRegion = ({region, isEditForm}) => {
+
+    const navigate = useNavigate(null)
 
     const [formRegion, setFormRegion] = useState({
         code_region: { value: "", isValid: false, error: "" },
@@ -62,39 +65,56 @@ const FormRegion = ({region, isEditForm}) => {
         }
     }
 
-    const updateRegion = () => {
+    function updateRegion () {
         console.log("Data region:", region);
-        RegionService.updateRegion(region)
+        makeRequest.put(`/regions/${region.id_region}`, region, {
+            headers: {"Content-Type": "application/json"}
+        })
         .then(resp => {
-            setValid(resp.status)
-            setMessage(resp.message)
-            if (resp.satatus) {
-            setFormRegion({
-                code_region: { value: "", isValid: false, error: "" },
-                nom_region: { value: "", isValid: false, error: "" },
-            });
-            
+            if (!resp.data) {
+                console.log(resp); 
+                setValid(resp.data.status)
+                setMessage(resp.data.message)
+                return;
             }
-        });
+            setValid(resp.data.status)
+            setMessage(resp.data.message)
+            clearData();
+            navigate('/region');
+        })
+        .catch(error => console.log(error) )   
     }
 
-    const addRegion = () => {
+    function addRegion () {
         console.log("Data region:", region);
-        RegionService.addRegion(region)
-        .then(resp =>{
-            setValid(resp.status)
-            setMessage(resp.message)
-            if (resp.sattus) {
-            setFormRegion({
-                code_region: { value: "", isValid: false, error: "" },
-                nom_region: { value: "", isValid: false, error: "" },
-            });
-            
+        makeRequest.post(`/regions`, region, {
+            headers: {"Content-Type": "application/json"}
+        })
+        .then(resp => {
+            if (!resp.data.status) {
+                setValid(resp.data.status)
+                setMessage(resp.data.message)
+                return;
             }
-        });
+            console.log(resp);
+            setValid(resp.data.status)
+            setMessage(resp.data.message)
+            clearData()   
+        })
+        .catch(error => console.log(error) ) 
     }
 
 
+    function clearData() {
+        setFormRegion({ ...formRegion,
+            ...{
+            code_region: { value: "", isValid: isEditForm ? true:false, error: "" },
+            nom_region: { value: "", isValid: isEditForm ? true:false, error: "" },
+        }});
+    }
+
+    
+    
   return (
     <>
         {/* <!-- =========== Modal add  region ========== --> */}

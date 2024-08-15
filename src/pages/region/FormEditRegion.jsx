@@ -1,26 +1,36 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom';
-import { REGION } from '../../helpers/mock-region';
 import FormRegion from './../../components/form_region/FormRegion';
 
-import Regionservice from '../../services/serviceRegion';
+import { makeRequest } from '../../services/axios';
 
 
 const FormEditRegion = () => {
-    let { id } = useParams();
+    const { id } = useParams();
     
+    const [error, setError] = useState(false);
     const [region, setRegion] = useState([]);
     useEffect(() => {   
-        // const foundRegion = REGION.find(f => f.code_region == id);
-        Regionservice.getRegionById(+id).then(region => setRegion(region) );
+        makeRequest.get(`/regions/${id}`)
+        .then(resp => { 
+            if (!resp.data) {
+                setError(true)
+            }
+            setRegion(resp.data); 
+        })
+        .catch(error => {console.log(error);})
     }, [id]);
 
-    console.log(region);
     
 
     return (
         <>
-            <FormRegion region={region} isEditForm={true} />
+         {!error ? 
+            (
+                <FormRegion region={region} isEditForm={true} />
+            ):(
+                <p>Aucun donnee trouvé</p>
+            )}
         </>
     )
 }

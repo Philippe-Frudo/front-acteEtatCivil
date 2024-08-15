@@ -8,6 +8,7 @@ import FonkotanyService from '../../services/serviceFonkotany';
 import TableFileRegion from '../../components/tableFile/TableFileRegion';
 import { convertFile } from '../../helpers/convertFile';
 import { showDeleteModal } from '../../constants/modal';
+import { makeRequest } from '../../services/axios';
 
 const Fonkotany = () => {
 
@@ -16,7 +17,9 @@ const Fonkotany = () => {
     const count = fonkotany.length;
 
     useEffect(() => {
-        FonkotanyService.getFonkotany().then(fonkotany => setFonkotany(fonkotany))
+        makeRequest.get('/fonkotany')
+        .then(resp => { setFonkotany(resp.data); })
+        .catch(error => {console.log(error);})
     }, []);
 
     const [isDelete, setIsDelete] = useState(false)

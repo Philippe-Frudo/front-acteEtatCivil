@@ -115,7 +115,7 @@ const Login = () => {
             <section className="section container">
                 <div className="modal container-authentication" >
                     <h3 className="modal-title" style={{ color: '#000', marginBottom: "10px" }}>Authentification</h3>
-                    <span className="modal-subtitle" style={{ color: '#000' }}>Vous allez directement vers la page</span>
+                    <span className="modal-subtitle" style={{ color: '#000' }}>sous titre ...</span>
 
                     <div>
                         <form className="form-authentification" id="loginForm" onSubmit={e => handleSubmit(e)}>

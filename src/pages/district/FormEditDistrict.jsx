@@ -1,21 +1,35 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom';
 import FormDistrict from './../../components/form_district/FormDistrict';
-import DistrictService from '../../services/serviceDistrict';
+import { makeRequest } from '../../services/axios';
+// import DistrictService from '../../services/serviceDistrict';
 // import DISTRICT from '../../models/mock-district';
 
 const FormEditDistrict = () => {
     const { id } = useParams();
     
+    const [error, setError] = useState(false);
     const [district, setDistrict] = useState({});
     
     useEffect(() => {   
-        DistrictService.getDistrictById(+id).then(district => setDistrict(district));
+        makeRequest.get(`/districts/${id}`)
+        .then(resp => { 
+            if (!resp.data) {
+                setError(true)
+            }
+            setDistrict(resp.data); 
+        })
+        .catch(error => {console.log(error);})
     }, [id]);
 
     return (
         <>
-            <FormDistrict district={district} isEditForm={true} />
+            {!error ? 
+            (
+                <FormDistrict district={district} isEditForm={true} />
+            ):(
+                <p>Aucun donnee trouvé</p>
+            )}
         </>
     )
 }

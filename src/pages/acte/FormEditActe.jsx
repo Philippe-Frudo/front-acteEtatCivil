@@ -1,11 +1,12 @@
 import React, { useState, useEffect  } from 'react'
-import { useNavigate, useParams } from 'react-router-dom';
-
+import { useParams } from 'react-router-dom';
 import FormActeAndBirthday from './../../components/form_acte/FormActeAndActBirthday';
-import ACTES from '../../models/mock-acte';
-import PersonneService from '../../services/servicePersonne';
-import ActeService from '../../services/serviceActe';
 import { makeRequest } from '../../services/axios';
+
+// import ACTES from '../../models/mock-acte';
+// import PersonneService from '../../services/servicePersonne';
+// import ActeService from '../../services/serviceActe';
+
 
 
 const FormAddActe = () => {
@@ -20,21 +21,17 @@ const FormAddActe = () => {
     
     //GET ACTE PAR UN ID
     useEffect(() => {
-        makeRequest.get(`/actes/${id}/`).then(response => {
+        makeRequest.get(`/actes/${id}`).then(response => {
             if (!response.data) {
                 console.log("Aucun donnée trouvé");
                 setErrorActe(true); return
             }
             setErrorActe(false);
-            // console.log(response.data);
             setActe(response.data);
         })
         .catch(error => console.log(error) )
     }, [id]);
 
-
-    console.log(personne);
-    console.log(acte);
     
 
     //GET PERSONNE PAR UN ID
@@ -54,7 +51,8 @@ const FormAddActe = () => {
     }, [acte]);
 
     // Resultat de Get
-    const error = errorPerso && errorActe 
+    let error = true;
+    error = errorPerso && errorActe 
 
     return (
         <>

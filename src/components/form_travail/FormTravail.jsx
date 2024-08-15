@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
 import { regex } from '../../helpers/regex';
 import TravailService from './../../services/serviceTravail'
+import { makeRequest } from '../../services/axios';
 
 const formTravail = ({travail, isEditForm}) => {
     const navigate = useNavigate();
@@ -51,50 +52,68 @@ const formTravail = ({travail, isEditForm}) => {
         e.preventDefault();
         const isValid = Object.values(formTravail).every(field => field.isValid);
 
-        if (isValid && formTravail.nom_travail.value) {
+        if (isValid && formTravail.nom_travail?.value) {
             setValid(true)
             setMessage("En cours de connexion ...");
-            travail.nom_travail = formTravail.nom_travail.value;
-            console.log(travail);
+            travail.nom_travail = formTravail.nom_travail?.value;
             
-            isEditForm ? updatTtravail(): addTravail();
+            isEditForm ? updateTravail(): addTravail();
         } else {
             setMessage("Vérifier les champs non valides");
         }
     }
 
-    const updatTtravail = () => {
+    
+    function updateTravail () {
         console.log("Data travail:", travail);
-        TravailService.updateTravail(travail)
-        .then(resp => {
-            console.log(resp);
-            
-            setValid(resp.status)
-            setMessage(resp.message);
-            if (resp.status) {
-                setFormTravail({
-                    nom_travail: { value: "", isValid: false, error: "" },
-                });
-            }
+        makeRequest.put(`/travails/${travail.id_travail}`, travail, {
+            headers: {"Content-Type": "application/json"}
         })
-        .then(() => {
-            setTimeout(() => { navigate('/travail'), 2000 });   
-        });
+        .then(resp => {
+            if (!resp.data.status) {
+                console.log(resp); 
+                setValid(resp.data.status)
+                setMessage(resp.data.message)
+                return;
+            }
+            setValid(resp.data.status)
+            setMessage(resp.data.message)
+            clearData();
+            navigate('/travail')
+        })
+        .catch(error => console.log(error) )   
     }
 
-    const addTravail = () => {
+
+    function addTravail () {
         console.log("Data travail:", travail);
-        TravailService.addTravail(travail).then(resp =>{
-            setValid(resp.status)
-            setMessage(resp.message);
-            if (resp.status) {
-                setFormTravail({
-                    nom_travail: { value: "", isValid: false, error: "" },
-                });
+        makeRequest.post(`/travails`, travail, {
+            headers: {"Content-Type": "application/json"}
+        })
+        .then(resp => {
+
+            if (!resp.data.status) {
+                setValid(resp.data.status)
+                setMessage(resp.data.message)
+                return;
+            }
+            console.log(resp);
+            setValid(resp.data.status)
+            setMessage(resp.data.message)
+            clearData()   
+        })
+        .catch(error => console.log(error) ) 
+    }
+
+
+    function clearData() {
+        setFormTravail({
+            ...formTravail, 
+            ...{
+            nom_travail: { value: "", isValid: false, error: "" },
             }
         });
     }
-
 
   return (
     <>
@@ -134,10 +153,10 @@ const formTravail = ({travail, isEditForm}) => {
                                 name="nom_travail"
                                 id="nom_travail"
                                 placeholder="Nom de Fonkotanay"
-                                value={formTravail.nom_travail.value}
+                                value={formTravail.nom_travail?.value}
                                 onChange={handleInputChange}
                             />
-                            <span className="msg-error">{!formTravail.nom_travail.isValid && formTravail.nom_travail.error}</span>
+                            <span className="msg-error">{!formTravail.nom_travail?.isValid && formTravail.nom_travail?.error}</span>
                         </div>
 
                         <div className="action-group">
@@ -146,7 +165,7 @@ const formTravail = ({travail, isEditForm}) => {
                             (<button type="submit" className="btn btn-save" id="save">Envoyer</button>)
                             }
 
-                            <button type="reset" className="btn btn-clear" id="clear">Annuler</button>
+                            <button type="reset" className="btn btn-clear" id="clear" onClick={clearData}>Annuler</button>
                         </div>
                     </div>
                 </form>

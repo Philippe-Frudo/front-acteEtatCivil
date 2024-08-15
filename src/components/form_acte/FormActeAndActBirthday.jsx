@@ -29,9 +29,13 @@ const FormActeAndBirthday = ({personne, acte, isEditForm}) => {
     // travails.some(travail => travail.nom_travail === 'Ombiasa'); // Verification de valeur dans une tableau
 
     const [travails, setTravails] = useState([]);
-    useEffect(() => {
-        TravailService.getTravail().then(travails => setTravails(travails));
-    },[setTravails]);
+
+    useEffect(() => {   
+    //API GET TYPES ACTES
+        makeRequest.get('/travails')
+        .then(resp => { setTravails(resp.data) })
+        .catch(error => {console.log(error);})
+    },[]);
 
 
     
@@ -1091,7 +1095,7 @@ const FormActeAndBirthday = ({personne, acte, isEditForm}) => {
                                 <div className="content-user">
 
                                     <FormActe useFormActe={[formActe, setFormActe]} user={user}/>
-                                    <FormPersonne useFormPersonne={[formPersonne, setFormPersonne]} />
+                                    <FormPersonne useFormPersonne={[formPersonne, setFormPersonne]} useTravails={[travails, setTravails]}/>
 
                                     <div className="action-group">
                                         {isEditForm ? 

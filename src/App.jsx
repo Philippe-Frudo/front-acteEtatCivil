@@ -57,21 +57,22 @@ function App() {
             });
     }, []);
 
-    
+    const path = location.pathname == "/" || location.pathname == "/register"
 
     return (
         <>
             
         <Router>
-            <div className="big-container">
-                {(location.pathname == "/" || location.pathname == "/register") ? "" : <Header />}
+            <div className={ path ? "": "big-container"} >
+
+                {path ? null : <Header />}
 
                 <main className="main">
                     { /* <!-- =====HEADER MAIN ==== --> */}
-                    {(location.pathname == "/" || location.pathname == "/register") ? "" :  <MainTop />}
+                    { path ? null :  <MainTop />}
 
                     { /* <!-- ====== CONTAINER MAIN ===== --> */}
-                    <div className="main-container main-container-2" id='main-scroll'>
+                    <div className="main-container main-container-2" id={ path ? "": "main-scroll" }>
 
                     <Routes>
 
@@ -113,7 +114,6 @@ function App() {
                         {user.isAdmin ? (<Route path="/region/edit/:id" element={<FormEditRegion />} />):('') }
 
 
-                        {/* {user.isAdmin ? (<Route path="/utilisateur" element={<Utilisateur />} />):(null) } */}
                     </Routes>
 
                     </div>

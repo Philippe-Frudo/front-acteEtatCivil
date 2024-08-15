@@ -50,7 +50,7 @@ export default class CommuneService {
 
     static addAllCommune(dataComm): Object {
         if (this.isDev) {
-            return fetch(`${this.url}/addAllcommune`, {
+            return fetch(`${this.url}/addAllCommune`, {
                 method:"POST",
                 body: JSON.stringify(dataComm),
                 headers: {"Content-Type":"application/json"}

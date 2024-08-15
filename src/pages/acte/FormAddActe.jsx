@@ -4,6 +4,7 @@ import Personne from '../../models/personne';
 import Acte from '../../models/acte';
 import FormActeAndBirthday from './../../components/form_acte/FormActeAndActBirthday';
 
+
 const FormAddActe = () => {
 
     const [personne] = useState(new Personne());
@@ -12,7 +13,9 @@ const FormAddActe = () => {
 
     return (
         <>
-            <FormActeAndBirthday personne={personne} acte={acte} isEditForm={false} />
+
+                <FormActeAndBirthday personne={personne} acte={acte} isEditForm={false} />  
+            
         </>
     )
 }

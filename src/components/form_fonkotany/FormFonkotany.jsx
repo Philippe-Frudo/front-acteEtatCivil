@@ -4,9 +4,12 @@ import { errorBorder, messageValidator, searchAddress, successBorder } from '../
 import FonkotanyService from '../../services/serviceFonkotany';
 import CommuneService from '../../services/serviceCommune';
 import { regex } from './../../helpers/regex';
+import { makeRequest } from '../../services/axios';
 // import ADDRESS from '../../models/mock-address';
 
 const FormFonkotany = ({ fonkotany, isEditForm }) => {
+
+    const navigate = useNavigate(null);
 
     const [communes, setCommunes] = useState([]);
     const [showList, setShowList] = useState(false);
@@ -25,30 +28,39 @@ const FormFonkotany = ({ fonkotany, isEditForm }) => {
     const [formFonkotany, setFormFonkotany] = useState({
         code_fonkotany: { value: "", isValid: true, error: "" },
         nom_fonkotany: { value: "", isValid: true, error: "" },
-        code_commune: { value: "", isValid: true, error: "" },
+        id_commune: { value: "", isValid: true, error: "" },
     });
 
+
+    //API GET COMMUNE
     useEffect(() => {
-        CommuneService.getCommune().then(communes => setCommunes(communes));
+        makeRequest.get('/communes')
+        .then(resp => { setCommunes(resp.data); })
+        .catch(error => {console.log(error)})
+    }, [])
+
+
+    useEffect(() => {
         if (fonkotany) {
             setFormFonkotany({
-                code_fonkotany: { value: fonkotany.code_fonkotany || "", isValid: true, error: "" },
-                nom_fonkotany: { value: fonkotany.nom_fonkotany || "", isValid: true , error: "" },
-                code_commune: { value: fonkotany.code_commune || "", isValid: true, error: "" },
+                code_fonkotany: { value: fonkotany?.code_fonkotany || "", isValid: true, error: "" },
+                nom_fonkotany: { value: fonkotany?.nom_fonkotany || "", isValid: true , error: "" },
+                id_commune: { value: fonkotany?.id_commune || "", isValid: true, error: "" },
             });
                         
             communes?.forEach(f => {
-                if (f.code_commune == fonkotany.code_commune) {
+                if (f.id_commune == fonkotany.id_commune) {
                     setNomCommune(f.nom_commune); return; 
                 }
             })
         }
     }, [fonkotany]);
+
     
 
     //CHANGE VALUE COMMUNE
     const handleSetNomCommune = (commune) => {
-        const newField = { code_commune: { value: commune.code_commune, isValid: true } };
+        const newField = { id_commune: { value: commune.id_commune, isValid: true } };
         setFormFonkotany({ ...formFonkotany, ...newField });
         setNomCommune(commune.nom_commune)
         setShowList(false);
@@ -84,85 +96,135 @@ const FormFonkotany = ({ fonkotany, isEditForm }) => {
      const handleInputChangeCommune = (e) => {
             setNomCommune(e.target.value);
             if (!e.target.value) {
-                const newField = { code_commune: { value: "", isValid: false , error: "Ce champ est obligatoire" } };
+                const newField = { id_commune: { value: "", isValid: false , error: "Ce champ est obligatoire" } };
                 setFormFonkotany({ ...formFonkotany , ...newField });
             }
     }
-    // console.log("Valeur de Code COMMUNE: ",formFonkotany.code_commune.value);  
         
 
     const [message, setMessage] = useState("");
     const [valid, setValid] = useState(false);
     const handleSubmit = (e) => {
         e.preventDefault();
-        const isValid = Object.values(formFonkotany).every(field => field.isValid);
+        const isValid = Object.values(formFonkotany).every(field => field?.isValid);
 
-        if (isValid && formFonkotany.code_fonkotany.value) {
+        if (isValid && formFonkotany.code_fonkotany?.value) {
             setValid(isValid);
             setMessage("En cours de connexion ...");
-            fonkotany.code_fonkotany = formFonkotany.code_fonkotany.value;
-            fonkotany.nom_fonkotany = formFonkotany.nom_fonkotany.value;
-            fonkotany.code_commune = formFonkotany.code_commune.value;
-            console.log(fonkotany);
+            fonkotany.code_fonkotany = formFonkotany.code_fonkotany?.value;
+            fonkotany.nom_fonkotany = formFonkotany.nom_fonkotany?.value;
+            fonkotany.id_commune = formFonkotany.id_commune.value;
+
+
             isEditForm ? updateFonkotany(): addFonkotany();
         } else {
             setMessage("Vérifier les champs non valides");
         }
     }
 
-    const updateFonkotany = () => {
-        FonkotanyService.updateFonkotany(fonkotany).then(msg => setMessage(msg))
-    }
 
-    const addFonkotany = () => {
-        FonkotanyService.addFonkotany(fonkotany).then(msg => setMessage(msg))
-    }
 
    /* const validFormFonkotany = () => {
         let newForm = { ...formFonkotany };
 
         //Validation code du fonkotany
-        if (!formFonkotany.code_fonkotany.value) {
-            newForm.code_fonkotany = {value: formFonkotany.code_fonkotany.value, error: "", isValid: false };
+        if (!formFonkotany.code_fonkotany?.value) {
+            newForm.code_fonkotany = {value: formFonkotany.code_fonkotany?.value, error: "", isValid: false };
             errorBorder(".code_fonkotany");
-            messageValidator(".code_fonkotany", newForm.code_fonkotany.error);
+            messageValidator(".code_fonkotany", newForm.code_fonkotany?.error);
         }else {
-            newForm.code_fonkotany = {value: formFonkotany.code_fonkotany.value, error: "", isValid: true };
+            newForm.code_fonkotany = {value: formFonkotany.code_fonkotany?.value, error: "", isValid: true };
             successBorder(".code_fonkotany");
-            messageValidator(".code_fonkotany", newForm.code_fonkotany.error);
+            messageValidator(".code_fonkotany", newForm.code_fonkotany?.error);
         }
 
         //Validation code du fonkotany
-        if (!formFonkotany.nom_fonkotany.value) {
-            newForm.nom_fonkotany = {value: formFonkotany.nom_fonkotany.value, error: "", isValid: false };
+        if (!formFonkotany.nom_fonkotany?.value) {
+            newForm.nom_fonkotany = {value: formFonkotany.nom_fonkotany?.value, error: "", isValid: false };
             errorBorder(".nom_fonkotany");
-            messageValidator(".nom_fonkotany", newForm.nom_fonkotany.error);
+            messageValidator(".nom_fonkotany", newForm.nom_fonkotany?.error);
         }else {
-            newForm.nom_fonkotany = {value: formFonkotany.nom_fonkotany.value, error: "", isValid: true };
+            newForm.nom_fonkotany = {value: formFonkotany.nom_fonkotany?.value, error: "", isValid: true };
             successBorder(".nom_fonkotany");
-            messageValidator(".nom_fonkotany", newForm.nom_fonkotany.error);
+            messageValidator(".nom_fonkotany", newForm.nom_fonkotany?.error);
         }
 
         //Validation de code commune
         if (!formFonkotany.code_commune.value) {
             newForm.code_commune = {value: formFonkotany.code_commune.value, error: "", isValid: false };
             errorBorder(".code_commune");
-            messageValidator(".code_commune", newForm.code_commune.error);
+            messageValidator(".code_commune", newForm.code_commune?.error);
         }else {
             newForm.code_commune = {value: formFonkotany.code_commune.value, error: "", isValid: true };
             successBorder(".nom_fonkotany");
-            messageValidator(".code_commune", newForm.code_commune.error);
+            messageValidator(".code_commune", newForm.code_commune?.error);
         }
 
         setFormFonkotany(newForm);
-        return newForm.code_fonkotany.isValid && newForm.nom_fonkotany.isValid && newForm.code_commune.isValid
+        return newForm.code_fonkotany?.isValid && newForm.nom_fonkotany?.isValid && newForm.code_commune?.isValid
     }*/
 
     
-    const navigate = useNavigate();
     const handleClickBack = () => {
         navigate("/fonkotany", {replace: true});
     }
+
+
+    
+    
+    function updateFonkotany () {
+        console.log("Data fonkotany:", fonkotany);
+        makeRequest.put(`/fonkotany/${fonkotany.id_fonkotany}`, fonkotany, {
+            headers: {"Content-Type": "application/json"}
+        })
+        .then(resp => {
+            if (!resp.data.status) {
+                console.log(resp); 
+                setValid(resp.data.status)
+                setMessage(resp.data.message)
+                return;
+            }
+            setValid(resp.data.status)
+            setMessage(resp.data.message)
+            clearData();
+            navigate('/fonkotany',  {replace: true})
+        })
+        .catch(error => console.log(error) )   
+    }
+
+
+    function addFonkotany () {
+        console.log("Data fonkotany:", fonkotany);
+        makeRequest.post(`/fonkotany`, fonkotany, {
+            headers: {"Content-Type": "application/json"}
+        })
+        .then(resp => {
+
+            if (!resp.data.status) {
+                setValid(resp.data.status)
+                setMessage(resp.data.message)
+                return;
+            }
+            console.log(resp);
+            setValid(resp.data.status)
+            setMessage(resp.data.message)
+            clearData()   
+        })
+        .catch(error => console.log(error) ) 
+    }
+
+
+    function clearData() {
+        setFormFonkotany({
+            ...formFonkotany, 
+            ...{
+                code_fonkotany: { value: fonkotany.code_fonkotany || "", isValid: true, error: "" },
+                nom_fonkotany: { value: fonkotany.nom_fonkotany || "", isValid: true , error: "" },
+                code_commune: { value: fonkotany.code_commune || "", isValid: true, error: "" },
+            }
+        });
+    }
+
 
     return (
         <>
@@ -198,11 +260,11 @@ const FormFonkotany = ({ fonkotany, isEditForm }) => {
                                     name="code_fonkotany"
                                     id="code_fonkotany"
                                     placeholder="code de Fonkotanay"
-                                    value={formFonkotany.code_fonkotany.value}
+                                    value={formFonkotany.code_fonkotany?.value}
                                     onChange={handleInputChange}
                                 />
                                 <span className="msg-error">
-                                    {!formFonkotany.code_fonkotany.isValid && formFonkotany.code_fonkotany.error}
+                                    {!formFonkotany.code_fonkotany?.isValid && formFonkotany.code_fonkotany?.error}
                                 </span>
 
                             </div>
@@ -215,11 +277,11 @@ const FormFonkotany = ({ fonkotany, isEditForm }) => {
                                     name="nom_fonkotany"
                                     id="nom_fonkotany"
                                     placeholder="Nom de Fonkotanay"
-                                    value={formFonkotany.nom_fonkotany.value}
+                                    value={formFonkotany.nom_fonkotany?.value}
                                     onChange={handleInputChange}
                                 />
                                  <span className="msg-error">
-                                    {!formFonkotany.nom_fonkotany.isValid && formFonkotany.nom_fonkotany.error}
+                                    {!formFonkotany.nom_fonkotany?.isValid && formFonkotany.nom_fonkotany?.error}
                                 </span>
                             </div>
 
@@ -249,7 +311,7 @@ const FormFonkotany = ({ fonkotany, isEditForm }) => {
                                     ))}
                                 </ul>
                                  <span className="msg-error">
-                                    {!formFonkotany.code_commune.isValid && formFonkotany.code_commune.error}
+                                    {!formFonkotany.id_commune?.isValid && formFonkotany.id_commune?.error}
                                 </span>
                             </div>
                             <div className="action-group">
