@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
-import RegionService from '../../services/serviceRegion';
-import DistrictService from '../../services/serviceDistrict';
-import CommuneService from '../../services/serviceCommune';
-import FonkotanyService from '../../services/serviceFonkotany';
-import ActeService from '../../services/serviceActe';
-import TravailService from '../../services/serviceTravail';
+// import RegionService from '../../services/serviceRegion';
+// import DistrictService from '../../services/serviceDistrict';
+// import CommuneService from '../../services/serviceCommune';
+// import FonkotanyService from '../../services/serviceFonkotany';
+// import ActeService from '../../services/serviceActe';
+// import TravailService from '../../services/serviceTravail';
 import { makeRequest } from '../../services/axios';
 // import PersonneService from '../../services/servicePersonne';
 
@@ -69,7 +69,7 @@ const TableFileRegion = ({useData, useAccept, nameFile}) => {
             case "district" :
 
                     console.log("Data File disrict:", dataFile);
-                    makeRequest.post(`/addAllDistrict`, dataFile, {
+                    makeRequest.post(`/addAlldistrict`, dataFile, {
                         headers: {"Content-Type": "application/json"}
                     })
                     .then(resp => { 
@@ -151,7 +151,7 @@ const TableFileRegion = ({useData, useAccept, nameFile}) => {
                                 (<span className='message success'>{message}</span>):
                                 (<span className='message error'>
                                     {message.length >1 ? 
-                                    'Ces fichiers existent deja dans la base de donnee: ':'Ce fichier existe deja dans la base de donnee: '
+                                    'Les fichiers existent déjà dans la base de donnee: ':'Le fichier existe déj dans la base de donnee: '
                                     }
                                      {message}
                                 </span>)
@@ -224,11 +224,10 @@ const TableFileRegion = ({useData, useAccept, nameFile}) => {
                     style={{ padding:"0.5rem 0.8rem", marginTop:"0.5rem" }}
                     onClick={() => handleAddFile(nameFile)}
                     >
-                      <span className="content-add-now" style={{ display:"flex", alignItems:"center"}}>
-                        <svg className="add-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                          <path d="M19 11h-6V5h-2v6H5v2h6v6h2v-6h6z" />
-                        </svg>
-                        <span className="add-now-name" id='add-adresse'>Ajouter</span>
+                      <span className="content-add-now" style={{ display:"flex", alignItems:"center", gap:"0.5rem"}}>
+                       
+                        <box-icon  className="add-icon" name='save' type='solid' color='#fff'></box-icon>
+                        <span className="add-now-name" id='add-adresse'>Enregistrer</span>
                       </span>
                     </button>
                 </main>

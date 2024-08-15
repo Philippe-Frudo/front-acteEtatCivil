@@ -25,7 +25,7 @@ export default class Acte {
 
     constructor(
         id_off: number,
-        // id_acte: number,
+        id_acte: number = 0,
         id_type: number = 1,
         num_acte: string = '',
         date_acte: string = '',
@@ -50,7 +50,7 @@ export default class Acte {
 
 
     ) {
-        // this.id_acte = id_acte;
+        this.id_acte = id_acte;
         this.id_off = id_off;
         this.id_type = id_type;
         this.num_acte = num_acte;

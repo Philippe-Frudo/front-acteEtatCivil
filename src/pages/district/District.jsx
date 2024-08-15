@@ -2,13 +2,13 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import "./district.css";
 import { filterTable3Columns } from '../../helpers/searchTable';
-import DistrictService from '../../services/serviceDistrict';
 import { showAddModal, showDeleteModal, showUpdateModal } from '../../constants/modal';
 import ModalDelete from '../../components/modal_delete/ModalDelete';
 import TableFileRegion from '../../components/tableFile/TableFileRegion';
 import { convertFile } from '../../helpers/convertFile';
 import { makeRequest } from '../../services/axios';
 // import DISTRICT from '../../models/mock-district';
+// import DistrictService from '../../services/serviceDistrict';
 
 const District = () => {
 
@@ -66,8 +66,6 @@ const District = () => {
         fileInputRef.current.value = null; // Réinitialise la valeur du champ
       }
     };
-    
-    console.log(dataImport);
 
 
     return (

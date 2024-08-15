@@ -58,6 +58,8 @@ const Header = () => {
             window.removeEventListener('resize', handleResize);
         };
     }, []);
+
+
     function handleClick() {
         if (isOn) {
             setIsOn(!isOn);
@@ -84,12 +86,11 @@ const Header = () => {
                         <path d="M10.061 19.061 17.121 12l-7.06-7.061-2.122 2.122L12.879 12l-4.94 4.939z" />
                     </svg>
                 </div>
-                {/* id={(screenHeight < "600") ? "menu-scroll" : ""} */}
                 <span >
 
                     <div className="header-content header-content-1">
                         <div className={isOn ? "logo flex-start" : "logo"}>
-                            <div className="logo-image">
+                            <div className="">
                                 <Logo/>
                             </div>
                             <div className={isOn ? "logo-name show-details-menu" : "logo-name"}>
@@ -138,6 +139,7 @@ const Header = () => {
 
                         </div>
                     </div>
+                    
                     <div className="header-content header-content-3">
                         <div className={isOn ? "card-user border-card-user" : "card-user"}>
                             <div className={isOn ? "card-user-img flex-start" : "card-user-img"}>

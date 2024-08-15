@@ -11,7 +11,7 @@ const FormEditFonkotany = () => {
     const [fonkotany, setFonkotany] = useState([]);
 
     useEffect(() => {   
-        makeRequest.get(`/fonkotany/${IDBCursorWithValue}`)
+        makeRequest.get(`/fonkotany/${id}`)
         .then(resp => { 
             if (!resp.data) {
                 setError(true)

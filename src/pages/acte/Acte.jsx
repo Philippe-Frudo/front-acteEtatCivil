@@ -38,7 +38,7 @@ const Acte = ({user}) => {
     const [showListDistrict, setShowListDistrict] = useState(false);
     const [showListRegion, setShowListRegion] = useState(false);
 
-    const [typesActe, setTypesActe] = useState([]);
+    // const [typesActe, setTypesActe] = useState([]);
     const [travails, setTravails] = useState([]);
     const [fonkotany, setFonkotany] = useState([]);
     const [communes, setCommunes] = useState([]);
@@ -46,6 +46,27 @@ const Acte = ({user}) => {
     const [regions, setRegions] = useState([]);
 
     const [error, setError] = useState(false);
+
+
+    
+    
+    document.querySelectorAll("input").forEach(input => {
+        input.addEventListener("focus", () => {
+            const inputsClassName = ["nom_travail", "nom_fonkotany", "nom_commune", "nom_district", "nom_region"];
+            if (!inputsClassName.includes(input.className)) {
+                setShowListFonkotany(false);
+                setShowListCommune(false);
+                setShowListDistrict(false);
+                setShowListRegion(false);
+                // hiddenList(".nom_fonkotany");
+                // hiddenList(".list_adrs_acte");
+                // hiddenList(".list_profession_temion"); 
+                // hiddenList(".list_travail_person"); 
+                // hiddenList(".list_travail_mere"); 
+                // hiddenList(".list_travail_pere"); 
+            }
+        })
+    });
 
 
 
@@ -80,11 +101,11 @@ const Acte = ({user}) => {
     
     
     //API GET TYPES ACTES
-    useEffect(() => {
-        makeRequest.get('/typesActe')
-        .then(resp => { setTypesActe(resp.data) })
-        .catch(error => {console.log(error);})
-    }, []);
+    // useEffect(() => {
+    //     makeRequest.get('/typesActe')
+    //     .then(resp => { setTypesActe(resp.data) })
+    //     .catch(error => {console.log(error);})
+    // }, []);
     
     const [listSearch, setListSearch] = useState({
         id_type: {value: '' },

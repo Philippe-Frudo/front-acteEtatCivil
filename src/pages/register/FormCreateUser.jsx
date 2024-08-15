@@ -2,14 +2,17 @@ import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Officier from '../../models/officier';
 import handleSex from './../../constants/sexe'
-import ADDRESS from '../../models/mock-address';
 import { hiddenList, searchAddress } from '../../helpers/borderField';
 import './register.css';
 import { regex } from '../../helpers/regex';
-import OfficierService from '../../services/serviceOfficier';
 import CommuneService from '../../services/serviceCommune';
 import { makeRequest } from '../../services/axios';
 
+import emailjs from "@emailjs/browser";
+
+
+// import OfficierService from '../../services/serviceOfficier';
+// import ADDRESS from '../../models/mock-address';
 
 const FormCreateUser = () => {
 
@@ -19,9 +22,13 @@ const FormCreateUser = () => {
     const [nomCommune, setNomCommune] = useState("");
   
   
+    //API GET COMMUNES
     useEffect(() => {
-        CommuneService.getCommune().then(communes => setCommunes(communes));
-    },[]);
+        makeRequest.get('/communes')
+        .then(resp => { setCommunes(resp.data); })
+        .catch(error => {console.log(error);})
+    }, []);
+
 
     document.querySelectorAll("input").forEach(input => {
         input.addEventListener("focus", () => {
@@ -118,14 +125,14 @@ const FormCreateUser = () => {
             }
     }
 
+
+
     const [message, setMessage] = useState("");
     const [valid, setValid] = useState(false);
     const handleSubmit = (e) => {
         e.preventDefault()
         let isValid = Object.values(formOfficier).every(field => field.isValid);
-        console.log(formOfficier);
-        
-        console.log("valid:", isValid);
+
         if (isValid) {
             setValid(isValid);
             setMessage("En cours de connexion");
@@ -148,7 +155,6 @@ const FormCreateUser = () => {
 
     }
 
-
     function register() {
         // API CREER OFFICIER (UTILISATEUR)
         makeRequest.post('/officiers', officier, {
@@ -163,6 +169,13 @@ const FormCreateUser = () => {
             }
             setValid(true)
             setMessage(response.data.message)
+
+            // Email JS
+            emailjs
+            .send("service_erl068v","template_dswbbur", officier, "OM-fB_NYpfB3XoSrO" )
+            .then(response => { console.log('SUCCES', response); })
+            .catch(error => console.log("Erreur d'envoi email", error) );
+
                     
             clearData();
         })
@@ -174,7 +187,8 @@ const FormCreateUser = () => {
     //  CLEAR DATA
     function clearData() {
         setFormOfficier(
-            { ...formOfficier, 
+            { 
+                ...formOfficier, 
                 ...{
                     photo_off: { value: '' , isValid: true, error: "" },
                     nom_off: { value:'', isValid: true, error: "" },
@@ -236,7 +250,8 @@ const FormCreateUser = () => {
                                 <label htmlFor="prenom_off" className="form-group-label">Prénom:</label>
                                 <input type="text" 
                                 className="form-group-input prenom_off" 
-                                name="prenom_off" id="prenom_off" 
+                                name="prenom_off" 
+                                id="prenom_off" 
                                 placeholder="Prénom" 
                                 value={formOfficier.prenom_off.value}
                                 onChange={handleInputChange}

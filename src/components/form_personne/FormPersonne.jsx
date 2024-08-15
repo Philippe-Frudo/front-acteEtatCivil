@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import handleSex from "../../constants/sexe";
 import { hiddenList, messageValidator, searchAddress, showList, successBorder } from '../../helpers/borderField';
-import TRAVAILS from '../../models/mock-travail';
-import TravailService from '../../services/serviceTravail';
+// import TRAVAILS from '../../models/mock-travail';
+// import TravailService from '../../services/serviceTravail';
 
 
 const FormPersonne = ({ useFormPersonne, useTravails }) => {
@@ -20,7 +20,7 @@ const FormPersonne = ({ useFormPersonne, useTravails }) => {
         const newField = { [fieldName]: { value: fieldValue } };
         setFormPersonne(prevState => ({ ...prevState, ...newField }));
 
-        if (!("sexe_person").includes(fieldName)) {
+        if ( fieldName !== "sexe_person" ) {
             successBorder(`.${fieldName}`);
             messageValidator(`.${fieldName}`, "");
         }
@@ -84,7 +84,7 @@ const FormPersonne = ({ useFormPersonne, useTravails }) => {
   
     return (
         <>
-            // { /* <!-- =========== Modal add Personne ========== --> */ }
+            { /* <!-- =========== Modal add Personne ========== --> */ }
             <div className="content-personne">
                 <h3 className='card-acte'>Personne</h3>
                 <fieldset>
@@ -100,12 +100,13 @@ const FormPersonne = ({ useFormPersonne, useTravails }) => {
                                 type="text" 
                                 className="form-group-input nom_person" 
                                 name="nom_person" id="nom_person" 
-                                placeholder="Nom" 
+                                placeholder="nom" 
                                 value={formPersonne.nom_person.value} 
                                 onChange={handleInputChange} 
                             />
                             <span className="msg-error"></span>
                         </div>
+
                         <div>
                             <label htmlFor="prenom_person " className="form-group-label">Prénom:</label>
                             <input 
@@ -113,7 +114,7 @@ const FormPersonne = ({ useFormPersonne, useTravails }) => {
                                 className="form-group-input prenom_person " 
                                 name="prenom_person" 
                                 id="prenom_person" 
-                                placeholder="Prénom" 
+                                placeholder="prénom" 
                                 value={formPersonne.prenom_person.value} 
                                 onChange={handleInputChange} 
                             />
@@ -155,7 +156,7 @@ const FormPersonne = ({ useFormPersonne, useTravails }) => {
                                 className="form-group-input adrs_person" 
                                 name="adrs_person" 
                                 id="adrs_person" 
-                                placeholder="Adresse" 
+                                placeholder="adresse dans le copie" 
                                 value={formPersonne.adrs_person.value} 
                                 onChange={handleInputChange}
                             />
@@ -171,7 +172,7 @@ const FormPersonne = ({ useFormPersonne, useTravails }) => {
                                 className="form-group-input nom_travail_person" 
                                 name="nom_travail_person" 
                                 id="nom_travail_person" 
-                                placeholder="profession du personne" 
+                                placeholder="'néan' s'il n'a pas de travail" 
                                 value={fieldTravailPersonne} 
                                 onChange={handleInputChangeTravailPerson}
                                 onKeyUp={(e) => searchAddress(e.target.id, "list_travail_person") }
@@ -187,6 +188,7 @@ const FormPersonne = ({ useFormPersonne, useTravails }) => {
                                     </li>
                                 ))}
                             </ul>
+                            <span className=""><i>Assurez-vous de bien sélectionner le profession</i></span>
                             <span className="msg-error"></span>
                         </div>
                     </div>
@@ -204,8 +206,8 @@ const FormPersonne = ({ useFormPersonne, useTravails }) => {
                                 type="text" 
                                 className="form-group-input nom_m" 
                                 name="nom_m" id="nom_m" 
-                                placeholder="Nom" 
-                                value={formPersonne.nom_m.value} 
+                                placeholder="nom" 
+                                value={formPersonne.nom_m?.value} 
                                 onChange={handleInputChange}
                             />
                             <span className="msg-error"></span>
@@ -217,8 +219,8 @@ const FormPersonne = ({ useFormPersonne, useTravails }) => {
                                 type="text" 
                                 className="form-group-input prenom_m" 
                                 name="prenom_m" id="prenom_m" 
-                                placeholder="Prénom" 
-                                value={formPersonne.prenom_m.value} 
+                                placeholder="prénom" 
+                                value={formPersonne.prenom_m?.value} 
                                 onChange={handleInputChange}
                             />
                             <span className="msg-error"></span>
@@ -227,14 +229,14 @@ const FormPersonne = ({ useFormPersonne, useTravails }) => {
                 
                     <div className="form-group form-group-2">
                         <div>
-                            <label htmlFor="date_nais_m" className="form-group-label">Date de Naissance:</label>
+                            <label htmlFor="date_nais_m" className="form-group-label">Date de naissance:</label>
                             <input
                                 type="date" 
                                 className="form-group-input date_nais_m" 
                                 name="date_nais_m" 
                                 id="date_nais_m" 
-                                placeholder="Date de naissance" 
-                                value={formPersonne.date_nais_m.value} 
+                                placeholder="date" 
+                                value={formPersonne.date_nais_m?.value} 
                                 onChange={handleInputChange}
                             />
                             <span className="msg-error"></span>
@@ -246,7 +248,7 @@ const FormPersonne = ({ useFormPersonne, useTravails }) => {
                                 className="form-group-input age_m" 
                                 name="age_m" id="age_m" 
                                 placeholder="Age" 
-                                value={formPersonne.age_m.value ? formPersonne.age_m.value :""} 
+                                value={formPersonne.age_m?.value ? formPersonne.age_m?.value :""} 
                                 onChange={handleInputChange} 
                                 disabled
                             />
@@ -262,8 +264,8 @@ const FormPersonne = ({ useFormPersonne, useTravails }) => {
                                 className="form-group-input lieu_nais_m" 
                                 name="lieu_nais_m" 
                                 id="lieu_nais_m" 
-                                placeholder="Lieu de naissance" 
-                                value={formPersonne.lieu_nais_m.value} 
+                                placeholder="lieu de naissance dans copie" 
+                                value={formPersonne.lieu_nais_m?.value} 
                                 onChange={handleInputChange} 
                             />
                             <span className="msg-error"></span>
@@ -280,7 +282,7 @@ const FormPersonne = ({ useFormPersonne, useTravails }) => {
                                 name="adrs_m" 
                                 id="adrs_m" 
                                 placeholder="Adresse" 
-                                value={formPersonne.adrs_m.value} 
+                                value={formPersonne.adrs_m?.value} 
                                 onChange={handleInputChange} 
                             />
                             <span className="msg-error"></span>
@@ -289,14 +291,14 @@ const FormPersonne = ({ useFormPersonne, useTravails }) => {
 
                     <div className="form-group">
                         <div style={{position:"relative"}}>
-                            <label htmlFor="profession_m" className="form-group-label">Profession :</label>
+                            <label htmlFor="profession_m" className="form-group-label">Profession:</label>
                             <input 
                                 type="text" 
                                 className="form-group-input profession_m" 
                                 name="profession_m" 
                                 id="profession_m" 
-                                placeholder="profession" 
-                                value={formPersonne.profession_m.value} 
+                                placeholder="seléctionner le travail" 
+                                value={formPersonne.profession_m?.value} 
                                 onChange={handleInputChange}
                                 onKeyUp={(e) => searchAddress(e.target.id, "list_travail_mere") }
                                 onFocus={() => showList(".list_travail_mere") } 
@@ -312,6 +314,7 @@ const FormPersonne = ({ useFormPersonne, useTravails }) => {
                                 ))}
                             </ul>
 
+                            <span className=""><i>Assurez-vous de sélectionner le profession</i></span>
                             <span className="msg-error"></span>
                         </div>
                     </div>
@@ -422,7 +425,7 @@ const FormPersonne = ({ useFormPersonne, useTravails }) => {
                                 className="form-group-input profession_p" 
                                 name="profession_p" 
                                 id="profession_p" 
-                                placeholder="profession" 
+                                placeholder=" seléctionner profession" 
                                 value={formPersonne.profession_p.value} 
                                 onChange={handleInputChange}
                                 onKeyUp={(e) => searchAddress(e.target.id, "list_travail_pere") }
@@ -438,6 +441,7 @@ const FormPersonne = ({ useFormPersonne, useTravails }) => {
                                     </li>
                                 ))}
                             </ul>
+                            <span className=""><i>Assurez-vous de sélectionner le profession</i></span>
                             <span className="msg-error"></span>
                         </div>
                     </div>

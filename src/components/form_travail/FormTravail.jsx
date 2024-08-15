@@ -123,8 +123,8 @@ const formTravail = ({travail, isEditForm}) => {
                 <div className="modal-header">
                     <div>
                         {isEditForm ? 
-                        (<h3 className="modal-title">Modifier du travail</h3>):
-                        (<h3 className="modal-title">Ajout du travail</h3>)
+                        (<h3 className="modal-title">Modifier travail</h3>):
+                        (<h3 className="modal-title">Ajouter travail</h3>)
                         }
 
                         <span className="modal-subtitle"></span>
@@ -152,7 +152,7 @@ const formTravail = ({travail, isEditForm}) => {
                                 className="form-group-input nom_travail"
                                 name="nom_travail"
                                 id="nom_travail"
-                                placeholder="Nom de Fonkotanay"
+                                placeholder="nom"
                                 value={formTravail.nom_travail?.value}
                                 onChange={handleInputChange}
                             />
@@ -162,7 +162,7 @@ const formTravail = ({travail, isEditForm}) => {
                         <div className="action-group">
                             {isEditForm ? 
                             (<button type="submit" className="btn btn-save" id="save">Modifier</button>):
-                            (<button type="submit" className="btn btn-save" id="save">Envoyer</button>)
+                            (<button type="submit" className="btn btn-save" id="save">Enregistrer</button>)
                             }
 
                             <button type="reset" className="btn btn-clear" id="clear" onClick={clearData}>Annuler</button>

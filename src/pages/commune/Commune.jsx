@@ -66,7 +66,6 @@ const Commune = () => {
       }
     };
     
-    console.log("Impoerter fichier: ",dataImport);
 
   return (
     <>
