@@ -26,20 +26,17 @@ const Acte = ({user}) => {
     
     const count = actes.length;
 
-    // const [nomTravail, setNomTravail] = useState('');
     const [nomFonkotany, setNomFonkotany] = useState('');
     const [nomCommune, setNomCommune] = useState('');
     const [nomDistrict, setNomDistrict] = useState('');
     const [nomRegion, setNomRegion] = useState('');
 
-    const [showListTravails, setShowListTravails] = useState([]);
     const [showListFonkotany, setShowListFonkotany] = useState(false);
     const [showListCommune, setShowListCommune] = useState(false);
     const [showListDistrict, setShowListDistrict] = useState(false);
     const [showListRegion, setShowListRegion] = useState(false);
 
     // const [typesActe, setTypesActe] = useState([]);
-    const [travails, setTravails] = useState([]);
     const [fonkotany, setFonkotany] = useState([]);
     const [communes, setCommunes] = useState([]);
     const [districts, setDistricts] = useState([]);
@@ -47,23 +44,16 @@ const Acte = ({user}) => {
 
     const [error, setError] = useState(false);
 
-
-    
+ 
     
     document.querySelectorAll("input").forEach(input => {
+        let inputsClassName = ["nom_travail", "nom_fonkotany", "nom_commune", "nom_district", "nom_region"];
         input.addEventListener("focus", () => {
-            const inputsClassName = ["nom_travail", "nom_fonkotany", "nom_commune", "nom_district", "nom_region"];
             if (!inputsClassName.includes(input.className)) {
                 setShowListFonkotany(false);
                 setShowListCommune(false);
                 setShowListDistrict(false);
                 setShowListRegion(false);
-                // hiddenList(".nom_fonkotany");
-                // hiddenList(".list_adrs_acte");
-                // hiddenList(".list_profession_temion"); 
-                // hiddenList(".list_travail_person"); 
-                // hiddenList(".list_travail_mere"); 
-                // hiddenList(".list_travail_pere"); 
             }
         })
     });

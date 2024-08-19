@@ -127,13 +127,20 @@ const TableFileRegion = ({useData, useAccept, nameFile}) => {
         }
     }
 
-    const lenghtColumn = dataFile.length
-    // console.log(Object.keys(dataFile[0]).map((v, i, n)=>  console.log(n)) )
-    // console.log( Object.keys(dataFile[0]));
+    
+    const countElement = dataFile.length
+
+    let numberColumn;
+    if (dataFile && dataFile[0]) { // Vérifie si data et data[0] ne sont ni undefined ni null
+        numberColumn = Object.keys(dataFile[0]).length;
+    } else {
+        console.error("dataFileRegion est undefined, null ou vide."); // Gère le cas où data est vide, undefined, ou null
+    }
+    
    
   return (
     <>
-        <div className="modal add-modal active-modal" style={{ width:"100%" }}>
+        <div className="modal add-modal active-modal">
     {dataFile ? (
             <div className="modal-container" style={{ maxHeight: '90vh', overflowY:"auto", overflowX:"none" }}>
                 <div className="modal-header">
@@ -145,6 +152,8 @@ const TableFileRegion = ({useData, useAccept, nameFile}) => {
                         <button className="btn btn-close" id="close-modale-add" onClick={handaleClickBack} >X</button>
                     </div>
                 </div>
+
+                    {/* ========== Message Response ========== */}
                     <div className="">
                         {status ? (
                             !message ? 
@@ -160,13 +169,34 @@ const TableFileRegion = ({useData, useAccept, nameFile}) => {
                         }
                     </div>
 
-                    { /* <!-- MAIN CARD 1 --> */}
+                { /* <!-- MAIN CARD 1 --> */}
                 <main className="main-main-content" id="main-main-content-1">
                 <div className="table-content">
                     <table className="table" id="nom-table">
-                        {lenghtColumn > 2 ? 
-                        (
-                        <>
+                        {numberColumn == 1 && countElement >= 1 && (<>
+                            <thead>
+                                <tr>
+                                    <th>Nom</th>
+                                </tr>
+                            </thead>
+                            <tbody id="table-region" className='table-scroll'>
+                                {Array.isArray(dataFile) && dataFile.length > 0 ? (
+                                    dataFile.map((rows, index) => (
+                                    <tr key={index}>
+                                    { Object.values(rows).map((value, index) => (
+                                            <td key={index}>{value}</td>
+                                    )) }
+                                    </tr>
+                                ))
+                                ) : (
+                                    <tr>
+                                        <td colSpan="2">Aucune donnée trouvée</td>
+                                    </tr>
+                                )}
+
+                            </tbody>
+                        </>)}
+                        {numberColumn == 3 && countElement >= 1 && (<>
                             <thead>
                                 <tr>
                                     <th>Code</th>
@@ -185,13 +215,13 @@ const TableFileRegion = ({useData, useAccept, nameFile}) => {
                                 ))
                                 ) : (
                                     <tr>
-                                        <td colSpan="2">Aucune donnée disponible</td>
+                                        <td colSpan="2">Aucune donnée trouvée</td>
                                     </tr>
                                 )}
+
                             </tbody>
-                        </>
-                        ):(
-                        <>
+                        </>)}
+                        {numberColumn == 2 && countElement >= 1 && (<>
                             <thead>
                                 <tr>
                                     <th>Code</th>
@@ -209,12 +239,12 @@ const TableFileRegion = ({useData, useAccept, nameFile}) => {
                                 ))
                                 ) : (
                                     <tr>
-                                        <td colSpan="2">Aucune donnée disponible</td>
+                                        <td colSpan="2">Aucune donnée trouvée</td>
                                     </tr>
                                 )}
+
                             </tbody>
-                        </>
-                         )}
+                        </>)}
                     </table>
 
                     
@@ -230,6 +260,9 @@ const TableFileRegion = ({useData, useAccept, nameFile}) => {
                         <span className="add-now-name" id='add-adresse'>Enregistrer</span>
                       </span>
                     </button>
+                    <div>
+                        <i>Assurez-vous de bien vérifier votre fichier {nameFile} avant de l'enregistrer pour éviter les erreurs.</i>
+                    </div>
                 </main>
             
             </div>

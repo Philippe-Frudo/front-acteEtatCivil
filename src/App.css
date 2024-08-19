@@ -763,12 +763,12 @@ fieldset {
 /* Alert Form */
 .alert-message {
   width: 100%; 
-  /* text-align: center;
+  text-align: center;
   height: 0;
   position: absolute;
   top: 20%;
   left: 0;
-  right: 0; */
+  right: 0;
   margin-bottom: 1rem;
   z-index: 100;
 }
@@ -883,8 +883,8 @@ fieldset {
   .header{
       min-width: 80px;
       max-width: 400px;
-      padding: 0 var(--mb-1) 0 var(--mb-1) ;
-      justify-content: center;
+      padding: var(--mb-2) var(--mb-1) 0 var(--mb-1) ;
+      /* justify-content: center; */
       /* height: 100vh; */
       z-index: 1000;
   }

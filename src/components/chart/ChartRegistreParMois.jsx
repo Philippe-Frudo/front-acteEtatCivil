@@ -6,7 +6,6 @@ const ChartRegistreParMois = () => {
     const [monthlyData, setMonthlyData] = useState([]);
 
     useEffect(() => {
-
         // Appel API pour récupérer les données par mois
         makeRequest.get('/getEnregistrementsParMois')
             .then(response => {
@@ -36,14 +35,13 @@ const ChartRegistreParMois = () => {
         'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'
     ];
 
-
     
     // Préparer les données pour le graphique
     const data = {
         labels: labels.slice(0, new Date().getMonth() + 1), // Limiter aux mois jusqu'à aujourd'hui
         datasets: [
             {
-                label: "Nombre d'actes par mois",
+                label: "Nombre d'acte",
                 backgroundColor: 'rgba(54, 162, 235, 0.5)',
                 borderColor: 'rgba(54, 162, 235, 1)',
                 borderWidth: 1,

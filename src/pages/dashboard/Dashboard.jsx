@@ -3,18 +3,17 @@ import Chart from "chart.js/auto";
 import { CategoryScale } from "chart.js";
 import "./dashboard.css";
 import 'boxicons';
-import ChartActMaiage from "../../components/chart/ChartActMaiage";
 import { useEffect, useState } from "react";
 import { makeRequest } from '../../services/axios';
 import ChartRegistreParMois from "../../components/chart/ChartRegistreParMois";
 
 Chart.register(CategoryScale);
 
-const Dashboard = () => {
+const Dashboard = ({user}) => {
 
-  const [totalOfficier, setTotalOfficier] = useState(); // L'officier est comme l'utilisateur
-  const [totalNaissance, setTotalNaissance] = useState();
-  const [registerToday, setRegisterToday] = useState();
+  const [totalOfficier, setTotalOfficier] = useState(''); // L'officier est comme l'utilisateur
+  const [totalNaissance, setTotalNaissance] = useState('');
+  const [registerToday, setRegisterToday] = useState('');
 
   
   // API COMPTE NOMBRE OFFICIER (UTILISATEUR)
@@ -43,15 +42,23 @@ const Dashboard = () => {
               if (!response.data) {
                 setTotalNaissance(response.data)
                 return;
+              }else {
+                if (user.isAdmin) {
+                  setTotalNaissance(response.data.length);
+                }else {
+                  const filterActe = response.data.filter(acte => acte.id_commune == user.commune);
+                  setTotalNaissance(filterActe.length);
+                }
               }
-              setTotalNaissance(response.data);
+
           } catch (error) {
               console.log(error);
           }
       };
       fetchData();
-  }, []);
+  }, [user]);
   
+
   // API COMPTE NOMBRE D'ANREGISTREMENT AUJOURD'HUI
   useEffect(() => {
       const fetchData = async () => {
@@ -79,7 +86,7 @@ const Dashboard = () => {
             <span className="main-header-content-subtitle">Soutitre page</span>
             <div className="dashboard-container">
               <div className="card-content">
-                <div className="dash-card dash-card-1">
+                <div className={ user?.isAdmin ? "dash-card dash-card-1": "hidden dash-card dash-card-1"}>
                   <h4 className="title-card">Utilisateur</h4>
                   <div className="dash-card-content">
                     <span className="dash-card-left">{totalOfficier}</span>
@@ -101,7 +108,7 @@ const Dashboard = () => {
                 </div>
 
                 <div className="dash-card dash-card-3">
-                  <h4 className="title-card">Nombre de registrement aujourd'hui</h4>
+                  <h4 className="title-card">Enregistrement aujourd'hui</h4>
                   <div className="dash-card-content">
                     <span className="dash-card-left">{registerToday}</span>
                     <span className="dash-card-right">
@@ -110,13 +117,12 @@ const Dashboard = () => {
                   </div>
                 </div>
 
-     
               </div>
 
               {/* Croissance par an */}
               <div className="card-content">
                 <div className="dash-card dash-card-4">
-                  <h4 className="title-card">Nombre d'enregistrement par mois à l'année actuelle </h4>
+                  <h4 className="title-card">Nombre d'acte enregistré par mois à l'année actuelle </h4>
                   {/* Chart diagramme en batton */}
                   <ChartRegistreParMois />
                   

@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import ModalDelete from '../../components/modal_delete/ModalDelete';
-import DETAILS from '../../models/mock-dataActe';
+// import DETAILS from '../../models/mock-dataActe';
 import { makeRequest } from '../../services/axios';
 import * as XLSX from 'xlsx';
-import MainTop from '../../components/main_top/MainTop';
-import Header from '../../components/header/Header';
 
 const ActeDetail = () => {
     const { id } = useParams();
@@ -45,26 +43,15 @@ const ActeDetail = () => {
 
     return (
         <>
-        
-    <div className="big-container">
-          <Header />
-          <main className="main">
-              { /* <!-- =====HEADER MAIN ==== --> */}
-              <MainTop />
-              { /* <!-- ====== CONTAINER MAIN ===== --> */}
-              <div className="main-container main-container-2" id='main-scroll'>
-
-
-
 
                 { /* <!-- ===== CARD 1 ===== --> */}
                 <div className="card active-main" id="card-1">
                     { /* <!-- ===== HEADER CARD 1 ===== --> */}
                     <header className="main-header-content">
-                        <h3 className="main-header-content-title">Detail d'acte de { error && detail.nom_person} { error && detail.prenom_person}</h3>
+                        <h3 className="main-header-content-title">Detail d'acte du {  error  ? "":detail.nom_person} {  error  ? "":detail.prenom_person}</h3>
                         <span className="main-header-content-subtitle">Soutitre page</span>
                         <div className="main-local-nav" >
-                            <div className="action-local-nav btn-page-detail">
+                            <div className="action-local-nav btn-page-detail">      
                                 <Link to="/acte-etat-civil">
                                     <button className="btn add-now" id="add-now">
                                         <span className="content-add-now" >
@@ -378,12 +365,6 @@ const ActeDetail = () => {
 
                 <ModalDelete id={id} nomPage={"commune"} useDelete={[isDelete, setIsDelete]}/>
 
-
-
-                    
-            </div>
-          </main>
-        </div>
         </>
     )
 }
