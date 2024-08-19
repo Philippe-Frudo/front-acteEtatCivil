@@ -85,7 +85,7 @@ function App() {
 
                         {user.isAdmin ? (<Route path="/user" element={<User />} />):('') }
 
-                        <Route path="/dashboard" element={<Dashboard />} />
+                        <Route path="/dashboard" element={<Dashboard user={user}/>} />
 
 
                         <Route path="/acte-etat-civil" element={<Acte user={user}/>} />
@@ -94,9 +94,9 @@ function App() {
                         <Route path="/acte-etat-civil/edit/:id" element={<FormEditActe />} />
                         
 
-                        <Route path="/travail" element={<Travail />} />
-                        <Route path="/travail/add" element={<FormAddTravail />} />
-                        <Route path="/travail/edit/:id" element={<FormEditTravail />} />
+                        {user.isAdmin ? (<Route path="/travail" element={<Travail />} />):('') }
+                        {user.isAdmin ? (<Route path="/travail/add" element={<FormAddTravail />} />):('') }
+                        {user.isAdmin ? (<Route path="/travail/edit/:id" element={<FormEditTravail />} />):('') }
 
 
                         <Route path="/fonkotany" element={<Fonkotany />} />

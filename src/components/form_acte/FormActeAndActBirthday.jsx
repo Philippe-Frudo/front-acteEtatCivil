@@ -7,7 +7,6 @@ import { regex } from '../../helpers/regex';
 import Auth from '../../services/Auth';
 import { makeRequest } from '../../services/axios';
 
-
 // import PersonneService from '../../services/servicePersonne';
 // import ActeService from '../../services/serviceActe';
 // import TravailService from '../../services/serviceTravail';
@@ -53,7 +52,6 @@ const FormActeAndBirthday = ({personne, acte, isEditForm}) => {
         .then(resp => { setTravails(resp.data) })
         .catch(error => {console.log(error);})
     },[]);
-
 
     
     document.querySelectorAll("input").forEach(input => {
@@ -823,7 +821,6 @@ const FormActeAndBirthday = ({personne, acte, isEditForm}) => {
         }
     }
 
-
     
     const [statePerson, setStatePerson] = useState(false);
     const [stateActe, setStateActe] = useState(false);
@@ -956,9 +953,6 @@ const FormActeAndBirthday = ({personne, acte, isEditForm}) => {
     // API MODIFIER ACTE ET PERSONNE
     const updatePersone = () => {
         
-        console.log(personne);
-        console.log(acte);
-        
         //API MODIFIER PERSONNE
         makeRequest.put(`/personnes/${personne?.id_person}`, personne, { 
             headers: {'Content-Type': 'application/json'}
@@ -1049,12 +1043,10 @@ const FormActeAndBirthday = ({personne, acte, isEditForm}) => {
             id_fonkotany : { value: '', isValid: false },
             id_commune : { value: '', isValid: false },
             id_off : { value: user.id, isValid: true }
-        }
-    });
-
-    setStateActe(false); 
-    setStatePerson(false);
-
+            }
+        });
+        setStateActe(false); 
+        setStatePerson(false);
     }
     
         // INITIALISATION DE DONNE
@@ -1063,7 +1055,7 @@ const FormActeAndBirthday = ({personne, acte, isEditForm}) => {
         navigate(`/acte-etat-civil/detail/${acte?.id_acte}`)
     }
     
-        console.log(acte);
+
         
     return (
         <>
@@ -1108,7 +1100,7 @@ const FormActeAndBirthday = ({personne, acte, isEditForm}) => {
 
                                 <div className="content-user">
 
-                                    <FormActe useFormActe={[formActe, setFormActe]} user={user}/>
+                                    <FormActe useFormActe={[formActe, setFormActe]} user={user} />
                                     <FormPersonne useFormPersonne={[formPersonne, setFormPersonne]} useTravails={[travails, setTravails]}/>
 
                                     <div className="action-group">

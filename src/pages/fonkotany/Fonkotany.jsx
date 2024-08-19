@@ -125,7 +125,7 @@ const Fonkotany = () => {
                                         <tr>
                                             <th>code</th>
                                             <th>Nom</th>
-                                            <th>Code district</th>
+                                            <th>Code comune</th>
                                             <th>Modifier</th>
                                             <th>Supprimer</th>
                                         </tr>

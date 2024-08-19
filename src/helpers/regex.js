@@ -1,6 +1,6 @@
 export const regex = {
     character: /^[a-zA-ZÀ-ÖØ-öø-ÿ]{3,50}$/,
-    nom: /^[a-zA-Zéèçê']{3,30}$/,
+    nom: /^[a-zA-Z']{3,30}$/,
     prenom: /^[a-zA-Zéèçê' ]{3,100}$/,
     numberAndDigit:  /^[a-zA-Z0-9éèçê' -]{3,50}$/,
     number: /^[1-9]\d*$/,

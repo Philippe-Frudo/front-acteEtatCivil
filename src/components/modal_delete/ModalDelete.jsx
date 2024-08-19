@@ -125,10 +125,11 @@ const ModalDelete = ({id, nomPage, useDelete, setData}) => {
                     // API DELETE PERSONNE
                     makeRequest.delete(`/actes/${id}`)
                     .then(response => {
+
                         if (!response.data) {
-                            console.log("Aucun donnée trouvé"); return
+                            console.log("Errer de supression",response.data);
+                           return
                         }
-                        console.log(response.data);
                         deletePerson(response.data)
 
                         setData((prev) => prev.filter((d)=> d.id_acte !== id))
@@ -142,9 +143,9 @@ const ModalDelete = ({id, nomPage, useDelete, setData}) => {
                         if (idP) {
                             makeRequest.delete(`/personnes/${idP}`).then(response => {
                                 if (!response.data) {
-                                    console.log("Aucun donnée trouvé"); return
+                                    console.log(response.data);
+                                    return
                                 }
-                                console.log(response.data);
                             })
                             .catch(error => console.log(error) )      
                         }
@@ -152,7 +153,6 @@ const ModalDelete = ({id, nomPage, useDelete, setData}) => {
                 }
                 break;
             
-
                 default: 
                 console.log('Fichier non identifier');
         }

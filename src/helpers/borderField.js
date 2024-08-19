@@ -27,7 +27,6 @@ export function messageSubmit(status, nameClass, msg) {
 
 // ===============LISTE ==================
 export function showList(nameClass) {
-    console.log("showList");
     document.querySelector(nameClass).classList.add("showList");
 }
 

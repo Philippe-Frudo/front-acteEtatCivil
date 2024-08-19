@@ -38,7 +38,6 @@ const FormActe = ({ useFormActe, user }) => {
     }, []);
     
 
-    console.log(user);
     
     //API GET FONKOTANY
     useEffect(() => {
@@ -46,10 +45,8 @@ const FormActe = ({ useFormActe, user }) => {
         .then(resp => { 
             if (!resp.data) {
               console.log(resp);
-              setError(false)
-              
+              setError(false) 
             }else {
-              console.log(resp);
               if (!user.isAdmin) {
                 const newFonkotany  = resp.data.filter(item => item.id_commune == user.commune)
                 setFonkotany(newFonkotany)
@@ -61,7 +58,7 @@ const FormActe = ({ useFormActe, user }) => {
             }
         })
         .catch(error => {console.log(error);})  
-    },[]);
+    },[user]);
 
 
 
@@ -84,17 +81,15 @@ const FormActe = ({ useFormActe, user }) => {
       } 
       // console.log(formActe[fieldName]?.value);
       
-    }
-    
+    } 
 
 
-
-//========== CHANGE ON CLICK TRAVAIL PROFESSION ==========
-const handleClickTravailTemoin = (trav) => {
-  const newField = { profession_temoin: { value: trav.nom_travail } };
-  setFormActe(prevState => ({ ...prevState, ...newField })); 
-  hiddenList(".list_profession_temion");
-}
+  //========== CHANGE ON CLICK TRAVAIL PROFESSION ==========
+  const handleClickTravailTemoin = (trav) => {
+    const newField = { profession_temoin: { value: trav.nom_travail } };
+    setFormActe(prevState => ({ ...prevState, ...newField })); 
+    hiddenList(".list_profession_temion");
+  }
 
 
   //==========INPUT  CHANGE value FIELD nom COMMUNE ==========
@@ -148,9 +143,8 @@ const handleClickTravailTemoin = (trav) => {
     let res = fonkotany.find(fonk => fonk.id_fonkotany === formActe.id_fonkotany?.value);
     if (res) {
       setFieldFonkotany(res.nom_fonkotany);
-    } else {
-      console.log('Fonkotany non trouvé.');
-    }
+    } 
+    // else { console.log('Fonkotany non trouvé.'); }
   }, [formActe, fonkotany]);
   
 
@@ -159,11 +153,37 @@ const handleClickTravailTemoin = (trav) => {
     let res = communes.find(com => com.id_commune === formActe.id_commune?.value);
     if (res) {
       setNomCommune(res.nom_commune);
-    } else {
-      console.log('Commune non trouvé.');
-    }
+    } 
+    // else { console.log('Commune non trouvé.'); }
   }, [formActe, communes]);
   
+
+  
+  
+  useEffect(() => {
+    if (!formActe.date_nais_m?.value) {
+      setFormActe(prevState => ( { ...prevState, ...{ age_m: {value: ''} } }) )
+    }
+  }, [formActe.date_nais_m?.value])
+
+
+  useEffect(() => {
+    if (!formActe.date_nais_p?.value) {
+      setFormActe(prevState => ( { ...prevState, ...{ age_p: {value: ''}} }) )
+    }
+  }, [formActe.date_nais_p?.value])
+
+
+  
+  useEffect(() => {
+    if (!formActe.date_nais_temoin?.value) {
+      setFormActe(prevState => ( { ...prevState, ...{ age_temoin: {value: ''}} }) )
+    }
+  }, [formActe.date_nais_temoin?.value])
+
+  
+
+
 
   return (
     <>

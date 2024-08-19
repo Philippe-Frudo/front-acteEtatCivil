@@ -10,7 +10,7 @@ const DataNav = [
     },
     {
         id: 2,
-        name: "Acte d'Etat Civil",
+        name: "Liste d'acte",
         root: "/acte-etat-civil",
         svg: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(0, 0, 0, 0.01);transform: ;msFilter:;">
         <circle fill="#fff" cx="12" cy="6" r="2"></circle>
@@ -20,7 +20,7 @@ const DataNav = [
     },
     {
         id: 4,
-        name: "Fonkotany",
+        name: "Liste fonkotany",
         root: "/fonkotany",
         svg: `<svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
   <rect width="100" height="100" fill="transparent"/>

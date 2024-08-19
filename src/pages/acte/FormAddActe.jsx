@@ -13,9 +13,7 @@ const FormAddActe = () => {
 
     return (
         <>
-
-                <FormActeAndBirthday personne={personne} acte={acte} isEditForm={false} />  
-            
+            <FormActeAndBirthday personne={personne} acte={acte} isEditForm={false} />  
         </>
     )
 }
