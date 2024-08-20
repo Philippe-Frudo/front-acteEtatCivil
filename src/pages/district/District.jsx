@@ -2,9 +2,9 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import "./district.css";
 import { filterTable3Columns } from '../../helpers/searchTable';
-import { showAddModal, showDeleteModal, showUpdateModal } from '../../constants/modal';
+import { showDeleteModal } from '../../constants/modal';
 import ModalDelete from '../../components/modal_delete/ModalDelete';
-import TableFileRegion from '../../components/tableFile/TableFileRegion';
+import TableFileExcel from '../../components/tableFile/TableFileExcel';
 import { convertFile } from '../../helpers/convertFile';
 import { makeRequest } from '../../services/axios';
 // import DISTRICT from '../../models/mock-district';
@@ -189,7 +189,7 @@ const District = () => {
                         <main className="main-main-content" id="main-main-content-2">CARD 2</main>
                     </div>
 
-            {acceptFile ? (<TableFileRegion useData={[dataImport, setDataImport]} useAccept={[acceptFile, setAcceptFile]} nameFile={'district'}/>):(null)}
+            {acceptFile ? (<TableFileExcel useData={[dataImport, setDataImport]} useAccept={[acceptFile, setAcceptFile]} nameFile={'district'}/>):(null)}
             <ModalDelete id={id} nomPage={"district"} useDelete={[isDelete, setIsDelete]} setData={setDistricts}/>
         </>
     )

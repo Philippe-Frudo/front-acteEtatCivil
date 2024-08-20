@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import { Link, replace, useNavigate } from 'react-router-dom';
-// import ADDRESSES from '../../models/mock-address';
+import { Link, useNavigate } from 'react-router-dom';
 import { searchAddress } from '../../helpers/borderField';
 import { regex } from '../../helpers/regex';
-import CommuneService from '../../services/serviceCommune';
-import DistrictService from '../../services/serviceDistrict';
 import { makeRequest } from '../../services/axios';
+// import ADDRESSES from '../../models/mock-address';
+// import CommuneService from '../../services/serviceCommune';
+// import DistrictService from '../../services/serviceDistrict';
 
 const FormCommune = ({commune, isEditForm}) => {
 
@@ -16,27 +16,21 @@ const FormCommune = ({commune, isEditForm}) => {
     const [nomDistrict, setNomDistrict] = useState("");
     
     const [formCommune, setFormCommune] = useState({
-        code_commune: { value: "", isValid: true, error: "" },
-        nom_commune: { value: "", isValid: true, error: "" },
-        id_district: { value: "", isValid: true, error: "" },
+        code_commune: { value: "", isValid: false, error: "" },
+        nom_commune: { value: "", isValid: false, error: "" },
+        id_district: { value: "", isValid: false, error: "" },
     });
 
-    console.log(formCommune);
-    
 
-    
-    // // Reiniti   aliser le champs
-    // const clearData = () => {
-    //     setFormCommune({
-    //         ...formCommune, ...{
-    //             code_commune: { value: "", isValid: true, error: "" },
-    //             nom_commune: { value: "", isValid: true, error: "" },
-    //             code_district: { value: "", isValid: true, error: "" },
-    //     }});
-    // }
+        //API GET DISTRICTS
+        useEffect(() => {
+            makeRequest.get('/districts')
+            .then(resp => { setDistricts(resp.data); })
+            .catch(error => {console.log(error);})
+        }, []);
+
+
     useEffect(() => {
-        DistrictService.getDistrict().then(districts => setDistricts(districts));
-
         if (commune) {
             setFormCommune({
                 code_commune: { value: commune.code_commune || "", isValid: true, error: "" },
@@ -45,10 +39,19 @@ const FormCommune = ({commune, isEditForm}) => {
             });
 
             districts?.forEach(f => {
-                if (f.id_district == commune.id_district) {
-                    setNomDistrict(f.nom_district); return;  
+                console.log(f);
+                
+                if (f.id_district == commune.id_commune) {
+                        console.log(f.nom_commune);
+                    setNomDistrict(f.nom_commune); return; 
                 }
-            });
+            })
+            // console.log(districts);
+            // const foundDistrict = districts.find(d => d.id_district == commune.id_district)
+            // if (foundDistrict) {
+            //     setNomDistrict(foundDistrict.nom_district); return;  
+            // }
+
         }
     }, [commune]);
 
@@ -78,7 +81,10 @@ const FormCommune = ({commune, isEditForm}) => {
             isValid = false;
             error = `Ce champ est obligatoire`;
 
-        } else if ( !regex.numberAndDigit.test(value)) {
+        } else if ( fieldName == "code_commune" && !regex.number.test(value)) {
+            isValid = false;
+            error = `Code invalide, seulement de nombre .`;
+        } else if ( fieldName == "nom_commune" && !regex.numberAndDigit.test(value)) {
             isValid = false;
             error = `Les caractères spéciaux ne sont pas autorisés à ce champ.`;
         }
@@ -94,6 +100,9 @@ const FormCommune = ({commune, isEditForm}) => {
 
         const newField = { [fieldName]: { value: fieldValue, isValid: validation.isValid , error: validation.error  } };
         setFormCommune({ ...formCommune, ...newField });
+        if (message) {
+            setMessage("")
+        }
     }
 
     //INPUT change CODE DISTRICT
@@ -110,6 +119,7 @@ const FormCommune = ({commune, isEditForm}) => {
     const [message, setMessage] = useState("");
     const handleSubmit = (e) => {
         e.preventDefault();
+        
         const isValid = Object.values(formCommune).every(field => field.isValid);
 
         if (isValid && formCommune.code_commune?.value) {
@@ -130,7 +140,6 @@ const FormCommune = ({commune, isEditForm}) => {
     
     function updateCommune () {
         if (commune.id_commune) {
-            console.log("Data commune:", commune);
             makeRequest.put(`/communes/${commune.id_commune}`, commune, {
                 headers: {"Content-Type": "application/json"}
             })
@@ -151,7 +160,6 @@ const FormCommune = ({commune, isEditForm}) => {
     }
 
     function addCommune () {
-        console.log("Data commune:", commune);
         makeRequest.post(`/communes`, commune, {
             headers: {"Content-Type": "application/json"}
         })
@@ -169,9 +177,9 @@ const FormCommune = ({commune, isEditForm}) => {
         .catch(error => console.log(error) ) 
     }
 
-
     function clearData() {
         setNomDistrict('')
+        setMessage("")
         setFormCommune({ ...formCommune,
             ...{
             code_commune: { value: "", isValid: false, error: "" },
@@ -184,7 +192,6 @@ const FormCommune = ({commune, isEditForm}) => {
         clearData()
         setMessage('')
     }
-
 
   return (
     <>
@@ -209,16 +216,18 @@ const FormCommune = ({commune, isEditForm}) => {
             <form className="form" id="add-commune" onSubmit={handleSubmit}>
                 <div className="alert-message">
                     {message && valid ?
-                        (<span className='message success'>{message}</span>):
-                        (<span className='message error'>{message}</span>)
+                        ( <p className={message ? "message success":"success"}>{message}</p>):
+                        ( <p  className={message ? "message error":"error"}>{message}</p>)
                     }
                 </div>
                 <div className="content-user">
+
+                    {/* Code de la commune */}
                     <div className="form-group">
-                        <label htmlFor="code_commune" className="form-group-label">Code du commune:</label>
+                        <label htmlFor="code_commune" className="form-group-label">Code de la commune:</label>
                         <input
                             type="text"
-                            className="form-group-input code_commune"
+                            className={!formCommune.code_commune?.isValid && formCommune.code_commune?.error ? "error-border form-group-input code_commune":"form-group-input code_commune"}
                             name="code_commune"
                             id="code_commune"
                             placeholder="code"
@@ -228,11 +237,12 @@ const FormCommune = ({commune, isEditForm}) => {
                         <span className="msg-error">{!formCommune.code_commune?.isValid && formCommune.code_commune?.error}</span>
                     </div>
 
+                    {/* Nom de la commune */}
                     <div className="form-group">
                         <label htmlFor="nom_commune" className="form-group-label">Nom du commune:</label>
                         <input
                             type="text"
-                            className="form-group-input nom_commune"
+                            className={!formCommune.nom_commune?.isValid && formCommune.nom_commune?.error ? "error-border form-group-input nom_commune":"form-group-input nom_commune"}
                             name="nom_commune"
                             id="nom_commune"
                             placeholder="commune"
@@ -242,11 +252,13 @@ const FormCommune = ({commune, isEditForm}) => {
                         <span className="msg-error">{!formCommune.nom_commune?.isValid && formCommune.nom_commune?.error}</span>
                     </div>
 
+                    {/* District */}
                     <div className="form-group" style={{position:"relative"}}>
                         <label htmlFor="nom_district" className="form-group-label">District:</label>
                         <input
                             type="text"
-                            className="form-group-input nom_district"
+                            className={!formCommune.id_district?.isValid && formCommune.id_district?.error ? 
+                                "error-border form-group-input nom_district":"form-group-input nom_district"}
                             name="nom_district"
                             id="nom_district"
                             placeholder="district"
@@ -270,7 +282,7 @@ const FormCommune = ({commune, isEditForm}) => {
                         <span className="msg-error">{!formCommune.id_district?.isValid && formCommune.id_district?.error}</span>
                     </div>
 
-
+                    {/* Action */}
                     <div className="action-group">
                         {isEditForm ? 
                             (<button type="submit" className="btn btn-save" id="save">Modifier</button>):

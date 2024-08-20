@@ -2,25 +2,21 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {errorBorder, successBorder} from "./../../helpers/borderField";
 import { makeRequest } from '../../services/axios';
-// import AuthentificationService from "../../services/AuthentificationService";
-// import "./../register/register.css";
-// import "./login.css";
-
+// import "./login.css"
 
 
 const Login = () => {
 
     let navigate = useNavigate()
 
-    const [form, setForm] = useState({
-            userEmail: { value: "" },
-            password: { value: "" }
-    });
-
     const [message, setMessage] = useState(""); 
-
     const [valid, setValid] = useState(false);
 
+    const [form, setForm] = useState(
+        {
+            userEmail: { value: "" },
+            password: { value: "" }
+        } );
 
 
     /**
@@ -33,13 +29,14 @@ const Login = () => {
         setForm({ ...form, ...newField });
 
         if (fieldName === "password") {
-            successBorder(".password");
+            successBorder(`.${fieldName}`);
         }
-        if (fieldName === "userEmail") {
-            successBorder(".userEmail");
+        if (message) {
+            setMessage('')
         }
     }
 
+    //VALIDATION DE FORMULAIRE 
     const validateForm = () => {
         let newForm = { ...form };
 
@@ -54,7 +51,6 @@ const Login = () => {
 
         // Validator Password
         if (form.password.value.length < 5) {
-            // Votre mot de passe doit faire au moins 6 caractères de long.
             newForm.password = { value: form.password.value, error: "", isValid: false };
             errorBorder(".password");
         } else {
@@ -65,57 +61,49 @@ const Login = () => {
         return newForm.userEmail.isValid && newForm.password.isValid;
     }
 
+
     const handleSubmit = (e) => {
         e.preventDefault();
         const isFormValid = validateForm();
-        console.log(isFormValid);
-        console.log(form);
 
-        // return
         if (isFormValid) {
             setValid(isFormValid);
-            setMessage("Connexion en cours ...");
+            // setMessage("Connexion en cours ...");
 
             // Appel API Authentification
-            makeRequest.post(`/officiers/auth`, 
-                {
-                    userEmail: form.userEmail.value,
+            makeRequest.post(`/officiers/login`, {
+                userEmail: form.userEmail.value,
                     password: form.password.value
                 }, 
-                {
-                    headers: {"Content-Type":"application/json" }
-                }
+                { headers: {"Content-Type":"application/json" } }
             )
             .then(response => {
                 console.log(response);
                 if ( !response.data.status) {
                     setValid(false)
-                    console.log("Aucun donnée à trouver")
                     console.log(response);
                     setMessage(response.data.message);
                     return;
                 }else{
                     setValid(true)
-                    // console.log("data:", response.data.data);
                     localStorage.setItem("user", JSON.stringify(response.data.data));
                     localStorage.setItem("auth", 1);
-                    // return
-                    navigate("/dashboard")     
+                    navigate("/dashboard")  
+                    location.reload();   
                 }
             })
             .catch(error => {
-                console.error("Erreur lors de la récupération des données :", error);
+                console.error("Erreur lors de la récupération des données:", error);
             });
-
         }
     }
 
     return (
         <>
-            <section className="section container">
+            <section className="section container" id="login" style={{ minHeigth:"100vh" }}>
                 <div className="modal container-authentication" >
                     <h3 className="modal-title" style={{ color: '#000', marginBottom: "10px" }}>Authentification</h3>
-                    <span className="modal-subtitle" style={{ color: '#000' }}>sous titre ...</span>
+                    <span className="modal-subtitle" style={{ color: '#000' }}>Biènvenu sur notre plateforme. On entrer votre compte pour vous accèder au plateforme</span>
 
                     <div>
                         <form className="form-authentification" id="loginForm" onSubmit={e => handleSubmit(e)}>
@@ -123,13 +111,15 @@ const Login = () => {
                             {/* Message . status: success or error*/}
                             <div className="container-message">
                                 {message && valid ? 
-                                    ( <p className="message success">{message}</p>):
-                                    ( <p className="message error">{message}</p>)
+                                    ( <p className={message ? "message success":"success"}>{message}</p>):
+                                    ( <p  className={message ? "message error":"error"}>{message}</p>)
                                 }
                             </div>
 
                             <div className="content-authentification">
                                 <div>
+
+                                    {/* Email */}
                                     <div className="form-group-login">
                                         <div>
                                             <label htmlFor="userEmail" className="form-group-label">Email</label>
@@ -148,6 +138,7 @@ const Login = () => {
                                         </div>
                                     </div>
 
+                                    {/* Mot de passe */}
                                     <div className="form-group-login" id="form-group">
                                         <div>
                                             <label htmlFor="password" className="form-group-label">Mot de passe</label>
@@ -188,9 +179,6 @@ const Login = () => {
                 </div>
             </section>
 
-            {/* <div style={{minWidth:"500px", minHeight:"500px"}}>
-            <box-icon name='loader' animation='spin' width="200px" color='rgba(0,0,0,0.74)' ></box-icon>
-            </div> */}
         </>
     )
 }

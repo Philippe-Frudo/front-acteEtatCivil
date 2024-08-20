@@ -1,14 +1,14 @@
 import React, { useEffect, useState, useRef } from 'react';
 import "./fonkotany.css";
-// import FONKOTANY from '../../models/mock-fonkotany';
 import ModalDelete from '../../components/modal_delete/ModalDelete';
 import { Link } from 'react-router-dom';
 import { filterTable3Columns } from '../../helpers/searchTable';
-import FonkotanyService from '../../services/serviceFonkotany';
-import TableFileRegion from '../../components/tableFile/TableFileRegion';
+import TableFileExcel from '../../components/tableFile/TableFileExcel';
 import { convertFile } from '../../helpers/convertFile';
 import { showDeleteModal } from '../../constants/modal';
 import { makeRequest } from '../../services/axios';
+// import FONKOTANY from '../../models/mock-fonkotany';
+// import FonkotanyService from '../../services/serviceFonkotany';
 
 const Fonkotany = () => {
 
@@ -186,7 +186,7 @@ const Fonkotany = () => {
                         </div>
                     </div>
 
-            {acceptFile ? (<TableFileRegion useData={[dataImport, setDataImport]} useAccept={ [acceptFile, setAcceptFile]} nameFile={'fonkotany'}/>):(null)}
+            {acceptFile ? (<TableFileExcel useData={[dataImport, setDataImport]} useAccept={ [acceptFile, setAcceptFile]} nameFile={'fonkotany'}/>):(null)}
             <ModalDelete id={id} nomPage={"fonkotany"} useDelete={[isDelete, setIsDelete]} setData={setFonkotany}/>
         </>
     )

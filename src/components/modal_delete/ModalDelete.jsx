@@ -52,7 +52,7 @@ const ModalDelete = ({id, nomPage, useDelete, setData}) => {
                 }
                 break;
 
-            case "région" :
+            case "region" :
                 if (isDelete) {
                      // API DELETE REGION
                      makeRequest.delete(`/regions/${id}`)

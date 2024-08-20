@@ -1,13 +1,14 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import "./acte.css";
 import { showDeleteModal } from '../../constants/modal';
 import ModalDelete from '../../components/modal_delete/ModalDelete';
-import { filterTable3Columns } from '../../helpers/searchTable';
+import { filterTable10Columns } from '../../helpers/searchTable';
 import { searchAddress } from '../../helpers/borderField';
 import { makeRequest } from '../../services/axios';
 import _ from 'lodash';
 import * as XLSX from 'xlsx';
+import { debounce } from 'lodash';
 
 // import ActeService from '../../services/serviceActe';
 // import TravailService from '../../services/serviceTravail';
@@ -30,6 +31,7 @@ const Acte = ({user}) => {
     const [nomCommune, setNomCommune] = useState('');
     const [nomDistrict, setNomDistrict] = useState('');
     const [nomRegion, setNomRegion] = useState('');
+
 
     const [showListFonkotany, setShowListFonkotany] = useState(false);
     const [showListCommune, setShowListCommune] = useState(false);
@@ -96,42 +98,55 @@ const Acte = ({user}) => {
     //     .then(resp => { setTypesActe(resp.data) })
     //     .catch(error => {console.log(error);})
     // }, []);
-    
-    const [listSearch, setListSearch] = useState({
-        id_type: {value: '' },
-        id_fonkotany: {value: '' },
-        id_commune: {value: '' },
-        id_district: {value: '' },
-        id_region: {value: '' }
-    });
+        
+        const [listSearch, setListSearch] = useState({
+            id_type: {value: '' },
+            id_fonkotany: {value: '' },
+            id_commune: {value: '' },
+            id_district: {value: '' },
+            id_region: {value: '' }
+        });
 
+
+
+    // Fonction debounced pour limiter la fréquence des appels API
 
     // API GET ACTES
-    // Fonction debounced pour limiter la fréquence des appels API
-    useEffect(() => {
+    const fetchActes = useCallback(
+        debounce(() => {
         makeRequest.get(`/actes?id=${listSearch.id_type.value}
-            &fonkotany=${listSearch.id_fonkotany.value}&
-            commune=${listSearch.id_commune.value}
+            &fonkotany=${listSearch.id_fonkotany.value}
+            &commune=${listSearch.id_commune.value}
             &district=${listSearch.id_district.value}
             &region=${listSearch.id_region.value}`)
-        .then((res) => { 
-            if (!res.data) {
-                console.log("Aucun donnée trouvé");
-                setError(false); return
-            }else {
-                setError(true);  
-                if (user.isAdmin) {
-                    setActes(res.data)
-                }else{
-                    const filteredData = res.data.filter(item => item.id_officier === user.id);
-                    setActes(filteredData ); 
+            .then((res) => { 
+                if (!res.data) {
+                    console.log("Aucun donnée trouvé");
+                    setError(false); 
+                } else {
+                    setError(true);   
+                    if (user.isAdmin) {
+                        setActes(res.data);
+                    } else {
+                        const filteredData = res.data.filter(item => item.id_officier === user.id);
+                        setActes(filteredData); 
+                    }
                 }
-            }
-            
-        })
-        .catch((error) => { console.log(error); });
-    }, [listSearch,]);
+            })
+            .catch((error) => { console.log(error); });
+        }, 500), // Délai de 500 ms avant l'exécution de la requête API
+        [listSearch, user.isAdmin, user.id]
+    );
     
+    useEffect(() => {
+        fetchActes();
+        // Nettoyer le debounce lorsqu'il n'est plus nécessaire
+        return () => {
+            fetchActes.cancel();
+        };
+    }, [listSearch, fetchActes]);
+
+
     //  INPUT CHANGE TYPE
     const handleInputChange = (e) => {
         const fieldName = e.target.name.trim();
@@ -140,41 +155,34 @@ const Acte = ({user}) => {
         setListSearch(({ ...listSearch, ...newField }));   
     }
 
-
     //========== CHANGE LA VALEUR DE L'ID FONKOTANY CHERCHER PAR CLICK ========
     const handleClickFonkotany = (fonkotany) => {
         if (fonkotany.id_fonkotany) {
         const newField = { id_fonkotany: { value: fonkotany.id_fonkotany } };
         setListSearch({ ...listSearch, ...newField }); 
         }
-        if (fonkotany.nom_fonkotany) {
-            setNomFonkotany(fonkotany.nom_fonkotany);
-        }
-        
+        setNomFonkotany(fonkotany.nom_fonkotany);
         setShowListFonkotany(false)
     }
+
     const inputChangeFonkotany = (input) => {
         setNomFonkotany(input.target.value)
-        if (!nomFonkotany) {
-            setListSearch(({ ...listSearch, ...{ id_fonkotany: { value: NaN } } }));
-        }
+        if (!input.target.value) {
+            setListSearch(({ ...listSearch, ...{ id_fonkotany: { value: '' } } }));
+        } 
     }
 
     // ====== CHANGE LA VALEUR DE L'ID COMMUNE CHERCHER PAR CLICK =====
     const handleClickCodeCommune = (commune) => {
         const newField = { id_commune: { value: commune.id_commune } };
         setListSearch(({ ...listSearch, ...newField })); 
-        
-        if (commune.nom_commune) {
-            setNomCommune(commune.nom_commune);
-        }
-        
+        setNomCommune(commune.nom_commune);  
         setShowListCommune(false);
     }   
     const inputChangeCommune = (input) => {
         setNomCommune(input.target.value)
-        if (!nomCommune) {
-            setListSearch(({ ...listSearch, ...{ id_commune: { value: NaN} } }));
+        if (!input.target.value) {
+            setListSearch(({ ...listSearch, ...{ id_commune: { value: ''} } }));
         }
     }
 
@@ -183,17 +191,13 @@ const Acte = ({user}) => {
     const handleClickDistrict = (district) => {
         const newField = { id_district: { value: district.id_district, isValid: true } };
         setListSearch({ ...listSearch, ...newField });
-        console.log(district.nom_district);
-        if (district.nom_district) {
-            setNomDistrict(district.nom_district);
-        }
-        
+        setNomDistrict(district.nom_district);
         setShowListDistrict(false);
     }
     const inputChangeDistrict= (input) => {
         setNomDistrict(input.target.value);
-        if (!nomDistrict) {
-            setListSearch(({ ...listSearch, ...{ id_district: { value: NaN} } }));
+        if (!input.target.value) {
+            setListSearch(({ ...listSearch, ...{ id_district: { value: ''} } }));
         }
     }
 
@@ -202,16 +206,13 @@ const Acte = ({user}) => {
     const handleClickRegion = (region) => {
         const newField = { id_region: { value: region.id_region, isValid: true } };
         setListSearch({ ...listSearch, ...newField });
-        if (region.nom_region) {
-            setNomRegion(region.nom_region);
-        }
-        
+        setNomRegion(region.nom_region);
         setShowListRegion(false);
     }
     const inputChangeRegion= (input) => {
         setNomRegion(input.target.value);
-        if (!nomRegion) {
-            setListSearch(({ ...listSearch, ...{ id_Region: { value: NaN} } }));
+        if (!input.target.value) {
+            setListSearch(({ ...listSearch, ...{ id_region: { value: ''} } }));
         }
     }
 
@@ -301,6 +302,7 @@ const Acte = ({user}) => {
                                         className="form-group-input nom_fonkotany" 
                                         name="nom_fonkotany" 
                                         id="nom_fonkotany" 
+                                        autoComplete='off'
                                         placeholder="Choisir le Fonkotany chercher" 
                                         value={nomFonkotany} 
                                         onChange={(e) => inputChangeFonkotany(e)}
@@ -328,6 +330,7 @@ const Acte = ({user}) => {
                                         className="form-group-input nom_commune" 
                                         name="nom_commune"
                                         id="nom_commune"
+                                        autoComplete='off'
                                         placeholder="Choisir la commune chercher"
                                         value={nomCommune} 
                                         onChange={(e) => inputChangeCommune(e)}
@@ -347,12 +350,12 @@ const Acte = ({user}) => {
                             </div>
 
                             <div className={ user?.isAdmin ? "form-group input-relative":"hidden form-group input-relative"}>
-                                {/* <label htmlFor="nom_district" className="form-group-label">Code District:</label> */}
                                 <input
                                     type="text"
                                     className="form-group-input nom_district"
                                     name="nom_district"
                                     id="nom_district"
+                                    autoComplete='off'
                                     placeholder="Selectionner la district chercher"
                                     value={nomDistrict}
                                     onChange={(e) => inputChangeDistrict(e)}
@@ -378,6 +381,7 @@ const Acte = ({user}) => {
                                     className="form-group-input nom_region"
                                     name="nom_region"
                                     id="nom_region"
+                                    autoComplete='off'
                                     placeholder="Selectionner la region chercher"
                                     value={nomRegion}
                                     onChange={(e) => inputChangeRegion(e) }
@@ -413,7 +417,7 @@ const Acte = ({user}) => {
                                     <input 
                                         className="main-search " 
                                         type="text" placeholder="chercher..." 
-                                        onInput={(e) =>filterTable3Columns(e.target.value , "table-acte")}
+                                        onInput={(e) =>filterTable10Columns(e.target.value , "table-acte")}
                                     />
                                 </label>
                             </div>

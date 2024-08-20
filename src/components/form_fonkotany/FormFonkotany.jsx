@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
-import { errorBorder, messageValidator, searchAddress, successBorder } from '../../helpers/borderField';
-import FonkotanyService from '../../services/serviceFonkotany';
-import CommuneService from '../../services/serviceCommune';
+import { searchAddress } from '../../helpers/borderField';
+// import FonkotanyService from '../../services/serviceFonkotany';
+// import CommuneService from '../../services/serviceCommune';
 import { regex } from './../../helpers/regex';
 import { makeRequest } from '../../services/axios';
 // import ADDRESS from '../../models/mock-address';
@@ -14,7 +14,6 @@ const FormFonkotany = ({ fonkotany, isEditForm }) => {
     const [communes, setCommunes] = useState([]);
     const [showList, setShowList] = useState(false);
     const [nomCommune, setNomCommune] = useState("");
-    // console.log(communes);
     
     document.querySelectorAll("input").forEach(input => {
         input.addEventListener("focus", () => {
@@ -90,6 +89,9 @@ const FormFonkotany = ({ fonkotany, isEditForm }) => {
         const validator = validateField(fieldName, fieldValue);
         const newField = { [fieldName]: { value: fieldValue, isValid: true } };
         setFormFonkotany({ ...formFonkotany, ...newField });
+        if (message) {
+            setMessage("")
+        }
     }
 
         //INPUT change CODE COMMUNE
@@ -252,8 +254,8 @@ const FormFonkotany = ({ fonkotany, isEditForm }) => {
 
                         <div className="alert-message">
                             {message && valid ? 
-                                (<span className='message success'>{message}</span>):
-                                (<span className='message error'>{message}</span>)
+                               ( <p className={message ? "message success":"success"}>{message}</p>):
+                               ( <p  className={message ? "message error":"error"}>{message}</p>)
                             }
                         </div>
                     <form className="form" id="add-fonkotany" onSubmit={handleSubmit}>

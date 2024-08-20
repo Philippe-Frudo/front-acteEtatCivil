@@ -1,16 +1,15 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { filterTable3Columns } from '../../helpers/searchTable';
-import Regionservice from '../../services/serviceRegion';
-import * as XLSX from 'xlsx';
-// import  REGION from '../../helpers/mock-region';
-// import "region.css";
 import { convertFile } from './../../helpers/convertFile';
-import TableFileRegion from '../../components/tableFile/TableFileRegion';
+import TableFileExcel from '../../components/tableFile/TableFileExcel';
 import ModalDelete from '../../components/modal_delete/ModalDelete';
 import { showDeleteModal } from '../../constants/modal';
 import { makeRequest } from '../../services/axios';
 
+// import Regionservice from '../../services/serviceRegion';
+// import  REGION from '../../helpers/mock-region';
+// import "region.css";
 
 const Region = () => {
   const fileInputRef = useRef(null);
@@ -52,7 +51,9 @@ const Region = () => {
 
     setErrorFile(null); // Réinitialise l'erreur si le fichier est valide
     setAcceptFile(true)
-    convertFile(e)
+
+    // Appeler la fonction qui convertir le fichier EXCEL en objet
+    convertFile(e) 
       .then((parseData) => {
         setDataImport(parseData);
       })
@@ -189,8 +190,8 @@ const Region = () => {
             <main className="main-main-content" id="main-main-content-2">CARD 2</main>
           </div>
 
-        {acceptFile ? (<TableFileRegion useData={[dataImport, setDataImport]} useAccept={ [acceptFile, setAcceptFile]} nameFile={'région'}/>):(null)}
-        <ModalDelete id={id} nomPage={"région"} useDelete={[isDelete, setIsDelete]} setData={setRegions}/>
+        {acceptFile ? (<TableFileExcel useData={[dataImport, setDataImport]} useAccept={ [acceptFile, setAcceptFile]} nameFile={'region'}/>):(null)}
+        <ModalDelete id={id} nomPage={"region"} useDelete={[isDelete, setIsDelete]} setData={setRegions}/>
     </>
   )
 }

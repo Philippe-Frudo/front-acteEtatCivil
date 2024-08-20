@@ -1,19 +1,18 @@
 import React, { useState } from 'react'
+import { makeRequest } from '../../services/axios';
 // import RegionService from '../../services/serviceRegion';
 // import DistrictService from '../../services/serviceDistrict';
 // import CommuneService from '../../services/serviceCommune';
 // import FonkotanyService from '../../services/serviceFonkotany';
 // import ActeService from '../../services/serviceActe';
 // import TravailService from '../../services/serviceTravail';
-import { makeRequest } from '../../services/axios';
 // import PersonneService from '../../services/servicePersonne';
 
-const TableFileRegion = ({useData, useAccept, nameFile}) => {
+const TableFileExcel = ({useData, useAccept, nameFile}) => {
     console.log(nameFile);
     
     const [dataFile, setDataFile] = useData;
     const[acceptFile, setAcceptFile] = useAccept;
-    
 
     const handaleClickBack = ()=> {
         setAcceptFile(false)
@@ -47,9 +46,7 @@ const TableFileRegion = ({useData, useAccept, nameFile}) => {
                 
                 break;
 
-            case "région" :
-                    console.log("Data File region:", dataFile);
-                   
+            case "region" :
                     makeRequest.post(`/addAllRegion`, dataFile, {
                         headers: {"Content-Type": "application/json"}
                     })
@@ -157,15 +154,14 @@ const TableFileRegion = ({useData, useAccept, nameFile}) => {
                     <div className="">
                         {status ? (
                             !message ? 
-                                (<span className='message success'>{message}</span>):
-                                (<span className='message error'>
+                            ( <p className={message ? "message success":"success"}>{message}</p>):
+                                ( <p  className={message ? "message error":"error"}>
                                     {message.length >1 ? 
                                     'Les fichiers existent déjà dans la base de donnee: ':'Le fichier existe déj dans la base de donnee: '
                                     }
                                      {message}
-                                </span>)
+                                </p>)
                         ):(null)
-
                         }
                     </div>
 
@@ -173,7 +169,9 @@ const TableFileRegion = ({useData, useAccept, nameFile}) => {
                 <main className="main-main-content" id="main-main-content-1">
                 <div className="table-content">
                     <table className="table" id="nom-table">
-                        {numberColumn == 1 && countElement >= 1 && (<>
+
+                        {/* Presentation de la contenue du fichier region*/}
+                        {nameFile == "travail" && countElement >= 1 && (<>
                             <thead>
                                 <tr>
                                     <th>Nom</th>
@@ -196,7 +194,9 @@ const TableFileRegion = ({useData, useAccept, nameFile}) => {
 
                             </tbody>
                         </>)}
-                        {numberColumn == 3 && countElement >= 1 && (<>
+
+                        {/* Presentation de la contenue du fichier region*/}
+                        { (['fonkotany', "commune", "district"]).includes(nameFile) && countElement >= 1 && (<>
                             <thead>
                                 <tr>
                                     <th>Code</th>
@@ -221,7 +221,9 @@ const TableFileRegion = ({useData, useAccept, nameFile}) => {
 
                             </tbody>
                         </>)}
-                        {numberColumn == 2 && countElement >= 1 && (<>
+
+                        {/* Presentation de la contenue du fichier region*/}
+                        {nameFile == "region" && countElement >= 1 && (<>
                             <thead>
                                 <tr>
                                     <th>Code</th>
@@ -246,7 +248,6 @@ const TableFileRegion = ({useData, useAccept, nameFile}) => {
                             </tbody>
                         </>)}
                     </table>
-
                     
                 </div>
                     <button 
@@ -261,7 +262,11 @@ const TableFileRegion = ({useData, useAccept, nameFile}) => {
                       </span>
                     </button>
                     <div>
-                        <i>Assurez-vous de bien vérifier votre fichier {nameFile} avant de l'enregistrer pour éviter les erreurs.</i>
+                        <i>
+                            Assurez-vous de bien vérifier votre fichier {nameFile} 
+                            avant de l'enregistrer pour éviter les erreurs. et le titre 
+                            {nameFile == "travail" ? "de colonne suit le norme": "des colonnes suit le norme"}
+                        </i>
                     </div>
                 </main>
             
@@ -279,4 +284,4 @@ const TableFileRegion = ({useData, useAccept, nameFile}) => {
   )
 }
 
-export default TableFileRegion
+export default TableFileExcel

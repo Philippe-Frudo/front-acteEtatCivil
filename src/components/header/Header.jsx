@@ -7,8 +7,9 @@ import Logo from "../Logo";
 import "./header.css";
 import Auth from "../../services/Auth";
 
-const Header = () => {
+const Header = ({refBody}) => {
 
+    
     // ====== AUTHENTIFICATION ======
     const auth = new Auth();
 
@@ -32,6 +33,7 @@ const Header = () => {
     function logout(e) {
         e.preventDefault()
         if ( Auth.logOut()) {
+            refBody.current.style.opacity = "0"
             navigate('/');
             console.log("Logout");  
         }

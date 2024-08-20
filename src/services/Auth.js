@@ -55,18 +55,14 @@ export default class Auth {
     }
     
 
-
-
-
     //=== API DET FORMATION UTILISATEUR (Officier) ===
-    static getFormation() {
+    static async getFormation() {
         return makeRequest.post(`/officiers/verifyConnect`, this.user, {
             headers: { "Content-Type": "application/json" }
         })
         .then(response => {
             if (!response || !response.data) {
-                console.log('Aucune donnée reçue');
-                return null;  // ou undefined
+                return null;  // ou undefined (si la reponse e null)
             }
 
             // console.log(response);

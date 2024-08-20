@@ -1,12 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { filterTable3Columns } from '../../helpers/searchTable'
-import TravailService from '../../services/serviceTravail'
 import ModalDelete from '../../components/modal_delete/ModalDelete'
 import { showDeleteModal } from '../../constants/modal'
-import TableFileRegion from '../../components/tableFile/TableFileRegion'
+import TableFileExcel from '../../components/tableFile/TableFileExcel'
 import { convertFile } from '../../helpers/convertFile'
 import { makeRequest } from '../../services/axios'
+// import TravailService from '../../services/serviceTravail'
 // import TRAVAILS from '../../models/mock-travail'
 
 
@@ -187,7 +187,7 @@ const Travail = () => {
                         <main className="main-main-content" id="main-main-content-2">CARD 2</main>
                     </div>
 
-            {acceptFile ? (<TableFileRegion useData={[dataImport, setDataImport]} useAccept={[acceptFile, setAcceptFile]} nameFile={'travail'}/>):(null)}
+            {acceptFile ? (<TableFileExcel useData={[dataImport, setDataImport]} useAccept={[acceptFile, setAcceptFile]} nameFile={'travail'}/>):(null)}
             <ModalDelete id={id} nomPage={"travail"} useDelete={[isDelete, setIsDelete]} setData={setTravails} />
         </>
     )

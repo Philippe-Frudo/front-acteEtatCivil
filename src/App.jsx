@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import "./App.css";
 import Header from './components/header/Header.jsx';
 
-import { BrowserRouter as Router, Route, Routes, useNavigate, useNavigation, Navigate } from 'react-router-dom';
-// import Utilisateur from './pages/utilisateur/Utilisateur';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import Login from './pages/login/Login';
 import Dashboard from './pages/dashboard/Dashboard';
 
@@ -15,7 +14,6 @@ import FormEditActe from './pages/acte/FormEditActe.jsx';
 import District from './pages/district/District';
 import Region from './pages/region/Region';
 import Travail from './pages/travail/Travail';
-import Utilisateur from './pages/utilisateur/Utilisateur.jsx';
 import FormCreateUser from './pages/register/FormCreateUser.jsx';
 
 import Fonkotany from './pages/fonkotany/Fonkotany.jsx';
@@ -45,6 +43,7 @@ function App() {
 
 
     const [user, setUser] = useState([])
+    const refBody = useRef();
 
     //=== API DET FORMATION UTILISATEUR (Officier) ===
     useEffect(() => {
@@ -64,9 +63,9 @@ function App() {
         <>
             
         <Router>
-            <div className={ path ? "": "big-container"} >
+            <div ref={refBody} className={ path ? "": "big-container"} >
 
-                {path ? null : <Header />}
+                {path ? null : <Header refBody={refBody}/>}
 
                 <main className="main">
                     { /* <!-- =====HEADER MAIN ==== --> */}
@@ -120,7 +119,7 @@ function App() {
 
 
                         {/* Paage non trouver */}
-                        <Route path="/404" element={<PageNotFound />} />
+                        <Route path="/404" element={<PageNotFound refBody={refBody}/>} />
                         <Route path="*" element={<Navigate replace to="/404" />} />
 
 

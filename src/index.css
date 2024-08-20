@@ -106,6 +106,35 @@ body {
   color: var(--text-color);
 }
 
+body {
+  opacity: 0;
+  animation: opacity 2.5s forwards;
+  -webkit-animation: opacity 2.5s forwards;
+}
+
+@keyframes opacity {
+  0% {
+      opacity: 0;
+  }
+  20% {
+      opacity: 0.2;
+  }
+  40% {
+      opacity: 0.4;
+  }
+  60% {
+      opacity: 0.6;
+  }
+  80% {
+      opacity: 0.8;
+  }
+
+  100% {
+      opacity: 1;
+  }
+}
+
+
 h1, h2, h3 {
   color: var(--text-color);
   font-weight: var(--font-semi-bold);
