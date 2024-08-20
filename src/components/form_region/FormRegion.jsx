@@ -45,6 +45,9 @@ const FormRegion = ({region, isEditForm}) => {
 
         const newField = { [fieldName]: { value: fieldValue, isValid: validation?.isValid , error: validation?.error  } };
         setFormRegion({ ...formRegion, ...newField });
+        if (message) {
+            setMessage("")
+        }
     }
          
     const [message, setMessage] = useState("");
@@ -137,8 +140,8 @@ const FormRegion = ({region, isEditForm}) => {
                 <form className="form" id="add-region" onSubmit={handleSubmit}>
                     <div className="alert-message">
                         {valid && message ? 
-                            (<span className='message success'>{message}</span>):
-                            (<span className='message error'>{message}</span>)
+                            ( <p className={message ? "message success":"success"}>{message}</p>):
+                            ( <p  className={message ? "message error":"error"}>{message}</p>)
                         }
                     </div>
                     <div className="content-user">

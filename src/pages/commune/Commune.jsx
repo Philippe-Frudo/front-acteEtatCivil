@@ -2,12 +2,12 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import "./commune.css";
 import { filterTable3Columns } from '../../helpers/searchTable';
-import CommuneService from '../../services/serviceCommune';
-import TableFileRegion from '../../components/tableFile/TableFileRegion';
+import TableFileExcel from '../../components/tableFile/TableFileExcel';
 import ModalDelete from '../../components/modal_delete/ModalDelete';
 import { convertFile } from '../../helpers/convertFile';
 import { showDeleteModal } from '../../constants/modal';
 import { makeRequest } from '../../services/axios';
+// import CommuneService from '../../services/serviceCommune';
 // import { COMMUNE } from '../../models/mock-commune';
 
 const Commune = () => {
@@ -191,7 +191,7 @@ const Commune = () => {
             <main className="main-main-content" id="main-main-content-2">CARD 2</main>
           </div>
 
-          {acceptFile ? (<TableFileRegion useData={[dataImport, setDataImport]} useAccept={ [acceptFile, setAcceptFile]} nameFile={'commune'}/>):(null)}
+          {acceptFile ? (<TableFileExcel useData={[dataImport, setDataImport]} useAccept={ [acceptFile, setAcceptFile]} nameFile={'commune'}/>):(null)}
           <ModalDelete id={id} nomPage={"commune"} useDelete={[isDelete, setIsDelete]} setData={setCommunes}/>
 
     </>

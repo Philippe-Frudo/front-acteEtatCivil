@@ -83,6 +83,9 @@ const FormDistrict = ({district, isEditForm}) => {
 
         const newField = { [fieldName]: { value: fieldValue, isValid: validation?.isValid , error: validation?.error  } };
         setFormDistrict({ ...formDistrict, ...newField });
+        if (message) {
+            setMessage("")
+        }
     }
     
     
@@ -200,8 +203,8 @@ const FormDistrict = ({district, isEditForm}) => {
             <form className="form" id="add-District" onSubmit={handleSubmit}>
                 <div className="alert-message">
                     {message && valid ? 
-                        (<span className='message success'>{message}</span>):
-                        (<span className='message error'>{message}</span>)
+                      ( <p className={message ? "message success":"success"}>{message}</p>):
+                      ( <p  className={message ? "message error":"error"}>{message}</p>)
                     }
                 </div>
                 <div className="content-user">

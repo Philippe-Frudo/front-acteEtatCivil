@@ -1,16 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Officier from '../../models/officier';
 import handleSex from './../../constants/sexe'
-import { hiddenList, searchAddress } from '../../helpers/borderField';
-import './register.css';
+import { searchAddress } from '../../helpers/borderField';
 import { regex } from '../../helpers/regex';
-import CommuneService from '../../services/serviceCommune';
 import { makeRequest } from '../../services/axios';
-
+import './register.css';
 import emailjs from "@emailjs/browser";
 
-
+// import CommuneService from '../../services/serviceCommune';
 // import OfficierService from '../../services/serviceOfficier';
 // import ADDRESS from '../../models/mock-address';
 
@@ -57,7 +55,7 @@ const FormCreateUser = () => {
     //Si le champ est null id_commune est null
     if (!e.target.value) {
       const newField = { id_commune: { value: '', isValid: false } };  
-      setFormOfficier({ ...formOfficier, ...newField });
+        setFormOfficier({ ...formOfficier, ...newField });
     }
   }
 
@@ -78,9 +76,11 @@ const FormCreateUser = () => {
         // let txtContent = document.querySelector(fieldName).previousElementSibling.innerText;
 
         if (fieldName == "prenom_off") {
-            if ( value && !regex.prenom.test(value)) {
-                isValid = false;
-                error = `Les caractères spéciaux ne sont pas autorisés au prenom, `;
+            if (value) {
+                if ( value && !regex.prenom.test(value)) {
+                    isValid = false;
+                    error = `Les caractères spéciaux ne sont pas autorisés au prenom, `;
+                }  
             }
         }
 
@@ -112,25 +112,18 @@ const FormCreateUser = () => {
 
         const newField = { [fieldName]: { value: fieldValue, isValid: validator.isValid, error: validator.error } }
         setFormOfficier({ ...formOfficier, ...newField });
-        console.log(fieldName, newField[fieldName].isValid);
+        // console.log(fieldName, newField[fieldName].isValid);
+        if(message) {
+            setMessage("")
+        }
     }
-
-     //INPUT change CODE COMMUNE
-     const handleInputChangeCommune = (e) => {
-            setCommune(e.target.value);
-            if (!e.target.value) {
-                const validation = validateField(e.target.name, e.target.value);
-                const newField = { code_commune: { value: "", isValid: validation.isValid , error: validation.error } };
-                setFormOfficier({ ...formOfficier , ...newField });
-            }
-    }
-
 
 
     const [message, setMessage] = useState("");
     const [valid, setValid] = useState(false);
     const handleSubmit = (e) => {
         e.preventDefault()
+        // const validator = validateField(fieldName, fieldValue);
         let isValid = Object.values(formOfficier).every(field => field.isValid);
 
         if (isValid) {
@@ -150,7 +143,7 @@ const FormCreateUser = () => {
 
         }else {
             setValid(false);
-            setMessage("Vérifie les champs obligatoire ou non valide");
+            setMessage("Vérifier les champs non valides");
         }
 
     }
@@ -200,6 +193,9 @@ const FormCreateUser = () => {
                 }
         });
         setCMotPass("");
+        setNomCommune('');
+        setMessage("")
+        setShowList(false)
     }
 
 
@@ -215,8 +211,8 @@ const FormCreateUser = () => {
                     </div>
                     <div className="container-message">
                     {message && valid ? 
-                        ( <p className="message success">{message}</p>):
-                        ( <p className="message error">{message}</p>)
+                        ( <p className={message ? "message success":"success"}>{message}</p>):
+                        ( <p  className={message ? "message error":"error"}>{message}</p>)
                     }
                     </div>
                 </div>
@@ -229,11 +225,12 @@ const FormCreateUser = () => {
                             </div>
                         </div>
 
+                        {/* Nom */}
                         <div className="form-group">
                             <div>
                                 <label htmlFor="nom_off" className="form-group-label">Nom:</label>
                                 <input type="text" 
-                                className="form-group-input nom_off" 
+                                className={!formOfficier.nom_off.isValid && formOfficier.nom_off.error ? "error-border form-group-input nom_off": "form-group-input nom_off"}
                                 name="nom_off" 
                                 id="nom_off" 
                                 placeholder="Nom" 
@@ -245,11 +242,12 @@ const FormCreateUser = () => {
                             </div>
                         </div>
 
+                        {/* Prenom */}
                         <div className="form-group">
                             <div>
                                 <label htmlFor="prenom_off" className="form-group-label">Prénom:</label>
                                 <input type="text" 
-                                className="form-group-input prenom_off" 
+                                className={!formOfficier.prenom_off.isValid && formOfficier.prenom_off.error ? "error-border form-group-input prenom_off":"form-group-input prenom_off"  }
                                 name="prenom_off" 
                                 id="prenom_off" 
                                 placeholder="Prénom" 
@@ -260,6 +258,7 @@ const FormCreateUser = () => {
                             </div>
                         </div>
 
+                        {/* Sexe */}
                         <div className="form-group">
                             <div>
                                 <label htmlFor="" className="form-group-label sexe_off">Sexe:</label>
@@ -289,15 +288,16 @@ const FormCreateUser = () => {
                             </div>
                         </div>
 
+                        {/* Email */}
                         <div className="form-group">
                             <div>
                                 <label htmlFor="email_off" className="form-group-label">Email:</label>
                                 <input 
                                 type="email" 
-                                className="form-group-input email_off" 
+                                className={!formOfficier.email_off.isValid && formOfficier.email_off.error ? "error-border form-group-input email_off": "form-group-input email_off" }
                                 name="email_off" 
                                 id="email_off" 
-                                required
+                                // required
                                 placeholder="E-mail" 
                                 value={formOfficier.email_off.value}
                                 onChange={handleInputChange}
@@ -306,14 +306,16 @@ const FormCreateUser = () => {
                             </div>
                         </div>
                         
+                        {/* Commune */}
                         <div className="form-group">
                             <div style={{position:"relative"}}>
                                 <label htmlFor="nom_commune" className="form-group-label">Commune:</label>
                                 <input
                                     type="text" 
-                                    className="form-group-input nom_commune" 
+                                    className={!formOfficier.email_off.isValid && formOfficier.id_commune.error ? "error-border form-group-input nom_commune":"form-group-input nom_commune" }
                                     name="nom_commune"
                                     id="nom_commune"
+                                    autoComplete='off'
                                     placeholder="Commune" 
                                     value={nomCommune} 
                                     onChange={inputChangeCommune}
@@ -325,18 +327,18 @@ const FormCreateUser = () => {
                                     {communes?.map(c => (
                                     <li key={c.id_commune}>
                                         <p className='list-p' onClick={() => handleSetCodeCommune(c)}>
-                                        {c.code_commune} &nbsp;
-                                        {c.nom_commune} &nbsp;
-                                        {c.code_district} &nbsp;
+                                        {c.nom_commune}({c.code_commune})
                                         </p>
                                     </li>
                                     ))}
                                 </ul>
 
-                                <span className="msg-error"></span>
+                                <span className=""><i>Assurez-vous de sélectionner la commune</i></span>
+                                <span className="msg-error">{!formOfficier.id_commune.isValid && formOfficier.id_commune.error}</span>
                             </div>
                         </div>
 
+                        {/* Mod de passe */}
                         <div className="form-group">
                             <div>
                                 <label htmlFor="confirmPwd" className="form-group-label">Mot de passe:</label>
@@ -352,12 +354,13 @@ const FormCreateUser = () => {
                             </div>
                         </div>
                         
+                        {/* Mod de passe de confirmation */}
                         <div className="form-group" style={{marginTop:"1rem"}}>
                             <div>
                                 <label htmlFor="motPass_off" className="form-group-label">Confirmer le mot de passe:</label>
-                                <input 
+                                <input
                                 type="password" 
-                                className="form-group-input motPass_off" 
+                                className={!formOfficier.motPass_off.isValid && formOfficier.motPass_off.error ? "error-border form-group-input motPass_off":"form-group-input motPass_off" }
                                 name="motPass_off" 
                                 id="motPass_off" 
                                 placeholder="Mot de passe" 

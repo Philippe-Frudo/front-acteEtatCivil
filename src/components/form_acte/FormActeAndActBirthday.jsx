@@ -892,7 +892,7 @@ const FormActeAndBirthday = ({personne, acte, isEditForm}) => {
             isEditForm ? updatePersone() : addPersonne();
         }else {
             setValid(false)
-            setMessage("Verifier le(s) champ(s) non valide ou null");
+            setMessage("Vérifier les champs non valides");
         }
     }
     
@@ -941,7 +941,7 @@ const FormActeAndBirthday = ({personne, acte, isEditForm}) => {
                 setStateActe(true)
                 setMessage("L'ajout d'acte est réussi")
                 clearData();
-                 setTimeout(() => {setMessage("")} , 6000);
+                //  setTimeout(() => {setMessage("")} , 6000);
 
             })
             .catch(error => console.log(error));
@@ -1091,18 +1091,22 @@ const FormActeAndBirthday = ({personne, acte, isEditForm}) => {
                         <main className="main-main-content" id="main-main-content-1" style={{marginTop: "0", paddingTop:"0"}}>
 
                             <form className="form" id="form-add-act" onSubmit={handleSubmit} style={{paddingTop:"0"}}>
-                                <div className="alert-message">
-                                    {message && valid ?
-                                    (<span className='success message'>{message}</span>):
-                                    (<span className='message error'>{message}</span>)
-                                    }
-                                </div>
+
 
                                 <div className="content-user">
 
                                     <FormActe useFormActe={[formActe, setFormActe]} user={user} />
                                     <FormPersonne useFormPersonne={[formPersonne, setFormPersonne]} useTravails={[travails, setTravails]}/>
 
+                                    {/* Message de\la reponse de requette */}
+                                    <div className="alert-message">
+                                        {message && valid ?
+                                        ( <p className={message ? "message success":"success"}>{message}</p>):
+                                        ( <p  className={message ? "message error":"error"}>{message}</p>)
+                                        }
+                                    </div>
+
+                                    {/* Acte de formulaire */}
                                     <div className="action-group">
                                         {isEditForm ? 
                                             (<button type="submit" className="btn btn-save" id="save">Modifier</button>):

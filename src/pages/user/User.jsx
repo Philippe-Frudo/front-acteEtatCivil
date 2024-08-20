@@ -170,7 +170,7 @@ const Officier = () => {
                                                         id="edit" title='confirmer' 
                                                         onClick={() => handleConfirm(f.id_off)}
                                                         >
-                                                        <a href={`mailto:${f.email_off}?subject=${subjectConfirm}&body=${encodeURIComponent("Bonjour! vous pouvez vous connecter à votre compte. vous avez été confirmé") }` }> 
+                                                        <a href={`mailto:${f.email_off}?subject=${subjectConfirm}&body=${encodeURIComponent("Bonjour! vous pouvez vous connecter à votre compte. vous avez été auorisé de connecter") }` }> 
                                                         <box-icon name='check' color='#fff' ></box-icon>
                                                         </a>
                                                     </button>

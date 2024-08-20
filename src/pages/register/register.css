@@ -31,11 +31,11 @@
     margin-left: 1rem;
 }
 
-.message {
+/* .message {
     width: 100%;
     color: initial;
     padding: 0;
-}
+} */
 
 @media screen and (max-width:"570px") {
     .modal {

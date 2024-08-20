@@ -44,6 +44,9 @@ const formTravail = ({travail, isEditForm}) => {
 
         const newField = { [fieldName]: { value: fieldValue, isValid: validation.isValid , error: validation.error  } };
         setFormTravail({ ...formTravail, ...newField });
+        if (message) {
+            setMessage("")
+        }
     }
 
     const [valid, setValid] = useState(false);
@@ -139,8 +142,8 @@ const formTravail = ({travail, isEditForm}) => {
                 <form className="form" id="add-travail" onSubmit={handleSubmit}>
                     <div className="alert-message">
                         {message && valid ? 
-                            (<span className='message success'>{message}</span>):
-                            (<span className='message error'>{message}</span>)
+                           ( <p className={message ? "message success":"success"}>{message}</p>):
+                           ( <p  className={message ? "message error":"error"}>{message}</p>)
                         }
                     </div>
                     <div className="content-user">
