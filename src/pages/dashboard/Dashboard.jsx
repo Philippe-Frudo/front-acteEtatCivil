@@ -14,24 +14,23 @@ const Dashboard = ({user}) => {
   const [totalOfficier, setTotalOfficier] = useState(''); // L'officier est comme l'utilisateur
   const [totalNaissance, setTotalNaissance] = useState('');
   const [registerToday, setRegisterToday] = useState('');
-
   
-  // API COMPTE NOMBRE OFFICIER (UTILISATEUR)
-  useEffect(() => {
-      const fetchData = async () => {
-          try {
-              const response = await makeRequest.get(`/nombreOfficier`);
-              if (!response.data) {
-                setTotalOfficier(response.data)
-                return;
-              }
-              setTotalOfficier(response.data);
-          } catch (error) {
-              console.log(error);
-          }
-      };
-      fetchData();
-  }, []);
+    // API COMPTE NOMBRE OFFICIER (UTILISATEUR)
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await makeRequest.get(`/nombreOfficier`);
+                if (!response.data) {
+                  setTotalOfficier(response.data)
+                  return;
+                }
+                setTotalOfficier(response.data);
+            } catch (error) {
+                console.log(error);
+            }
+        };
+        fetchData();
+    }, []);
   
 
   // API TOTAL NOMBRE DE NAISSANCE
@@ -59,25 +58,34 @@ const Dashboard = ({user}) => {
   }, [user]);
   
 
-  // API COMPTE NOMBRE D'ANREGISTREMENT AUJOURD'HUI
-  useEffect(() => {
-      const fetchData = async () => {
-          try {
-              const response = await makeRequest.get(`/registerToday`);
-              if (!response.data) {
-                setRegisterToday(response.data)
-                  // console.log("Aucune enregistrement trouvée");
-                  return;
-              }
-              setRegisterToday(response.data);
-          } catch (error) {
-              console.log(error);
-          }
-      };
-      fetchData();
-  }, []);
+    // API COMPTE NOMBRE D'ANREGISTREMENT AUJOURD'HUI
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await makeRequest.get(`/registerToday`);
+                if (!response.data) {
+                  console.log(response);
+                  
+                    // console.log("Aucune enregistrement trouvée");
+                    return;
+                }else {
+                  if (user.isAdmin) {
+                      setRegisterToday(response.data.length);
+                  }else {
+                    const acteToday = response.data.filter(acte => acte.id_commune == user.commune);
+                      setRegisterToday(acteToday.length);
+                  }
+
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        };
+        fetchData();
+    }, [user]);
 
 
+    
   return (
     <>
           { /* <!-- ===== HEADER CARD 1 ===== --> */}

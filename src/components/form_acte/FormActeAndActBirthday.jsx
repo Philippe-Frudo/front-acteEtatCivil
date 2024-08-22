@@ -896,7 +896,6 @@ const FormActeAndBirthday = ({personne, acte, isEditForm}) => {
         }
     }
     
-    
     // API AJOUT PERSONNE
     const addPersonne = () => {
         setMessage("En cours d'ajout personne");
@@ -1092,7 +1091,6 @@ const FormActeAndBirthday = ({personne, acte, isEditForm}) => {
 
                             <form className="form" id="form-add-act" onSubmit={handleSubmit} style={{paddingTop:"0"}}>
 
-
                                 <div className="content-user">
 
                                     <FormActe useFormActe={[formActe, setFormActe]} user={user} />
@@ -1109,12 +1107,20 @@ const FormActeAndBirthday = ({personne, acte, isEditForm}) => {
                                     {/* Acte de formulaire */}
                                     <div className="action-group">
                                         {isEditForm ? 
-                                            (<button type="submit" className="btn btn-save" id="save">Modifier</button>):
-                                            (<button type="submit" className="btn btn-save" id="save">Envoyer</button>)
+                                            (
+                                            <>
+                                                <button type="submit" className="btn btn-save" id="save">Modifier</button>
+                                                <Link to={`/acte-etat-civil/detail/${acte.id_acte}`}><button type="reset" className="btn btn-clear" id="clear">Annuler</button></Link>
+                                            </>
+                                            ):(
+                                            <>
+                                                <button type="submit" className="btn btn-save" id="save">Enregistrer</button>
+                                                <button type="reset" className="btn btn-clear" id="clear" onClick={annuler}>Annuler</button>
+                                            </>
+                                            )
                                         }
-                                        <Link to={`/acte-etat-civil`}>
-                                            <button type="reset" className="btn btn-clear" id="clear">Annuler</button>
-                                        </Link>
+                                       
+
                                     </div>
 
                                 </div>

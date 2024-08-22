@@ -38,22 +38,14 @@ const FormCommune = ({commune, isEditForm}) => {
                 id_district: { value: commune.id_district || "", isValid: true, error: "" },
             });
 
-            districts?.forEach(f => {
-                console.log(f);
-                
-                if (f.id_district == commune.id_commune) {
-                        console.log(f.nom_commune);
-                    setNomDistrict(f.nom_commune); return; 
+            districts?.forEach(d => {
+                if (d.id_district== commune.id_district) {
+                    setNomDistrict(d.nom_district); return; 
                 }
             })
-            // console.log(districts);
-            // const foundDistrict = districts.find(d => d.id_district == commune.id_district)
-            // if (foundDistrict) {
-            //     setNomDistrict(foundDistrict.nom_district); return;  
-            // }
 
         }
-    }, [commune]);
+    }, [commune, districts]);
 
     
     //CHANGE VALUE DISTRICT
@@ -84,9 +76,10 @@ const FormCommune = ({commune, isEditForm}) => {
         } else if ( fieldName == "code_commune" && !regex.number.test(value)) {
             isValid = false;
             error = `Code invalide, seulement de nombre .`;
-        } else if ( fieldName == "nom_commune" && !regex.numberAndDigit.test(value)) {
+
+        } else if ( fieldName == "nom_district" && districts.some(d => d.nom_district !== value)) {
             isValid = false;
-            error = `Les caractères spéciaux ne sont pas autorisés à ce champ.`;
+            error = `ce district n'est pas valide.`;
         }
 
         return { isValid, error };
@@ -179,7 +172,7 @@ const FormCommune = ({commune, isEditForm}) => {
 
     function clearData() {
         setNomDistrict('')
-        setMessage("")
+        // setMessage("")
         setFormCommune({ ...formCommune,
             ...{
             code_commune: { value: "", isValid: false, error: "" },
@@ -282,14 +275,22 @@ const FormCommune = ({commune, isEditForm}) => {
                         <span className="msg-error">{!formCommune.id_district?.isValid && formCommune.id_district?.error}</span>
                     </div>
 
-                    {/* Action */}
+                    {/* Action Form*/}
                     <div className="action-group">
                         {isEditForm ? 
-                            (<button type="submit" className="btn btn-save" id="save">Modifier</button>):
-                            (<button type="submit" className="btn btn-save" id="save">Enregistrer</button>)
+                            (
+                            <>
+                                <button type="submit" className="btn btn-save" id="save">Modifier</button>
+                                <Link to={`/district`}><button type="reset" className="btn btn-clear" id="clear">Annuler</button></Link>
+                            </>
+                            ):(
+                            <>
+                                <button type="submit" className="btn btn-save" id="save">Enregistrer</button>
+                                <button type="reset" className="btn btn-clear" id="clear" onClick={annuler}>Annuler</button>
+                            </>
+                            )
                         }
 
-                        <button type="reset" className="btn btn-clear" id="clear" onClick={annuler}>Annuler</button>
                     </div>
                 </div>
             </form>

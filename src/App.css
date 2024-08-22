@@ -130,6 +130,7 @@
   padding: 2rem 1rem;
   border: 2px solid lightgrey;
   border-radius: 5px;
+  
 }
 
 .card-user-img{
@@ -183,6 +184,7 @@
 
 .user-email {
   font-size: var(--small-font-size);
+  overflow-wrap: anywhere;
 }
 
 /* ==========MAIN ===========*/
@@ -540,6 +542,12 @@
 
 .sex {
   display: block;
+}
+
+.sexe {
+  display:flex;
+  align-items:center; 
+  align-content: center;
 }
 
 .sex-group {

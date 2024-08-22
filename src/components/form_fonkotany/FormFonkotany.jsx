@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { searchAddress } from '../../helpers/borderField';
+import { regex } from './../../helpers/regex';
 // import FonkotanyService from '../../services/serviceFonkotany';
 // import CommuneService from '../../services/serviceCommune';
-import { regex } from './../../helpers/regex';
 import { makeRequest } from '../../services/axios';
 // import ADDRESS from '../../models/mock-address';
 
@@ -25,9 +25,9 @@ const FormFonkotany = ({ fonkotany, isEditForm }) => {
 
 
     const [formFonkotany, setFormFonkotany] = useState({
-        code_fonkotany: { value: "", isValid: true, error: "" },
-        nom_fonkotany: { value: "", isValid: true, error: "" },
-        id_commune: { value: "", isValid: true, error: "" },
+        code_fonkotany: { value: "", isValid: false, error: "" },
+        nom_fonkotany: { value: "", isValid: false, error: "" },
+        id_commune: { value: "", isValid: false, error: "" },
     });
 
 
@@ -55,7 +55,6 @@ const FormFonkotany = ({ fonkotany, isEditForm }) => {
         }
     }, [fonkotany]);
 
-    
 
     //CHANGE VALUE COMMUNE
     const handleSetNomCommune = (commune) => {
@@ -65,7 +64,6 @@ const FormFonkotany = ({ fonkotany, isEditForm }) => {
         setShowList(false);
     }
 
-
     const validateField = (fieldName, value) => {
         let isValid = true;
         let error = "";
@@ -73,21 +71,24 @@ const FormFonkotany = ({ fonkotany, isEditForm }) => {
             isValid = false;
             error = `Ce champ est obligatoire`;
 
-        } else if ( !regex.numberAndDigit.test(value)) {
+        } else if ( fieldName == "code_fonkotany" && !regex.number.test(value)) {
             isValid = false;
-            error = `Les caractères spéciaux nom autorisés.`;
+            error = `Code invalide, seul le nombre est autorisé .`;
+
+        } else if ( fieldName == "nom_commune" && communes.some(d => d.nom_commune !== value)) {
+            isValid = false;
+            error = `cette commune n'est pas valide.`;
         }
 
         return { isValid, error };
     }
-
 
     const handleInputChange = (e) => {
         const fieldName = e.target.name;
         const fieldValue = e.target.value;
 
         const validator = validateField(fieldName, fieldValue);
-        const newField = { [fieldName]: { value: fieldValue, isValid: true } };
+        const newField = { [fieldName]: { value: fieldValue, isValid: validator.isValid, error: validator.error } };
         setFormFonkotany({ ...formFonkotany, ...newField });
         if (message) {
             setMessage("")
@@ -173,7 +174,6 @@ const FormFonkotany = ({ fonkotany, isEditForm }) => {
 
 
     
-    
     function updateFonkotany () {
         console.log("Data fonkotany:", fonkotany);
         makeRequest.put(`/fonkotany/${fonkotany.id_fonkotany}`, fonkotany, {
@@ -218,6 +218,7 @@ const FormFonkotany = ({ fonkotany, isEditForm }) => {
 
 
     function clearData() {
+        setNomCommune("")
         setFormFonkotany({
             ...formFonkotany, 
             ...{
@@ -240,6 +241,7 @@ const FormFonkotany = ({ fonkotany, isEditForm }) => {
             <div className="modal add-modal active-modal" >
                 <div className="modal-container">
                     <div className="modal-header">
+
                         <div>
                             {isEditForm ? 
                                 (<h3 className="modal-title">Modifier Fonkotany</h3>):
@@ -252,19 +254,24 @@ const FormFonkotany = ({ fonkotany, isEditForm }) => {
                         </div>
                     </div>
 
+                        {/* Message de la validation */}
                         <div className="alert-message">
                             {message && valid ? 
                                ( <p className={message ? "message success":"success"}>{message}</p>):
                                ( <p  className={message ? "message error":"error"}>{message}</p>)
                             }
                         </div>
+
                     <form className="form" id="add-fonkotany" onSubmit={handleSubmit}>
+
                         <div className="content-user">
+
+                            {/* Code du fomkotany */}
                             <div className="form-group">
-                                <label htmlFor="code_fonkotany" className="form-group-label">Code fonkotany:</label>
+                                <label htmlFor="code_fonkotany" className="form-group-label">Code du fonkotany:</label>
                                 <input
                                     type="text"
-                                    className="form-group-input code_fonkotany"
+                                    className={!formFonkotany.code_fonkotany?.isValid && formFonkotany.code_fonkotany?.error ? "error-border form-group-input code_fonkotany":"form-group-input code_fonkotany"}
                                     name="code_fonkotany"
                                     id="code_fonkotany"
                                     placeholder="code de Fonkotanay"
@@ -277,11 +284,12 @@ const FormFonkotany = ({ fonkotany, isEditForm }) => {
 
                             </div>
 
+                            {/* Nom du fonkotany */}
                             <div className="form-group">
                                 <label htmlFor="nom_fonkotany" className="form-group-label">Nom Fonkotany:</label>
                                 <input
                                     type="text"
-                                    className="form-group-input nom_fonkotany"
+                                    className={!formFonkotany.nom_fonkotany?.isValid && formFonkotany.nom_fonkotany?.error ? "error-border form-group-input nom_fonkotany":"form-group-input nom_fonkotany"}
                                     name="nom_fonkotany"
                                     id="nom_fonkotany"
                                     placeholder="Nom de Fonkotanay"
@@ -293,15 +301,16 @@ const FormFonkotany = ({ fonkotany, isEditForm }) => {
                                 </span>
                             </div>
 
+                            {/* Nom commune (id_commune) */}
                             <div className="form-group" style={{position:"relative"}}>
                                 <label htmlFor="nom_commune" className="form-group-label">Code Commune:</label>
                                 <input
                                     type="text"
-                                    className="form-group-input nom_commune"
+                                    className={!formFonkotany.id_commune?.isValid && formFonkotany.id_commune?.error ? "error-border form-group-input nom_commune":"form-group-input nom_commune"}
                                     name="nom_commune"
                                     id="nom_commune"
                                     placeholder="Commune"
-                                    defaultValue={nomCommune}
+                                    value={nomCommune}
                                     onChange={handleInputChangeCommune}
                                     onKeyUp={(e) => searchAddress(e.target.id, "list_commune") }
                                     onFocus={() => setShowList(true) }
@@ -320,13 +329,22 @@ const FormFonkotany = ({ fonkotany, isEditForm }) => {
                                     {!formFonkotany.id_commune?.isValid && formFonkotany.id_commune?.error}
                                 </span>
                             </div>
+
+                            {/* Action Form */}
                             <div className="action-group">
                                 {isEditForm ? 
-                                    (<button type="submit" className="btn btn-save" id="save">Modifier</button>):
-                                    (<button type="submit" className="btn btn-save" id="save">Enregistrer</button>)
+                                    (<>
+                                        <button type="submit" className="btn btn-save" id="save">Modifier</button>
+                                        <Link to={`/fonkotany`}><button type="reset" className="btn btn-clear" id="clear">Annuler</button></Link>
+                                    </>
+                                    ):(
+                                    <>
+                                        <button type="submit" className="btn btn-save" id="save">Enregistrer</button>
+                                        <button type="reset" className="btn btn-clear" id="clear" onClick={annuler}>Annuler</button>
+                                    </>
+                                    )
                                 }
 
-                                <button type="reset" className="btn btn-clear" id="clear" onClick={annuler}>Annuler</button>
                             </div>
                         </div>
                     </form>

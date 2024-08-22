@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
-// import FONKOTANY from '../../models/mock-fonkotany';
 import FormFonkotany from '../../components/form_fonkotany/FormFonkotany';
 import { useParams } from 'react-router-dom';
 import { makeRequest } from '../../services/axios';
+// import FONKOTANY from '../../models/mock-fonkotany';
 
 const FormEditFonkotany = () => {
     const { id } = useParams();

@@ -44,94 +44,90 @@ function App() {
 
     const [user, setUser] = useState([])
     const refBody = useRef();
+    const [loading, setLoading] = useState(true);
 
     //=== API DET FORMATION UTILISATEUR (Officier) ===
     useEffect(() => {
         Auth.getFormation()
             .then(resp => {
-                if (!resp || !resp.data) {  // Assurez-vous que resp n'est pas null ou undefined
+                if (resp && resp.data) {
+                    setUser(resp.data);
+                } else {
                     console.log('Utilisateur non identifié');
-                    return;
                 }
-                setUser(resp.data);
+            })
+            .catch(error => {
+                console.error("Erreur lors de la récupération des informations utilisateur:", error);
+            })
+            .finally(() => {
+                setLoading(false); // Arrête le chargement après la tentative de récupération des données
             });
     }, []);
 
     const path = location.pathname == "/" || location.pathname == "/register" || location.pathname == "/404"
 
+
+    if (loading) {
+        return <div>Chargement...</div>; // Ou un spinner de chargement
+    }
+    
+    if (!user) {
+        return <Navigate replace to="/404" />;
+    }
+
+
+
     return (
         <>
-            
-        <Router>
-            <div ref={refBody} className={ path ? "": "big-container"} >
-
-                {path ? null : <Header refBody={refBody}/>}
-
-                <main className="main">
-                    { /* <!-- =====HEADER MAIN ==== --> */}
-                    { path ? null :  <MainTop />}
-
-                    { /* <!-- ====== CONTAINER MAIN ===== --> */}
-                    <div className="main-container main-container-2" id={ path ? "": "main-scroll" }>
-
-
-                    <Routes>
-
-
-                        <Route exact path="/" element={<Login />} />
-                        <Route path="/register" element={<FormCreateUser />} />
-
-
-                        {user.isAdmin ? (<Route path="/user" element={<User />} />):('') }
-
-                        <Route path="/dashboard" element={<Dashboard user={user}/>} />
-
-
-                        <Route path="/acte-etat-civil" element={<Acte user={user}/>} />
-                        <Route path="/acte-etat-civil/detail/:id" element={<ActeDetail />} />
-                        <Route path="/acte-etat-civil/add" element={<FormAddActe />} />
-                        <Route path="/acte-etat-civil/edit/:id" element={<FormEditActe />} />
-                        
-
-                        {user.isAdmin ? (<Route path="/travail" element={<Travail />} />):('') }
-                        {user.isAdmin ? (<Route path="/travail/add" element={<FormAddTravail />} />):('') }
-                        {user.isAdmin ? (<Route path="/travail/edit/:id" element={<FormEditTravail />} />):('') }
-
-
-                        <Route path="/fonkotany" element={<Fonkotany />} />
-                        <Route path="/fonkotany/edit/:id" element={<FormEditFonkotany />} />
-                        <Route path="/fonkotany/add" element={<FormAddFonkotany />} />
-
-                        {user.isAdmin ? (<Route path="/commune" element={<Commune />} />):('') }
-                        {user.isAdmin ? (<Route path="/commune/add" element={<FormAddCommune />} />):('') }
-                        {user.isAdmin ? (<Route path="/commune/edit/:id" element={<FormEditCommune />} />):('') }
-
-
-                        {user.isAdmin ? (<Route path="/district" element={<District />} />):('') }
-                        {user.isAdmin ? (<Route path="/district/add" element={<FormAddDistrict />} />):('') }
-                        {user.isAdmin ? (<Route path="/district/edit/:id" element={<FormEditDistrict />} />):('') }
-                        
-
-                        {user.isAdmin ? (<Route path="/region" element={<Region />} />):('') }
-                        {user.isAdmin ? (<Route path="/region/add" element={<FormAddRegion />} />):('') }
-                        {user.isAdmin ? (<Route path="/region/edit/:id" element={<FormEditRegion />} />):('') }
-
-
-
-                        {/* Paage non trouver */}
-                        <Route path="/404" element={<PageNotFound refBody={refBody}/>} />
-                        <Route path="*" element={<Navigate replace to="/404" />} />
-
-
-                    </Routes>
-
-                    </div>
-                </main>
-            </div>
-
-        </Router>
+            <Router>
+                <div ref={refBody} className={ path ? "": "big-container"} >
+    
+                    {path ? null : <Header refBody={refBody}/>}
+    
+                    <main className="main">
+                        { path ? null :  <MainTop />}
+    
+                        <div className="main-container main-container-2" id={ path ? "": "main-scroll" }>
+                            <Routes>
+                                <Route exact path="/" element={<Login />} />
+                                <Route path="/register" element={<FormCreateUser />} />
+    
+                                {user.isAdmin && (
+                                    <>
+                                        <Route path="/user" element={<User />} />
+                                        <Route path="/travail" element={<Travail />} />
+                                        <Route path="/travail/add" element={<FormAddTravail />} />
+                                        <Route path="/travail/edit/:id" element={<FormEditTravail />} />
+                                        <Route path="/commune" element={<Commune />} />
+                                        <Route path="/commune/add" element={<FormAddCommune />} />
+                                        <Route path="/commune/edit/:id" element={<FormEditCommune />} />
+                                        <Route path="/district" element={<District />} />
+                                        <Route path="/district/add" element={<FormAddDistrict />} />
+                                        <Route path="/district/edit/:id" element={<FormEditDistrict />} />
+                                        <Route path="/region" element={<Region />} />
+                                        <Route path="/region/add" element={<FormAddRegion />} />
+                                        <Route path="/region/edit/:id" element={<FormEditRegion />} />
+                                    </>
+                                )}
+    
+                                <Route path="/dashboard" element={<Dashboard user={user}/>} />
+                                <Route path="/acte-etat-civil" element={<Acte user={user}/>} />
+                                <Route path="/acte-etat-civil/detail/:id" element={<ActeDetail />} />
+                                <Route path="/acte-etat-civil/add" element={<FormAddActe />} />
+                                <Route path="/acte-etat-civil/edit/:id" element={<FormEditActe />} />
+                                <Route path="/fonkotany" element={<Fonkotany />} />
+                                <Route path="/fonkotany/edit/:id" element={<FormEditFonkotany />} />
+                                <Route path="/fonkotany/add" element={<FormAddFonkotany />} />
+    
+                                <Route path="/404" element={<PageNotFound refBody={refBody}/>} />
+                                <Route path="*" element={<Navigate replace to="/404" />} />
+                            </Routes>
+                        </div>
+                    </main>
+                </div>
+            </Router>
         </>
-    )
+    );
 }
 
 export default App

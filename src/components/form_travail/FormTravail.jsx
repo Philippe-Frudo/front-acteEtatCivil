@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
 import { regex } from '../../helpers/regex';
-import TravailService from './../../services/serviceTravail'
 import { makeRequest } from '../../services/axios';
+// import TravailService from './../../services/serviceTravail'
 
 const formTravail = ({travail, isEditForm}) => {
     const navigate = useNavigate();
@@ -28,9 +28,6 @@ const formTravail = ({travail, isEditForm}) => {
             isValid = false;
             error = `Ce champ est obligatoire`;
 
-        } else if ( !regex.numberAndDigit.test(value)) {
-            isValid = false;
-            error = `Les caractères spéciaux ne sont pas autorisés à ce champ.`;
         }
 
         return { isValid, error };
@@ -50,13 +47,13 @@ const formTravail = ({travail, isEditForm}) => {
     }
 
     const [valid, setValid] = useState(false);
-    const [message, setMessage] = useState([]);
+    const [message, setMessage] = useState('');
     const handleSubmit = (e) => {
         e.preventDefault();
         const isValid = Object.values(formTravail).every(field => field.isValid);
 
         if (isValid && formTravail.nom_travail?.value) {
-            setValid(true)
+            setValid(isValid)
             setMessage("En cours de connexion ...");
             travail.nom_travail = formTravail.nom_travail?.value;
             
@@ -140,6 +137,8 @@ const formTravail = ({travail, isEditForm}) => {
                 </div>
 
                 <form className="form" id="add-travail" onSubmit={handleSubmit}>
+
+                    {/* Message reponse */}
                     <div className="alert-message">
                         {message && valid ? 
                            ( <p className={message ? "message success":"success"}>{message}</p>):
@@ -148,11 +147,12 @@ const formTravail = ({travail, isEditForm}) => {
                     </div>
                     <div className="content-user">
 
+                        {/* Nom Travail */}
                         <div className="form-group">
                             <label htmlFor="nom_travail" className="form-group-label">Nom travail:</label>
                             <input
                                 type="text"
-                                className="form-group-input nom_travail"
+                                className={!formTravail.nom_travail?.isValid && formTravail.nom_travail?.error ? "error-border form-group-input nom_travail": "form-group-input nom_travail"}
                                 name="nom_travail"
                                 id="nom_travail"
                                 placeholder="nom"
