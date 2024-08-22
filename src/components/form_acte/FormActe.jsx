@@ -190,25 +190,29 @@ const FormActe = ({ useFormActe, user }) => {
       <div className="content-mere">
         <h3 className="card-acte">Acte</h3>
         <fieldset>
-          <div >
-            <label htmlFor="id_type" className="form-group-label">Type d'acte:</label>
-            <select 
-              className="form-group-input select id_type" 
-              name="id_type" 
-              id="id_type" 
-              disabled
-              value={formActe.id_type?.value}
-              onChange={handleInputChange}
-            >
-              {/* <option value=''>Selectionner le type d'acte</option> */}
-              {typesActe.map(type => ( 
-                  <option key={type.id_type} value={type.id_type}>{type.nom_type}</option>
-              ))}
-            </select>
-            <span className="msg-error"></span>
-          </div>
 
-          <div className="form-group">
+          <div className="form-group form-group-2">
+
+            {/* Type d'acte */}
+            <div >
+              <label htmlFor="id_type" className="form-group-label">Type d'acte:</label>
+              <select 
+                className="form-group-input select id_type" 
+                name="id_type" 
+                id="id_type" 
+                disabled
+                value={formActe.id_type?.value}
+                onChange={handleInputChange}
+              >
+                {/* <option value=''>Selectionner le type d'acte</option> */}
+                {typesActe.map(type => ( 
+                    <option key={type.id_type} value={type.id_type}>{type.nom_type}</option>
+                ))}
+              </select>
+              <span className="msg-error"></span>
+            </div>
+            
+            {/* Numero d'acre */}
             <div>
               <label htmlFor="num_acte" className="form-group-label">Numéro d'acte:</label>
               <input 
@@ -222,7 +226,10 @@ const FormActe = ({ useFormActe, user }) => {
               />
               <span className="msg-error"></span>
             </div>
+
           </div>
+
+          {/* Date de l'acte */}
           <div className="form-group form-group-2">
             <div>
               <label htmlFor="date_acte" className="form-group-label">Date de l'acte:</label>
@@ -251,6 +258,7 @@ const FormActe = ({ useFormActe, user }) => {
             </div>
           </div>
           
+          {/* Lieu d'acte */}
           <div className="form-group">
             <div>
               <label htmlFor="lieu_acte" className="form-group-label">Lieu d'acte:</label>
@@ -266,39 +274,36 @@ const FormActe = ({ useFormActe, user }) => {
             </div>
           </div>
           
-          <div className="form-group">
-            <div className='input-relative'>
-                <label htmlFor="nom_fonkotany" className="form-group-label">Fonkotany:</label>
-                <input 
-                  type="text" 
-                  className="form-group-input nom_fonkotany" 
-                  name="nom_fonkotany" 
-                  id="nom_fonkotany" 
-                  placeholder="fonkotany" 
-                  value={fieldFonkotany} 
-                  onChange={handleInputChangeFonkotany}
-                  onKeyUp={(e) => searchAddress(e.target.id, "list_fonkotany") }
-                  onFocus={() => showList(".nom_fonkotany_acte") } 
-                  // onBlur={() => hiddenList(".adrs_person")}
-                />
-                <ul id="list_fonkotany" className="list nom_fonkotany_acte">
-                    {fonkotany?.map(fonk => (
-                      <li key={fonk.id_fonkotany}>
-                        <p onClick={() => handleClickFonkotany(fonk)} className='list-p'>
-                        {fonk.nom_fonkotany}({fonk.code_fonkotany})
-                        </p>
-                      </li>
-                    ))}
-                </ul>
+          {/* Commune et Fonkotany */}
+          <div className="form-group form-group-2">
+              <div className='input-relative'>
+                  <label htmlFor="nom_fonkotany" className="form-group-label">Fonkotany:</label>
+                  <input 
+                    type="text" 
+                    className="form-group-input nom_fonkotany" 
+                    name="nom_fonkotany" 
+                    id="nom_fonkotany" 
+                    placeholder="fonkotany" 
+                    value={fieldFonkotany} 
+                    onChange={handleInputChangeFonkotany}
+                    onKeyUp={(e) => searchAddress(e.target.id, "list_fonkotany") }
+                    onFocus={() => showList(".nom_fonkotany_acte") } 
+                    // onBlur={() => hiddenList(".adrs_person")}
+                  />
+                  <ul id="list_fonkotany" className="list nom_fonkotany_acte">
+                      {fonkotany?.map(fonk => (
+                        <li key={fonk.id_fonkotany}>
+                          <p onClick={() => handleClickFonkotany(fonk)} className='list-p'>
+                          {fonk.nom_fonkotany}({fonk.code_fonkotany})
+                          </p>
+                        </li>
+                      ))}
+                  </ul>
 
-                <span className=""><i>Assurez-vous de sélectionner le fonkotany</i></span>
-                <span className="msg-error"></span>
-            </div>
+                  <span className=""><i>Assurez-vous de sélectionner le fonkotany</i></span>
+                  <span className="msg-error"></span>
+              </div>
 
-          </div>
-
-          <br />
-          <div className="form-group">
                 <div style={{position:"relative"}}>
                     <label htmlFor="nom_commune" className="form-group-label">Commune:</label>
                     <input
@@ -329,9 +334,10 @@ const FormActe = ({ useFormActe, user }) => {
                     <span className=""><i>Assurez-vous de sélectionner la commune.</i></span>
                     <span className="msg-error"></span>
                 </div>
-                <br />
           </div>
+          <br />
 
+          {/* Date enregistrement */}
           <div className="form-group form-group-2">
             <div>
               <label htmlFor="date_enreg" className="form-group-label">Date d'enregistrement d'acte:</label>
@@ -444,8 +450,9 @@ const FormActe = ({ useFormActe, user }) => {
                 </div>
             </div>
 
+            {/* Sexe du temoin */}
             <div className="form-group">
-                <div >
+                <div className='sexe'>
                     <label htmlFor="" className="form-group-label sexe_temoin">Sexe:</label>
                     <label className="sex-group">
                         <input type="radio" 
@@ -469,8 +476,10 @@ const FormActe = ({ useFormActe, user }) => {
                     </label>
                 </div>
             </div>
+            <br />
 
-            <div className="form-group">
+            {/* Adresse eet travail */}
+            <div className="form-group form-group-2">
                 <div>
                     <label htmlFor="adrs_temoin" className="form-group-label">Adresse:</label>
                     <input 
@@ -484,9 +493,7 @@ const FormActe = ({ useFormActe, user }) => {
                     />
                     <span className="msg-error"></span>
                 </div>
-            </div>
 
-            <div className="form-group">
               <div style={{position:"relative"}}>
                   <label htmlFor="profession_temoin" className="form-group-label">Profession:</label>
                   <input 
@@ -513,6 +520,7 @@ const FormActe = ({ useFormActe, user }) => {
                   <span className=""><i>Assurez-vous de sélectionner le travail</i></span>
                   <span className="msg-error"></span>
               </div>
+
             </div>
 
         </fieldset>

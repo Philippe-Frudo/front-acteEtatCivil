@@ -65,15 +65,21 @@ const FormDistrict = ({district, isEditForm}) => {
             isValid = false;
             error = `Ce champ est obligatoire`;
 
-        } else if ( !regex.numberAndDigit.test(value)) {
+        } else if ( fieldName == "nom_district" && value.length < 0) {
             isValid = false;
-            error = `Les caractères spéciaux ne sont pas autorisés à ce champ.`;
+            error = `district n'est pas valide.`;
+
+        } else if ( fieldName == "code_district" && !regex.number.test(value)) {
+            isValid = false;
+            error = `Code invalide, seul le nombre est autorisé.`;
+
+        } else if ( fieldName == "nom_region" && regions.some(d => d.nom_region !== value)) {
+            isValid = false;
+            error = `cette region n'est pas valide. Entrer de region valide`;
         }
 
         return { isValid, error };
     }
-
-    // console.log(formDistrict.code_district?.isValid);
 
     const handleInputChange = (e) => {
         const fieldName = e.target.name;
@@ -105,13 +111,12 @@ const FormDistrict = ({district, isEditForm}) => {
 
     function handleSubmit (e) {   
         e.preventDefault();
-        console.log('Submit');
         const isValid = Object.values(formDistrict).every(field => field.isValid);
         
 
         if (isValid && formDistrict.code_district?.value) {
             setValid(true);
-            setMessage("En cours de connexion ...");
+            // setMessage("En cours de connexion ...");
             district.code_district = formDistrict.code_district?.value;
             district.nom_district = formDistrict.nom_district?.value;
             district.id_region = formDistrict.id_region.value;
@@ -165,14 +170,15 @@ const FormDistrict = ({district, isEditForm}) => {
     }
     
     function clearData() {
-        setNomRegion('')
         setFormDistrict({
             ...formDistrict, 
             ...{
-            code_district: { value: "", isValid: false, error: "" },
-            nom_district: { value: "", isValid: false, error: "" },
-            id_region: { value: "", isValid: false, error: "" },
-        }})
+                code_district: { value: "", isValid: false, error: "" },
+                nom_district: { value: "", isValid: false, error: "" },
+                id_region: { value: "", isValid: false, error: "" },
+            } })
+            
+            setNomRegion('')
     }
 
     function annuler() {
@@ -203,16 +209,19 @@ const FormDistrict = ({district, isEditForm}) => {
             <form className="form" id="add-District" onSubmit={handleSubmit}>
                 <div className="alert-message">
                     {message && valid ? 
-                      ( <p className={message ? "message success":"success"}>{message}</p>):
-                      ( <p  className={message ? "message error":"error"}>{message}</p>)
+                      (<p className={message ? "message success":"success"}>{message}</p>):
+                      (<p  className={message ? "message error":"error"}>{message}</p>)
                     }
                 </div>
+
                 <div className="content-user">
+
+                    {/* Code district */}
                     <div className="form-group">
-                        <label htmlFor="code_district" className="form-group-label">Code district:</label>
+                        <label htmlFor="code_district" className="form-group-label">Code du district:</label>
                         <input
                             type="text"
-                            className="form-group-input code_district"
+                            className={!formDistrict.code_district?.isValid && formDistrict.code_district?.error ? "error-border form-group-input code_district":"form-group-input code_district"}
                             name="code_district"
                             id="code_district"
                             placeholder="code"
@@ -223,11 +232,12 @@ const FormDistrict = ({district, isEditForm}) => {
                         <span className="msg-error">{!formDistrict.code_district?.isValid && formDistrict.code_district?.error}</span>
                     </div>
 
+                    {/* Nom du district */}
                     <div className="form-group">
                         <label htmlFor="nom_district" className="form-group-label">Nom district:</label>
                         <input
                             type="text"
-                            className="form-group-input nom_district"
+                            className={!formDistrict.nom_district?.isValid && formDistrict.nom_district?.error ? "error-border form-group-input nom_district":"form-group-input nom_district"}
                             name="nom_district"
                             id="nom_district"
                             placeholder="nom"
@@ -237,21 +247,22 @@ const FormDistrict = ({district, isEditForm}) => {
                         <span className="msg-error">{!formDistrict.nom_district?.isValid && formDistrict.nom_district?.error}</span>
                     </div>
 
+                    {/* Region */}
                     <div className="form-group" style={{position:"relative"}}>
                         <label htmlFor="nom_region" className="form-group-label">Région:</label>
                         <input
                             type="text"
-                            className="form-group-input nom_region"
+                            className={!formDistrict.id_region?.isValid && formDistrict.id_region?.error ? "error-border form-group-input nom_region":"form-group-input nom_region"}
                             name="nom_region"
                             id="nom_region"
                             placeholder="région"
                             value={nomRegion}
                             onChange={handleInputChangeRegion}
-                            onKeyUp={(e) => searchAddress(e.target.id, "list_district") }
+                            onKeyUp={(e) => searchAddress(e.target.id, "list_region") }
                             onFocus={() => setShowList(true) }
                         />
           
-                        <ul id="list_district" className={ showList ? "showList list":"list"}>
+                        <ul id="list_region" className={ showList ? "showList list":"list"}>
                             {regions?.map(c => (
                             <li key={c.id_region}>
                                 <p className='list-p' onClick={() => handleSetNomRegion(c)}>
@@ -265,13 +276,26 @@ const FormDistrict = ({district, isEditForm}) => {
 
                     </div>
 
+
+                    {/* Action Formulaire */}
                     <div className="action-group">
                         {isEditForm ? 
-                            (<button type="submit" className="btn btn-save" id="save">Modifier</button>):
-                            (<button type="submit" className="btn btn-save" id="save">Enregistrer</button>)
+                            (
+                            <>
+                                <button type="submit" className="btn btn-save" id="save">Modifier</button>
+                                <Link to={`/district`}><button type="reset" className="btn btn-clear" id="clear">Annuler</button></Link>
+                            </>
+                            ):
+                            (
+                            <>
+                                <button type="submit" className="btn btn-save" id="save">Enregistrer</button>
+                                <button type="reset" className="btn btn-clear" id="clear" onClick={annuler}>Annuler</button>
+                            </>
+                            )
                         }
 
-                        <button type="reset" className="btn btn-clear" id="clear" onClick={annuler}>Annuler</button>
+
+                        
                     </div>
                 </div>
             </form>

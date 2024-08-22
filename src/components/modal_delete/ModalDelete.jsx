@@ -175,7 +175,8 @@ const ModalDelete = ({id, nomPage, useDelete, setData}) => {
                     </div>
 
                     <div className="action-group" style={{ padding: "1rem 1rem 2rem 1rem", display: "flex", SalignContent: "center", justifyContent: "center" }}>
-                        <button 
+                        <button
+                        style={{ backgroundColor:"red" }}
                         type="submit" 
                         className="btn btn-save" 
                         id="delete" 
@@ -184,7 +185,7 @@ const ModalDelete = ({id, nomPage, useDelete, setData}) => {
                             Confirmer
                         </button>
 
-                        <button type="reset" className="btn btn-clear" id="cancel" onClick={hiddenDeleteModal}> Annuler</button>
+                        <button type="reset" className="btn btn-clear" id="cancel" onClick={hiddenDeleteModal}>Annuler</button>
                     </div>
                 </div>
             </div>

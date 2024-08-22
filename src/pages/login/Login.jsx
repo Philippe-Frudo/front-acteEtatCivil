@@ -78,7 +78,6 @@ const Login = () => {
                 { headers: {"Content-Type":"application/json" } }
             )
             .then(response => {
-                console.log(response);
                 if ( !response.data.status) {
                     setValid(false)
                     console.log(response);
@@ -103,7 +102,7 @@ const Login = () => {
             <section className="section container" id="login" style={{ minHeigth:"100vh" }}>
                 <div className="modal container-authentication" >
                     <h3 className="modal-title" style={{ color: '#000', marginBottom: "10px" }}>Authentification</h3>
-                    <span className="modal-subtitle" style={{ color: '#000' }}>Biènvenu sur notre plateforme. On entrer votre compte pour vous accèder au plateforme</span>
+                    <span className="modal-subtitle" style={{ color: '#000' }}>Biènvenu sur notre plateforme. Entrer votre compte pour vous accèder.</span>
 
                     <div>
                         <form className="form-authentification" id="loginForm" onSubmit={e => handleSubmit(e)}>
@@ -129,7 +128,7 @@ const Login = () => {
                                                 name="userEmail" id="userEmail" 
                                                 placeholder="votre e-mail" 
                                                 autoComplete="off" 
-                                                required
+                                                // required
                                                 value={form.userEmail.value} 
                                                 onChange={e => handleInputChange(e)} 
                                             />
@@ -147,8 +146,8 @@ const Login = () => {
                                                 className="form-group-input password" 
                                                 name="password" 
                                                 id="password" 
-                                                required
-                                                placeholder="Mot de passe" 
+                                                // required
+                                                placeholder="votre mot de passe" 
                                                 autoComplete="off" 
                                                 value={form.password.value} 
                                                 onChange={e => handleInputChange(e)} 

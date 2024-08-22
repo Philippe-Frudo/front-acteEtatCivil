@@ -93,6 +93,7 @@ const FormPersonne = ({ useFormPersonne, useTravails }) => {
                         </div>
                     </div>
                     
+                    {/* Nom et prenom */}
                     <div className="form-group form-group-2">
                         <div>
                             <label htmlFor="nom_person" className="form-group-label">Nom:</label>
@@ -122,8 +123,9 @@ const FormPersonne = ({ useFormPersonne, useTravails }) => {
                         </div>
                     </div>
 
+                    {/* Sexe de la personne */}
                     <div className="form-group">
-                        <div>
+                        <div className='sexe'>
                             <label htmlFor="" className="form-group-label sexe_person ">Sexe:</label>
                             <label className="sex-group">
                                 <input type="radio" 
@@ -147,8 +149,10 @@ const FormPersonne = ({ useFormPersonne, useTravails }) => {
                             </label>
                         </div>
                     </div>
+                    <br />
 
-                    <div className="form-group">
+                    {/* Adresse du personne */}
+                    <div className="form-group form-group-2">
                         <div>
                             <label htmlFor="adrs_person" className="form-group-label">Adresse:</label>
                             <input 
@@ -162,9 +166,7 @@ const FormPersonne = ({ useFormPersonne, useTravails }) => {
                             />
                             <span className="msg-error"></span>
                         </div>
-                    </div>
 
-                    <div className="form-group">
                         <div style={{position:"relative"}}>
                             <label htmlFor="nom_travail_person" className="form-group-label">Profession:</label>
                             <input 
@@ -188,6 +190,7 @@ const FormPersonne = ({ useFormPersonne, useTravails }) => {
                                     </li>
                                 ))}
                             </ul>
+                            
                             <span className=""><i>Assurez-vous de bien sélectionner le profession</i></span>
                             <span className="msg-error"></span>
                         </div>
@@ -199,6 +202,7 @@ const FormPersonne = ({ useFormPersonne, useTravails }) => {
             <div className="content-mere">
                 <h3 className="card-acte">Mère</h3>
                 <fieldset>
+                    {/* Nom et prenom */}
                     <div className="form-group form-group-2">
                         <div>
                             <label htmlFor="nom_m" className="form-group-label">Nom:</label>
@@ -227,6 +231,7 @@ const FormPersonne = ({ useFormPersonne, useTravails }) => {
                         </div>
                     </div>
                 
+                    {/* Date de naissance et age de la mere */}
                     <div className="form-group form-group-2">
                         <div>
                             <label htmlFor="date_nais_m" className="form-group-label">Date de naissance:</label>
@@ -256,6 +261,7 @@ const FormPersonne = ({ useFormPersonne, useTravails }) => {
                         </div>        
                     </div>
 
+                    {/* Lieu de naisance de la mere*/}
                     <div className="form-group">
                         <div>
                             <label htmlFor="lieu_nais_m" className="form-group-label">Lieu de naissance:</label>
@@ -273,7 +279,8 @@ const FormPersonne = ({ useFormPersonne, useTravails }) => {
                        
                     </div>
 
-                    <div className="form-group">
+                    {/* Adresse de la mere */}
+                    <div className="form-group form-group-2">
                         <div>
                             <label htmlFor="adrs_m" className="form-group-label">Adresse:</label>
                             <input 
@@ -287,9 +294,7 @@ const FormPersonne = ({ useFormPersonne, useTravails }) => {
                             />
                             <span className="msg-error"></span>
                         </div>
-                    </div>
 
-                    <div className="form-group">
                         <div style={{position:"relative"}}>
                             <label htmlFor="profession_m" className="form-group-label">Profession:</label>
                             <input 
@@ -325,6 +330,8 @@ const FormPersonne = ({ useFormPersonne, useTravails }) => {
             <div className="content-mere">
                 <h3 className="card-acte">Père</h3>
                 <fieldset>
+
+                    {/* Nom et prenom */}
                     <div className="form-group form-group-2">
                         <div>
                             <label htmlFor="nom_p" className="form-group-label">Nom:</label>
@@ -354,6 +361,7 @@ const FormPersonne = ({ useFormPersonne, useTravails }) => {
                         </div>
                     </div>
             
+                    {/* Date de naissance et age */}
                     <div className="form-group form-group-2">
                         <div>
                             <label htmlFor="date_nais_p" className="form-group-label">Date de Naissance:</label>
@@ -385,6 +393,7 @@ const FormPersonne = ({ useFormPersonne, useTravails }) => {
                         </div>
                     </div>
 
+                    {/* Lieu de naissance */}
                     <div className="form-group">
                         <div>
                             <label htmlFor="lieu_nais_p" className="form-group-label">Lieu de naissance:</label>
@@ -401,7 +410,8 @@ const FormPersonne = ({ useFormPersonne, useTravails }) => {
                         </div>
                     </div>
 
-                    <div className="form-group">
+                    {/* Adresse */}
+                    <div className="form-group form-group-2">
                         <div>
                             <label htmlFor="adrs_p" className="form-group-label">Adresse:</label>
                             <input 
@@ -415,9 +425,7 @@ const FormPersonne = ({ useFormPersonne, useTravails }) => {
                             />
                             <span className="msg-error"></span>
                         </div>
-                    </div>
-                    
-                    <div className="form-group">
+
                         <div style={{position:"relative"}}>
                             <label htmlFor="profession_p" className="form-group-label">Profession :</label>
                             <input 

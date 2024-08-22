@@ -1,8 +1,9 @@
 import React from 'react'
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import RegionService from '../../services/serviceRegion';
+// import RegionService from '../../services/serviceRegion';
 import { makeRequest } from '../../services/axios';
+import { regex } from '../../helpers/regex';
 
 const FormRegion = ({region, isEditForm}) => {
 
@@ -30,10 +31,12 @@ const FormRegion = ({region, isEditForm}) => {
         if (!value) {
             isValid = false;
             error = "Ce champ est obligatoire";
-        } else if (/[^a-zA-Z0-9 ]/.test(value)) {
+
+        } else if ( fieldName == "code_region" && !regex.number.test(value)) {
             isValid = false;
-            error = "Caractères spéciaux non autorisés";
-        }
+            error = `Code invalide, seulement de nombre est autorisé.`;
+        } 
+
         return { isValid, error };
     }
 
@@ -87,6 +90,8 @@ const FormRegion = ({region, isEditForm}) => {
         .catch(error => console.log(error) )   
     }
 
+
+    // ADD REGION
     function addRegion () {
         makeRequest.post(`/regions`, region, {
             headers: {"Content-Type": "application/json"}
@@ -107,6 +112,7 @@ const FormRegion = ({region, isEditForm}) => {
     }
 
 
+    // REINITIALISER LES CHAMPS
     function clearData() {
         setFormRegion({ ...formRegion,
             ...{
@@ -138,19 +144,23 @@ const FormRegion = ({region, isEditForm}) => {
                 </div>
 
                 <form className="form" id="add-region" onSubmit={handleSubmit}>
+
+                    {/* Message de la reponse */}
                     <div className="alert-message">
                         {valid && message ? 
                             ( <p className={message ? "message success":"success"}>{message}</p>):
                             ( <p  className={message ? "message error":"error"}>{message}</p>)
                         }
                     </div>
+
                     <div className="content-user">
 
+                        {/* Code region */}
                         <div className="form-group">
-                            <label htmlFor="code_region" className="form-group-label">Code région:</label>
+                            <label htmlFor="code_region" className="form-group-label">Code:</label>
                             <input
                                 type="text"
-                                className="form-group-input code_region"
+                                className={!formRegion.code_region?.isValid && formRegion.code_region?.error ? "error-border form-group-input code_region":"form-group-input code_region"}
                                 name="code_region"
                                 id="code_region"
                                 placeholder="Code region"
@@ -161,11 +171,12 @@ const FormRegion = ({region, isEditForm}) => {
                             <span className="msg-error">{!formRegion.code_region?.isValid && formRegion.code_region?.error}</span>
                         </div>
 
+                        {/* Nom Region */}
                         <div className="form-group">
                             <label htmlFor="nom_region" className="form-group-label">Nom région:</label>
                             <input
                                 type="text"
-                                className="form-group-input nom_region"
+                                className={!formRegion.nom_region?.isValid && formRegion.nom_region?.error ? "error-border form-group-input nom_region":"form-group-input nom_region"}
                                 name="nom_region"
                                 id="nom_region"
                                 placeholder="nom"
@@ -175,13 +186,21 @@ const FormRegion = ({region, isEditForm}) => {
                             <span className="msg-error">{!formRegion.nom_region?.isValid && formRegion.nom_region?.error}</span>
                         </div>
 
+                        {/* ACTION Form */}
                         <div className="action-group">
                             {isEditForm ? 
-                            (<button type="submit" className="btn btn-save" id="save">Modifier</button>):
-                            (<button type="submit" className="btn btn-save" id="save">Enregistrer</button>)
+                                (
+                                <>
+                                    <button type="submit" className="btn btn-save" id="save">Modifier</button>
+                                    <Link to={`/region`}><button type="reset" className="btn btn-clear" id="clear">Annuler</button></Link>
+                                </>
+                                ):(
+                                <>
+                                    <button type="submit" className="btn btn-save" id="save">Enregistrer</button>
+                                    <button type="reset" className="btn btn-clear" id="clear" onClick={clearData}>Annuler</button>
+                                </>
+                                )
                             }
-
-                            <button type="reset" className="btn btn-clear" id="clear" onClick={clearData}>Annuler</button>
                         </div>
                     </div>
                 </form>

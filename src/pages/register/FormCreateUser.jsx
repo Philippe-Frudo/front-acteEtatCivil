@@ -165,11 +165,20 @@ const FormCreateUser = () => {
 
             // Email JS
             emailjs
-            .send("service_erl068v","template_dswbbur", officier, "OM-fB_NYpfB3XoSrO" )
+            .send("service_erl068v","template_dswbbur", 
+                {
+                    nom_off: officier.nom_off,
+                    prenom_off: officier.prenom_off,
+                    sexe_off: officier.sexe_off,
+                    email_off:  officier.email_off,
+                    motPass_off: officier.motPass_off,
+                    nom_commune: nomCommune,
+                    reply_to: '',
+                }, 
+                "OM-fB_NYpfB3XoSrO" )
             .then(response => { console.log('SUCCES', response); })
             .catch(error => console.log("Erreur d'envoi email", error) );
 
-                    
             clearData();
         })
         // .then( () => useNavigate('/login') )
@@ -194,7 +203,7 @@ const FormCreateUser = () => {
         });
         setCMotPass("");
         setNomCommune('');
-        setMessage("")
+        // setMessage("")
         setShowList(false)
     }
 

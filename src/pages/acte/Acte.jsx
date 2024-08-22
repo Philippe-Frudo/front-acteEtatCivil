@@ -250,7 +250,6 @@ const Acte = ({user}) => {
         }
     }
 
-
     //  EXPORTER LE TABLEAU AFFICHER
     const handleOnExport = () => {
         let wa = XLSX.utils.book_new();
@@ -265,8 +264,8 @@ const Acte = ({user}) => {
         <>
                 { /* <!-- ===== HEADER CARD 1 ===== --> */}
                 <header className="main-header-content">
-                    <h3 className="main-header-content-title">Acte de naissance</h3>
-                    <span className="main-header-content-subtitle">Soutitre page</span>
+                    <h3 className="main-header-content-title">Liste d'acte des naissances</h3>
+                    <span className="main-header-content-subtitle">soutitre page</span>
                     
                     {/* <div className="main-local-nav">
                         <ul>
@@ -296,7 +295,7 @@ const Acte = ({user}) => {
 
                             <div className="form-group input-relative">
                                 <div className='input-relative'>
-                                    {/* <label htmlFor="nom_fonkotany" className="form-group-label">Fonkotany:</label> */}
+                                    <label htmlFor="nom_fonkotany" className="form-group-label">Fonkotany:</label>
                                     <input 
                                         type="text" 
                                         className="form-group-input nom_fonkotany" 
@@ -324,7 +323,7 @@ const Acte = ({user}) => {
                         
                             <div className={ user?.isAdmin ? "form-group":"hidden form-group"}>
                                 <div className="input-relative" >
-                                    {/* <label htmlFor="nom_commune" className="form-group-label">Commune:</label> */}
+                                    <label htmlFor="nom_commune" className="form-group-label">Commune:</label>
                                     <input
                                         type="text" 
                                         className="form-group-input nom_commune" 
@@ -350,6 +349,7 @@ const Acte = ({user}) => {
                             </div>
 
                             <div className={ user?.isAdmin ? "form-group input-relative":"hidden form-group input-relative"}>
+                                <label htmlFor="nom_commune" className="form-group-label">District:</label>
                                 <input
                                     type="text"
                                     className="form-group-input nom_district"
@@ -375,7 +375,7 @@ const Acte = ({user}) => {
                             </div>
 
                             <div className={ user?.isAdmin ? "form-group input-relative":"hidden form-group input-relative"}>
-                                {/* <label htmlFor="nom_region" className="form-group-label">Region:</label> */}
+                                <label htmlFor="nom_region" className="form-group-label">Region:</label>
                                 <input
                                     type="text"
                                     className="form-group-input nom_region"
